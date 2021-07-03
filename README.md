@@ -1,1 +1,2 @@
-სამაგალითო პროექტის აღწერა ნახეთ Example-Quiz-Website.pdf ფაილში.
+# EatHub
+final project for Free Uni OOP class 
