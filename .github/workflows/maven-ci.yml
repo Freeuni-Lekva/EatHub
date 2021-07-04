@@ -28,4 +28,4 @@ jobs:
           mysql database: 'eathub_db'
           mysql root password: ${{ secrets.ROOTPASSWORD }}
       - name: Build with Maven
-        run: mvn -B package --file pom.xml
+        run: mvn -B sql:execute package --file pom.xml

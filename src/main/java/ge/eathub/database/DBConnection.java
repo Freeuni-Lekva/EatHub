@@ -24,11 +24,11 @@ public class DBConnection {
         ds.setDatabaseName(DataBaseInfo.DATA_BASE_NAME);
         ds.setUser(DataBaseInfo.USERNAME);
         ds.setPassword(DataBaseInfo.PASSWORD);
-        try {
-            executeSqlFile(ds);
-        } catch (SQLException | FileNotFoundException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            executeSqlFile(ds);
+//        } catch (SQLException | FileNotFoundException e) {
+//            e.printStackTrace();
+//        }
         return ds;
     }
 
