@@ -4,12 +4,17 @@ import ge.eathub.dao.UserDao;
 import ge.eathub.dto.UserLoginDto;
 import ge.eathub.dto.UserRegisterDto;
 import ge.eathub.exceptions.InvalidEmailException;
+import ge.eathub.exceptions.InvalidUserPasswordException;
 import ge.eathub.exceptions.UserCreationException;
+import ge.eathub.exceptions.UserNotFoundException;
 import ge.eathub.models.User;
 import ge.eathub.service.UserService;
 import ge.eathub.utils.EmailValidator;
 import org.mindrot.jbcrypt.BCrypt;
 
+import java.util.Optional;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 import java.util.logging.Logger;
 
 public class UserServiceImpl implements UserService {
@@ -22,7 +27,7 @@ public class UserServiceImpl implements UserService {
 
     // TODO Send registration email
     @Override
-    public void registerUser(UserRegisterDto userDto)  throws UserCreationException , InvalidEmailException {
+    public void registerUser(UserRegisterDto userDto) throws UserCreationException, InvalidEmailException {
         logger.info("create user " + userDto.getUsername());
         if (!EmailValidator.validate(userDto.getEmail())) {
             throw new InvalidEmailException(userDto.getEmail());
@@ -35,8 +40,16 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean LoginUser(UserLoginDto userDto) {
+    public boolean LoginUser(UserLoginDto userDto) throws Throwable {
+        Optional<User> userByUsername = userDao.getUserByUsername(userDto.getUsername());
+        User user = userByUsername.orElseThrow((Supplier<Throwable>) () -> {
+            throw new UserNotFoundException(userDto.getUsername());
+        });
 
-        return false;
+        if (!BCrypt.checkpw(userDto.getPassword(),user.getPassword())) {
+            throw new InvalidUserPasswordException(userDto.getUsername());
+        }
+        // todo
+        return true;
     }
 }
