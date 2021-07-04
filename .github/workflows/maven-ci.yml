@@ -13,6 +13,10 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
+    # env:
+    #   DB_DATABASE: eathub_db
+    #   DB_USER: root
+    #   DB_PASSWORD: root
     steps:
       - uses: actions/checkout@v2
       - name: Set up JDK 15
@@ -20,12 +24,33 @@ jobs:
         with:
           java-version: '15'
           distribution: 'adopt'
+      # - name: Set up MySQL
+      #   run: |
+      #     sudo /etc/init.d/mysql start
+      #     mysql -e 'CREATE DATABASE eathub_db;' -uroot -p${{ env.DB_PASSWORD }}
+      #     mysql -uroot -p${{ env.DB_PASSWORD }} eathub_db < /home/runner/work/EatHub-Test/EatHub-Test/database/mysqltables.sql
+
+
       - name: Shutdown Ubuntu MySQL (SUDO)
         run: sudo service mysql stop
+
       - name: set up mysql
         uses: mirromutth/mysql-action@v1.1
         with:
           mysql database: 'eathub_db'
           mysql root password: ${{ secrets.ROOTPASSWORD }}
+        # run: |
+        #     mysql -e 'CREATE DATABASE eathub_db;' -uroot -p${{ secrets.ROOTPASSWORD }}
+        #     mysql -uroot -p${{ secrets.ROOTPASSWORD }}  eathub_db < /home/runner/work/EatHub-Test/EatHub-Test/database/mysqltables.sql
+
+      # - name: Set up MySQL
+      #   run: |
+      #     docker ps
+      #     docker exec $(docker ps | grep "mysql:latest" | awk '{print $1}') ls
+      #     docker exec $(docker ps | grep "mysql:latest" | awk '{print $1}') "ls /github/workspace/"
+      #     docker exec $(docker ps | grep "mysql:latest" | awk '{print $1}') 'mysql -u root -ptoor eathub_db </github/workspace/database/mysqltables.sql'
+      #  sudo /etc/init.d/mysql start
+      #  mysql -e 'CREATE DATABASE eathub_db;' -uroot -p${{ env.DB_PASSWORD }}
+
       - name: Build with Maven
         run: mvn -B sql:execute package --file pom.xml
