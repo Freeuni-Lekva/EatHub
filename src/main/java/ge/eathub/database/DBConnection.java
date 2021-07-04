@@ -1,25 +1,34 @@
 package ge.eathub.database;
 
 import com.mysql.cj.jdbc.MysqlConnectionPoolDataSource;
+import org.apache.ibatis.jdbc.ScriptRunner;
 
 import javax.sql.DataSource;
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.Reader;
 import java.sql.Connection;
 import java.sql.SQLException;
 
 public class DBConnection {
-    private static final String USERNAME = "root";
-    private static final String PASSWORD = "toor";
-    private static final String SERVER_NAME = "localhost";
-    private static final int PORT = 3306;
-    private static final String DATA_BASE_NAME = "eathub_db";
+
+    private static boolean initialized = false;
+    private static final String INIT_DATABASE_FILE = "src/main/resources/mysqltables.sql";
 
     public static DataSource getMySqlDataSource() {
+        // todo make singleton
         MysqlConnectionPoolDataSource ds = new MysqlConnectionPoolDataSource();
-        ds.setServerName(SERVER_NAME);
-        ds.setPort(PORT);
-        ds.setDatabaseName(DATA_BASE_NAME);
-        ds.setUser(USERNAME);
-        ds.setPassword(PASSWORD);
+        ds.setServerName(DataBaseInfo.SERVER_NAME);
+        ds.setPort(DataBaseInfo.PORT);
+        ds.setDatabaseName(DataBaseInfo.DATA_BASE_NAME);
+        ds.setUser(DataBaseInfo.USERNAME);
+        ds.setPassword(DataBaseInfo.PASSWORD);
+        try {
+            executeSqlFile(ds);
+        } catch (SQLException | FileNotFoundException e) {
+            e.printStackTrace();
+        }
         return ds;
     }
 
@@ -31,5 +40,13 @@ public class DBConnection {
                 e.printStackTrace();
             }
         }
+    }
+
+    private static synchronized void executeSqlFile(DataSource ds) throws SQLException, FileNotFoundException {
+        if (initialized) return;
+        ScriptRunner sr = new ScriptRunner(ds.getConnection());
+        Reader reader = new BufferedReader(new FileReader(INIT_DATABASE_FILE));
+        sr.runScript(reader);
+        initialized = true;
     }
 }
