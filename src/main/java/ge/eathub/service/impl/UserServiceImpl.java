@@ -3,6 +3,7 @@ package ge.eathub.service.impl;
 import ge.eathub.dao.UserDao;
 import ge.eathub.dto.UserLoginDto;
 import ge.eathub.dto.UserRegisterDto;
+import ge.eathub.exceptions.InvalidEmailException;
 import ge.eathub.exceptions.UserCreationException;
 import ge.eathub.models.User;
 import ge.eathub.service.UserService;
@@ -21,23 +22,16 @@ public class UserServiceImpl implements UserService {
 
     // TODO Send registration email
     @Override
-    public boolean registerUser(UserRegisterDto userDto) {
-        try {
-            if (!EmailValidator.validate(userDto.getEmail())) {
-                logger.info("false email");
-                return false;
-            }
-            User newUser = new User(userDto.getUsername(),
-                    BCrypt.hashpw(userDto.getPassword(), BCrypt.gensalt()),
-                    userDto.getEmail());
-            userDao.createUser(newUser);
-
-        } catch (UserCreationException e) {
-            e.printStackTrace();
-            logger.info(e.getMessage());
-            return false;
+    public void registerUser(UserRegisterDto userDto)  throws UserCreationException , InvalidEmailException {
+        logger.info("create user " + userDto.getUsername());
+        if (!EmailValidator.validate(userDto.getEmail())) {
+            throw new InvalidEmailException(userDto.getEmail());
         }
-        return true;
+        User newUser = new User(userDto.getUsername(),
+                BCrypt.hashpw(userDto.getPassword(), BCrypt.gensalt()),
+                userDto.getEmail());
+        User createdUserNotUsed = userDao.createUser(newUser);
+
     }
 
     @Override

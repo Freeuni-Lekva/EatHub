@@ -2,7 +2,9 @@ package ge.eathub.dao.impl;
 
 import ge.eathub.dao.UserDao;
 import ge.eathub.database.DBConnection;
+import ge.eathub.exceptions.EmailAlreadyExistsException;
 import ge.eathub.exceptions.UserCreationException;
+import ge.eathub.exceptions.UsernameAlreadyExistsException;
 import ge.eathub.models.Role;
 import ge.eathub.models.User;
 
@@ -15,6 +17,7 @@ import java.util.Optional;
 public class MySqlUserDao implements UserDao {
 
     private final DataSource dataSource;
+    public static final int MYSQL_DUPLICATE_ERROR_CODE = 1062;
 
     public MySqlUserDao(DataSource dataSource) {
         this.dataSource = dataSource;
@@ -122,19 +125,28 @@ public class MySqlUserDao implements UserDao {
             stm.setString(3, user.getEmail());
             stm.setBigDecimal(4, user.getBalance());
             stm.setString(5, user.getRole().name());
-
             if (stm.executeUpdate() == 1) {
                 ResultSet rs = stm.getGeneratedKeys();
                 rs.next();
                 Long newUserID = rs.getLong(1);
                 return new User(user).setUserID(newUserID);
             }
+
+        } catch (SQLIntegrityConstraintViolationException e) {
+            if (e.getErrorCode() == MYSQL_DUPLICATE_ERROR_CODE) {
+                if (e.getMessage().contains("%s.%s".formatted(User.TABLE, User.COLUMN_USERNAME))) {
+                    throw new UsernameAlreadyExistsException(user.getUsername());
+                }
+                if (e.getMessage().contains("%s.%s".formatted(User.TABLE, User.COLUMN_EMAIL))) {
+                    throw new EmailAlreadyExistsException(user.getEmail());
+                }
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
             DBConnection.closeConnection(conn);
         }
-        throw new UserCreationException(user.getUsername());
+        throw new UserCreationException("unknown error | user" + user.getUsername());
     }
 
 }

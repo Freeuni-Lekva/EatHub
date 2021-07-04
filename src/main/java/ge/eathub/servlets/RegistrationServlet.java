@@ -1,6 +1,8 @@
 package ge.eathub.servlets;
 
 import ge.eathub.dto.UserRegisterDto;
+import ge.eathub.exceptions.InvalidEmailException;
+import ge.eathub.exceptions.UserCreationException;
 import ge.eathub.listener.NameConstants;
 import ge.eathub.service.UserService;
 
@@ -40,10 +42,11 @@ public class RegistrationServlet extends HttpServlet {
             request.getRequestDispatcher(REGISTRATION_PAGE).forward(request, response);
         } else {
             UserRegisterDto user = new UserRegisterDto(username, password, email);
-            if (userService.registerUser(user)) { // TODO send proper errors
+            try { // TODO send proper errors
+                userService.registerUser(user);
                 request.getRequestDispatcher(USER_START_PAGE).forward(request, response);
-            } else {
-                request.setAttribute(ERROR_ATTR, "Cannot register user");
+            } catch (InvalidEmailException | UserCreationException e) {
+                request.setAttribute(ERROR_ATTR, e.getMessage());
                 request.getRequestDispatcher(REGISTRATION_PAGE).forward(request, response);
             }
 

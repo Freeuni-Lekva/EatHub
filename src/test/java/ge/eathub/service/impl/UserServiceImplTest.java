@@ -3,6 +3,7 @@ package ge.eathub.service.impl;
 import ge.eathub.dao.UserDao;
 import ge.eathub.dao.impl.InMemoryUserDao;
 import ge.eathub.dto.UserRegisterDto;
+import ge.eathub.exceptions.InvalidEmailException;
 import ge.eathub.exceptions.UserCreationException;
 import ge.eathub.service.UserService;
 import org.junit.jupiter.api.Test;
@@ -23,22 +24,20 @@ class UserServiceImplTest {
     public void registerUserTest1() {
         UserService userService = new UserServiceImpl(daoMockito);
         when(daoMockito.createUser(any())).thenReturn(null);
-        assertTrue(userService.registerUser(new UserRegisterDto("asd", "asd", "asd@asd.com")));
-
+        userService.registerUser(new UserRegisterDto("asd", "asd", "asd@asd.com"));
     }
 
     @Test
     public void registerUserException() {
         UserService userService = new UserServiceImpl(daoMockito);
         when(daoMockito.createUser(any())).thenThrow(UserCreationException.class);
-        assertFalse(userService.registerUser(new UserRegisterDto("asd", "asd", "asd@asd.com")));
-
+        assertThrows(UserCreationException.class, () -> userService.registerUser(new UserRegisterDto("asd", "asd", "asd@asd.com")));
     }
 
     @Test
     public void registerUserEmail() {
         UserService userService = new UserServiceImpl(daoMockito);
-        assertFalse(userService.registerUser(new UserRegisterDto("asd", "asd", "asdasd")));
+        assertThrows(InvalidEmailException.class, () -> userService.registerUser(new UserRegisterDto("asd", "asd", "asdasd")));
 
     }
 }
