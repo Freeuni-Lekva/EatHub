@@ -2,17 +2,16 @@ package ge.eathub.servlets;
 
 import ge.eathub.dto.UserDto;
 import ge.eathub.dto.UserLoginDto;
-import ge.eathub.dto.UserRegisterDto;
-import ge.eathub.exceptions.InvalidEmailException;
 import ge.eathub.exceptions.InvalidUserPasswordException;
-import ge.eathub.exceptions.UserCreationException;
 import ge.eathub.exceptions.UserNotFoundException;
 import ge.eathub.listener.NameConstants;
 import ge.eathub.service.UserService;
 
-import javax.servlet.*;
-import javax.servlet.http.*;
-import javax.servlet.annotation.*;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.logging.Logger;
 

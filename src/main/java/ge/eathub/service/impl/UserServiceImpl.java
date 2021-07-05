@@ -14,7 +14,6 @@ import ge.eathub.utils.EmailValidator;
 import org.mindrot.jbcrypt.BCrypt;
 
 import java.util.Optional;
-import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.logging.Logger;
 
