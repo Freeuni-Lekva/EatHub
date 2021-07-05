@@ -1,17 +1,23 @@
 package ge.eathub.service.impl;
 
-import ge.eathub.dao.UserDao;
 import ge.eathub.dao.impl.InMemoryUserDao;
+import ge.eathub.dto.UserDto;
+import ge.eathub.dto.UserLoginDto;
 import ge.eathub.dto.UserRegisterDto;
 import ge.eathub.exceptions.InvalidEmailException;
+import ge.eathub.exceptions.InvalidUserPasswordException;
 import ge.eathub.exceptions.UserCreationException;
+import ge.eathub.exceptions.UserNotFoundException;
 import ge.eathub.service.UserService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import static org.junit.jupiter.api.Assertions.*;
+import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -39,5 +45,42 @@ class UserServiceImplTest {
         UserService userService = new UserServiceImpl(daoMockito);
         assertThrows(InvalidEmailException.class, () -> userService.registerUser(new UserRegisterDto("asd", "asd", "asdasd")));
 
+    }
+
+    @Test
+    void loginTest1() {
+        String username = "asd";
+        String email = "asd@asd.com";
+        String password = "asd";
+        UserService userService = new UserServiceImpl(new InMemoryUserDao());
+        userService.registerUser(new UserRegisterDto(username, password, email));
+//        when(daoMockito.getUserByUsername(username)).thenReturn(Optional.of(new User(username,email)))
+        try {
+            UserDto userDto = userService.loginUser(new UserLoginDto(username, password));
+            assertEquals(username, userDto.getUsername());
+        } catch (InvalidUserPasswordException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    void loginTest2() {
+        String username = "asd";
+        String email = "asd@asd.com";
+        String password = "asd";
+        UserService userService = new UserServiceImpl(daoMockito);
+//        userService.registerUser(new UserRegisterDto(username, password,email));
+        when(daoMockito.getUserByUsername(username)).thenReturn(Optional.empty());
+        assertThrows(UserNotFoundException.class, () -> userService.loginUser(new UserLoginDto(username, password)));
+    }
+
+    @Test
+    void loginTest3() {
+        String username = "asd";
+        String email = "asd@asd.com";
+        String password = "asd";
+        UserService userService = new UserServiceImpl(new InMemoryUserDao());
+        userService.registerUser(new UserRegisterDto(username, password, email));
+        assertThrows(InvalidUserPasswordException.class, () -> userService.loginUser(new UserLoginDto(username, "qsadsdasd")));
     }
 }

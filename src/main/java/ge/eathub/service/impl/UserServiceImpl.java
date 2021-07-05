@@ -1,6 +1,7 @@
 package ge.eathub.service.impl;
 
 import ge.eathub.dao.UserDao;
+import ge.eathub.dto.UserDto;
 import ge.eathub.dto.UserLoginDto;
 import ge.eathub.dto.UserRegisterDto;
 import ge.eathub.exceptions.InvalidEmailException;
@@ -13,7 +14,6 @@ import ge.eathub.utils.EmailValidator;
 import org.mindrot.jbcrypt.BCrypt;
 
 import java.util.Optional;
-import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.logging.Logger;
 
@@ -40,16 +40,15 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean LoginUser(UserLoginDto userDto) throws Throwable {
+    public UserDto loginUser(UserLoginDto userDto) throws UserNotFoundException, InvalidUserPasswordException {
         Optional<User> userByUsername = userDao.getUserByUsername(userDto.getUsername());
-        User user = userByUsername.orElseThrow((Supplier<Throwable>) () -> {
+        User user = userByUsername.orElseThrow((Supplier<UserNotFoundException>) () -> {
             throw new UserNotFoundException(userDto.getUsername());
         });
 
-        if (!BCrypt.checkpw(userDto.getPassword(),user.getPassword())) {
+        if (!BCrypt.checkpw(userDto.getPassword(), user.getPassword())) {
             throw new InvalidUserPasswordException(userDto.getUsername());
         }
-        // todo
-        return true;
+        return user.toDto();
     }
 }

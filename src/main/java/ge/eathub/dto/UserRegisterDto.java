@@ -37,7 +37,4 @@ public class UserRegisterDto {
         this.email = email;
     }
 
-    public User toUser() {
-        return new User(username, password, email);
-    }
 }
