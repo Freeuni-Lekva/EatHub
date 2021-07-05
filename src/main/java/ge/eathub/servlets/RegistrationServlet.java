@@ -19,7 +19,8 @@ public class RegistrationServlet extends HttpServlet {
     private final static Logger logger = Logger.getLogger(RegistrationServlet.class.getName());
     private static final String REGISTRATION_PAGE = "/WEB-INF/register.jsp";
     private static final String USER_START_PAGE = "/WEB-INF/start.jsp";
-    private static final String ERROR_ATTR = "REG_ERROR";
+    private static final String USER_LOGIN_PAGE = "/WEB-INF/login.jsp";
+    public static final String ERROR_ATTR = "REG_ERROR";
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -44,7 +45,7 @@ public class RegistrationServlet extends HttpServlet {
             UserRegisterDto user = new UserRegisterDto(username, password, email);
             try { // TODO send proper errors
                 userService.registerUser(user);
-                request.getRequestDispatcher(USER_START_PAGE).forward(request, response);
+                request.getRequestDispatcher(USER_LOGIN_PAGE).forward(request, response);
             } catch (InvalidEmailException | UserCreationException e) {
                 request.setAttribute(ERROR_ATTR, e.getMessage());
                 request.getRequestDispatcher(REGISTRATION_PAGE).forward(request, response);

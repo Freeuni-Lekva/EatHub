@@ -1,5 +1,7 @@
 package ge.eathub.models;
 
+import ge.eathub.dto.UserDto;
+
 import java.math.BigDecimal;
 import java.util.Objects;
 
@@ -43,12 +45,20 @@ public class User {
         this.role = user.getRole();
     }
 
+    public User() {
+    }
+
+    public static User builder() {
+        return new User();
+    }
+
     public String getEmail() {
         return email;
     }
 
-    public void setEmail(String email) {
+    public User setEmail(String email) {
         this.email = email;
+        return this;
     }
 
 
@@ -95,6 +105,15 @@ public class User {
     public User setRole(Role role) {
         this.role = role;
         return this;
+    }
+
+    public UserDto toDto() {
+//        return UserDto.builder()
+//                .setUsername(username)
+//                .setEmail(email)
+//                .setBalance(balance)
+//                .setRole(role);
+        return new UserDto(username, email, balance, role);
     }
 
     @Override
