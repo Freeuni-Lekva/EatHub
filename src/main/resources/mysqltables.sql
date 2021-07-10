@@ -16,3 +16,34 @@ CREATE TABLE users
     UNIQUE (username),
     UNIQUE (email)
 );
+
+
+CREATE TABLE meals
+(
+    meal_id       BIGINT  NOT NULL AUTO_INCREMENT,
+    meal_name     VARCHAR(100) NOT NULL,
+    cooking_time  TIME    NOT NULL,
+    restaurant_id BIGINT  NOT NULL,
+    PRIMARY KEY (meal_id),
+    UNIQUE (meal_id)
+);
+
+
+
+CREATE TABLE Restaurants
+(
+    restaurant_id   BIGINT  NOT NULL AUTO_INCREMENT,
+    restaurant_name VARCHAR(100) NOT NULL,
+    location        VARCHAR(100) NOT NULL,
+    max_limit       NUMERIC NOT NULL,
+    Rating          DECIMAL NOT NULL DEFAULT 0,
+    Balance         DECIMAL NOT NULL,
+    PRIMARY KEY (restaurant_id),
+    UNIQUE (restaurant_id)
+);
+
+ALTER TABLE meals
+    ADD CONSTRAINT FK_Restaurants_TO_meals
+        FOREIGN KEY (restaurant_id)
+            REFERENCES Restaurants (restaurant_id);
+
