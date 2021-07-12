@@ -12,7 +12,7 @@ CREATE TABLE users
     balance  DECIMAL NOT NULL,
     role     VARCHAR(64) NOT NULL,
     PRIMARY KEY (user_id),
-    UNIQUE (user_id),
-    UNIQUE (username),
-    UNIQUE (email)
+    CONSTRAINT UQ_user_id UNIQUE (user_id),
+    CONSTRAINT UQ_username UNIQUE (username),
+    CONSTRAINT UQ_email UNIQUE (email)
 );
