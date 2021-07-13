@@ -1,14 +1,17 @@
 package ge.eathub.websockets;
 
-import com.google.gson.Gson;
-import ge.eathub.models.chat.Message;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import ge.eathub.utils.ObjectMapperFactory;
+import ge.eathub.models.chat.SocketMessage;
 
 import javax.websocket.DecodeException;
 import javax.websocket.Decoder;
 import javax.websocket.EndpointConfig;
 
-public class MessageDecoder implements Decoder.Text<Message> {
-    public static final Gson gson = new Gson();
+public class MessageDecoder implements Decoder.Text<SocketMessage> {
+
+    public static final ObjectMapper mapper = ObjectMapperFactory.get();
 
     @Override
     public void init(EndpointConfig config) {
@@ -21,8 +24,12 @@ public class MessageDecoder implements Decoder.Text<Message> {
     }
 
     @Override
-    public Message decode(String s) throws DecodeException {
-        return gson.fromJson(s, Message.class);
+    public SocketMessage decode(String s) throws DecodeException {
+        try {
+            return mapper.readValue(s, SocketMessage.class);
+        } catch (JsonProcessingException e) {
+            throw new DecodeException(s, e.getMessage(), e);
+        }
     }
 
     @Override
