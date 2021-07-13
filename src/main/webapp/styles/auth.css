@@ -1,0 +1,16 @@
+/* Authentication */
+
+#authentication {
+    margin-top: 100px;
+}
+
+#authentication * {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 10px;
+}
+
+#authentication .error {
+    text-align: center;
+}
