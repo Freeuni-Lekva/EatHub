@@ -1,0 +1,127 @@
+
+/* Title Bar */
+
+#title {
+    background-color: #0084FF;
+    font-size: 20px;
+    padding: 10px 20px 10px 20px;
+    color: #fff;
+}
+
+/* Contact list */
+
+#contacts {
+    float: left;
+    width: 120px;
+    padding: 20px;
+    background-color: aliceblue;
+    min-height: calc(100vh - 85px);
+    max-height: calc(100vh - 85px);
+    display: none;
+}
+
+#contacts .contact .status {
+    background-color: #13CF13;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    display: inline-block;
+    margin-right: 10px;
+}
+
+#contacts .contact .name {
+    line-height: 40px;
+    vertical-align: super;
+}
+
+/* Chat */
+
+#chat {
+    float: right;
+    width: calc(100% - 160px);
+    display: none;
+}
+
+#messages {
+    min-height: calc(100vh - 130px);
+    max-height: calc(100vh - 130px);
+    padding: 20px 20px 0 20px;
+    overflow-y: auto;
+}
+
+#messages .message {
+    margin-bottom: 3px;
+}
+
+#messages .message .content {
+    min-width: 20px;
+    max-width: 250px;
+    border-radius: 20px;
+    padding: 10px;
+    display: table;
+}
+
+#messages .message.event .content {
+    background-color: #FF7E29;
+    color: #fff;
+    margin-left: auto;
+    margin-right: auto;
+    font-size: 10px;
+    padding: 7px;
+}
+
+#messages .message.received {
+    left: 0;
+    text-align: left;
+}
+
+#messages .message.received .content {
+    background-color: gainsboro;
+    border-radius: 0 20px 20px;
+}
+
+#messages .message.received .sender {
+    color: dimgrey;
+    font-size: 10px;
+}
+
+#messages .message.sent {
+    right: 0;
+    text-align: right;
+}
+
+#messages .message.sent .content {
+    background-color: #0084FF;
+    margin-left: auto;
+    margin-right: 0;
+    color: #fff;
+    text-align: right;
+    border-radius: 20px 0 20px 20px;
+}
+
+#messages .message.sent .sender {
+    color: #0084FF;
+    font-size: 10px;
+}
+
+#chat-controls {
+    height: 40px;
+    padding: 20px 20px 0 20px;
+}
+
+#chat-controls button {
+    float: right;
+}
+
+#chat-controls input[type="text"] {
+    width: calc(100% - 9em);
+}
+
+#messages .message.sent.same-sender-previous-message .sender,
+#messages .message.received.same-sender-previous-message .sender {
+    display: none;
+}
+
+#messages .message:not(.same-sender-previous-message) {
+    margin-top: 10px;
+}

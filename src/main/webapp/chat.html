@@ -2,28 +2,20 @@
 <meta charset="utf-8" name="viewport" content="width=device-width, initial-scale=1">
 <html lang="en">
 <head>
+    <link type="text/css" rel="stylesheet" href="styles/common.css">
+    <link type="text/css" rel="stylesheet" href="styles/chat.css">
+    <script type="application/javascript" src="scripts/chat.js"></script>
     <title>Chat</title>
 </head>
 <body>
+<div style="display: block" id="contacts"></div>
+<div style="display: block" id="chat">
+    <div id="messages" autofocus></div>
+    <form id="chat-controls" onsubmit="return false;">
+        <input type="text" id="message" placeholder="Enter a message" />
+        <button class="button" onclick="sendMessage()">Send</button>
+    </form>
+</div>
 
-<table>
-    <tr>
-        <td colspan="2">
-            <label for="username"></label><input type="text" id="username" placeholder="Username"/>
-            <button type="button" onclick="connect();">Connect</button>
-        </td>
-    </tr>
-    <tr>
-        <td>
-            <label for="log"></label><textarea cols="80" id="log" readonly="readonly" rows="10"></textarea>
-            <label for="msg"></label><input type="text" size="51" id="msg" placeholder="Message"/>
-            <button type="button" onclick="send();">Send</button>
-        </td>
-
-    </tr>
-</table>
 </body>
-
-<script type="application/javascript" src="scripts/websocket.js"></script>
-
 </html>
