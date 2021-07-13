@@ -1,89 +1,137 @@
 package ge.eathub.websockets;
 
 
-import ge.eathub.models.chat.Message;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import ge.eathub.models.chat.MessageType;
+import ge.eathub.utils.ObjectMapperFactory;
+import ge.eathub.models.chat.SocketMessage;
 
-import javax.websocket.*;
+import javax.enterprise.context.Dependent;
+import javax.websocket.OnClose;
+import javax.websocket.OnMessage;
+import javax.websocket.OnOpen;
+import javax.websocket.Session;
 import javax.websocket.server.ServerEndpoint;
-import java.io.IOException;
 import java.security.Principal;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.stream.Collectors;
 
-//@ApplicationScoped
-@ServerEndpoint(value = "/chat/",
+@Dependent
+@ServerEndpoint(
+        value = "/chat",
         encoders = MessageEncoder.class,
         decoders = MessageDecoder.class,
         configurator = ChatConfig.class)
 public class ChatEndpoint {
 
-    private Session session;
-
-    private static final Map<Long, Session> activeUsers = new ConcurrentHashMap<>();
-    Long roomID = 1L;
+    private static final Map<Long, Set<Session>> activeUsers = new ConcurrentHashMap<>();
+    Long roomID;
 
     @OnOpen
-    public void onOpen(Session session, EndpointConfig config) throws EncodeException, IOException {
-        roomID = 123L;
-        System.out.println("opened room : " + roomID);
-        if (!activeUsers.containsKey(roomID)) {
-            activeUsers.put(roomID, session);
+    public void onOpen(Session session) {
+        roomID = Long.valueOf(session.getRequestParameterMap().get("room-id").get(0));
+        Set<Session> ses = activeUsers.getOrDefault(roomID, null);
+        if (ses == null) {
+            ses = new CopyOnWriteArraySet<>();
+            ses.add(session);
+            activeUsers.put(roomID, ses);
+        } else {
+            ses.add(session);
         }
-//        activeUsers.putIfAbsent(roomID, session);
-        Message message = new Message(-199L, roomID, MessageType.TEXT, " just opened ");
-        broadcastAvailableUsers(roomID);
-        broadcast(message, roomID);
+
+        String username = session.getUserPrincipal().getName();
+
+        welcomeUser(session, username);
+        broadcastAvailableUsers();
     }
 
     @OnMessage
-    public void onMessage(Session session, Message message) throws IOException, EncodeException {
-        System.out.println("on close " + roomID);
-
-        broadcast(message, roomID);
+    public void onMessage(Session session, SocketMessage message) {
+        System.out.println("on message :" + message);
+        broadcast(message.setUsername(session.getUserPrincipal().getName()));
     }
-
 
     @OnClose
-    public void onClose(Session session, CloseReason closeReason) throws EncodeException, IOException {
-        System.out.println("on close " + roomID);
-        Message message = new Message(-1L, roomID, MessageType.TEXT, "user left ");
-//        broadcast(message, roomID);
+    public void onClose(Session session) {
+        activeUsers.get(roomID).remove(session);
+        String username = session.getUserPrincipal().getName();
+        broadcastUserDisconnected(username);
+        broadcastAvailableUsers();
     }
 
-    private static void broadcast(Message message, Long roomID)
-            throws IOException, EncodeException {
-        System.out.println(message);
-        System.out.println(roomID);
-
-        activeUsers.get(roomID).getOpenSessions().forEach(ses -> {
-            synchronized (ses) {
-                try {
-                    ses.getBasicRemote().
-                            sendObject(message);
-                } catch (IOException | EncodeException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
+    private void welcomeUser(Session currentSession, String username) {
+        currentSession.getAsyncRemote()
+                .sendObject(new SocketMessage()
+                        .setUsername(username)
+                        .setType(MessageType.WELCOME)
+                        .setRoomID(roomID)
+                        .setContent("Welcome " + username));
     }
 
+    private void broadcastUserDisconnected(String username) {
+        broadcast(new SocketMessage().setUsername(username)
+                .setType(MessageType.GOODBYE)
+                .setRoomID(roomID)
+                .setContent("Goodbye " + username));
+    }
 
-    private void broadcastAvailableUsers(Long roomID) {
+    private static class ActiveUsers {
+        private Set<String> usernames;
+        private MessageType type = MessageType.ACTIVE_USERS;
 
-        Set<String> usernames = activeUsers.get(roomID).getOpenSessions().stream()
+        public ActiveUsers(Set<String> usernames) {
+            this.usernames = usernames;
+        }
+
+        public MessageType getType() {
+            return type;
+        }
+
+        public void setType(MessageType type) {
+            this.type = type;
+        }
+
+        public Set<String> getUsernames() {
+            return usernames;
+        }
+
+        public void setUsernames(Set<String> usernames) {
+            this.usernames = usernames;
+        }
+    }
+
+    private void broadcastAvailableUsers() {
+
+        Set<String> usernames = activeUsers.get(roomID).stream()
                 .map(Session::getUserPrincipal)
                 .map(Principal::getName)
-//                .distinct()
                 .collect(Collectors.toSet());
-        System.out.println(usernames);
+        try {
+            String users = ObjectMapperFactory.get().writeValueAsString(new ActiveUsers(usernames));
+            Set<Session> sessions = activeUsers.get(roomID);
+            sessions.forEach(session -> {
+                if (session.isOpen()) {
+                    session.getAsyncRemote().sendText(users);
+                }
+            });
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
     }
 
-    @OnError
-    public void error(Session session, Throwable t) {
-        System.out.println("on error ");
-        t.printStackTrace();
+    private void broadcast(SocketMessage message) {
+//        synchronized (sessions) {
+        Set<Session> sessions = activeUsers.get(roomID);
+        sessions.forEach(session -> {
+            if (session.isOpen()) {
+                session.getAsyncRemote().sendObject(message);
+            }
+        });
+//        }
     }
+
+
 }

@@ -1,26 +1,26 @@
 package ge.eathub.models.chat;
 
 import java.io.Serializable;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Date;
 
-public class Message  implements Serializable {
+public class Message implements Serializable {
     private Long userID;
     private Long roomID;
     private LocalDateTime timeSend;
     private MessageType type;
     private String content; // this is temporary
 
+    public Message() {
+    }
+
     public Message(Long userID, Long roomID, MessageType type,
                    String content) {
         this.userID = userID;
         this.roomID = roomID;
         this.type = type;
-        this.content= content;
+        this.content = content;
         this.timeSend = LocalDateTime.now();
     }
-
 
 
     public Long getUserID() {
@@ -63,7 +63,7 @@ public class Message  implements Serializable {
         return content;
     }
 
-    public Message setContent(String messageContent) {
+    public Message setContent(String content) {
         this.content = content;
         return this;
     }
