@@ -13,12 +13,15 @@ public class ChatConfig extends ServerEndpointConfig.Configurator {
                                 HandshakeResponse resp) {
         System.out.println(" started handshake");
 //        TODO validate
-        System.out.println(req.getHeaders());
-        System.out.println("user principal: " + req.getUserPrincipal());
-        System.out.println("http session:" + req.getHttpSession());
-        System.out.println(resp.getHeaders());
+//        try {
+//            Long roomID = Long.valueOf(req.getParameterMap().get("room-id").get(0));
+//            conf.getUserProperties().put("room-id",roomID);
+//        } catch (Exception e){
+                // how to stop ??
+//        }
 
-//        conf.getUserProperties().put("handshakereq", req);
+        System.out.println(req.getParameterMap());
+
     }
 
 }

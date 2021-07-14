@@ -7,10 +7,7 @@ import ge.eathub.utils.ObjectMapperFactory;
 import ge.eathub.models.chat.SocketMessage;
 
 import javax.enterprise.context.Dependent;
-import javax.websocket.OnClose;
-import javax.websocket.OnMessage;
-import javax.websocket.OnOpen;
-import javax.websocket.Session;
+import javax.websocket.*;
 import javax.websocket.server.ServerEndpoint;
 import java.security.Principal;
 import java.util.Map;
@@ -31,21 +28,28 @@ public class ChatEndpoint {
     Long roomID;
 
     @OnOpen
-    public void onOpen(Session session) {
-        roomID = Long.valueOf(session.getRequestParameterMap().get("room-id").get(0));
-        Set<Session> ses = activeUsers.getOrDefault(roomID, null);
-        if (ses == null) {
-            ses = new CopyOnWriteArraySet<>();
-            ses.add(session);
-            activeUsers.put(roomID, ses);
-        } else {
-            ses.add(session);
+    public void onOpen(Session session, EndpointConfig config) throws SessionException {
+        try {
+            roomID = Long.valueOf(session.getRequestParameterMap().get("room-id").get(0));
+            Set<Session> ses = activeUsers.getOrDefault(roomID, null);
+            if (ses == null) {
+                ses = new CopyOnWriteArraySet<>();
+                ses.add(session);
+                activeUsers.put(roomID, ses);
+            } else {
+                ses.add(session);
+            }
+
+            String username = session.getUserPrincipal().getName();
+
+            welcomeUser(session, username);
+            broadcastAvailableUsers();
+        } catch (Exception e) {
+            System.out.println("caught error");
+            e.printStackTrace();
+            throw new SessionException(e.getMessage(), e, session);
         }
 
-        String username = session.getUserPrincipal().getName();
-
-        welcomeUser(session, username);
-        broadcastAvailableUsers();
     }
 
     @OnMessage
@@ -60,6 +64,12 @@ public class ChatEndpoint {
         String username = session.getUserPrincipal().getName();
         broadcastUserDisconnected(username);
         broadcastAvailableUsers();
+    }
+
+    @OnError
+    public void OnError(Session session, Throwable t) {
+        System.out.println("on error");
+        t.printStackTrace();
     }
 
     private void welcomeUser(Session currentSession, String username) {

@@ -38,7 +38,7 @@ public class AccessTokenFilter implements Filter {
             response.sendError(HttpServletResponse.SC_FORBIDDEN, TOKEN_NOT_FOUNT);
             return;
         }
-        Optional<String> optionalUsername = authenticator.getUsernameFromToken(token);
+        Optional<String> optionalUsername = authenticator.getUsername(token);
         // TODO check room-id
         if (optionalUsername.isPresent()) {
             filterChain.doFilter(new AuthenticatedRequest(request, optionalUsername.get()), servletResponse);
