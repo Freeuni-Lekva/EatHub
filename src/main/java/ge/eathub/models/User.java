@@ -113,7 +113,7 @@ public class User {
 //                .setEmail(email)
 //                .setBalance(balance)
 //                .setRole(role);
-        return new UserDto(username, email, balance, role);
+        return new UserDto(userID, username, email, balance, role);
     }
 
     @Override

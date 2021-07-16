@@ -10,6 +10,8 @@
     <% UserDto user = (UserDto) request.getSession().getAttribute(UserDto.ATTR);%>
     <h1>Hello <%= user.getUsername() %>
     </h1>
+    <h1>UserID <%= user.getUserID() %>
+    </h1>
     <h2>email <%= user.getEmail() %>
     </h2>
     <h2>balance <%= user.getBalance() %>
