@@ -17,7 +17,7 @@ CREATE TABLE users
     UNIQUE (email)
 );
 
-
+DROP TABLE IF EXISTS meals;
 CREATE TABLE meals
 (
     meal_id       BIGINT  NOT NULL AUTO_INCREMENT,
@@ -29,7 +29,7 @@ CREATE TABLE meals
 );
 
 
-
+DROP TABLE IF EXISTS Restaurants;
 CREATE TABLE Restaurants
 (
     restaurant_id   BIGINT  NOT NULL AUTO_INCREMENT,
