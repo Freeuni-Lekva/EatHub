@@ -43,8 +43,9 @@ public class Restaurant {
         return restaurantID;
     }
 
-    public void setRestaurantID(Long restaurantID) {
+    public Restaurant setRestaurantID(Long restaurantID) {
         this.restaurantID = restaurantID;
+        return this;
     }
 
     public String getRestaurantName() {

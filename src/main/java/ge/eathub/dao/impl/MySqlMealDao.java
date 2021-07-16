@@ -91,7 +91,6 @@ public class MySqlMealDao implements MealDao {
                 ResultSet rs = stm.getGeneratedKeys();
                 rs.next();
                 Long newMealID = rs.getLong(1);
-                meal.setMealID(newMealID);
                 return new Meal(meal).setMealID(newMealID);
             }
         } catch (SQLException e) {
