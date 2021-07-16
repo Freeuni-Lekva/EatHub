@@ -29,8 +29,8 @@ CREATE TABLE meals
 );
 
 
-DROP TABLE IF EXISTS Restaurants;
-CREATE TABLE Restaurants
+DROP TABLE IF EXISTS restaurants;
+CREATE TABLE restaurants
 (
     restaurant_id   BIGINT  NOT NULL AUTO_INCREMENT,
     restaurant_name VARCHAR(100) NOT NULL,
