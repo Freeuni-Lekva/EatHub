@@ -2,18 +2,13 @@ package ge.eathub.dao.impl;
 
 import ge.eathub.dao.RestaurantDao;
 import ge.eathub.database.DBConnection;
-import ge.eathub.exceptions.MealCreationException;
 import ge.eathub.exceptions.RestauranCreationException;
 import ge.eathub.models.Meal;
 import ge.eathub.models.Restaurant;
-import ge.eathub.models.Role;
-import ge.eathub.models.User;
 
 import javax.sql.DataSource;
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 public class MySqlRestaurantDao implements RestaurantDao {
 
@@ -39,8 +34,8 @@ public class MySqlRestaurantDao implements RestaurantDao {
                                 rs.getString(2),
                                 rs.getString(3),
                                 rs.getLong(4),
-                                rs.getDouble(5),
-                                rs.getDouble(6)
+                                rs.getBigDecimal(5),
+                                rs.getBigDecimal(6)
                         )
                 );
             }
@@ -67,8 +62,8 @@ public class MySqlRestaurantDao implements RestaurantDao {
                     rs.getString(2),
                     rs.getString(3),
                     rs.getLong(4),
-                    rs.getDouble(5),
-                    rs.getDouble(6)
+                    rs.getBigDecimal(5),
+                    rs.getBigDecimal(6)
             ));
         } catch (SQLException e) {
             e.printStackTrace();
@@ -92,8 +87,9 @@ public class MySqlRestaurantDao implements RestaurantDao {
                 ret.add(new Meal(
                                 rs.getLong(1),
                                 rs.getString(2),
-                                rs.getTime(3),
-                                rs.getLong(4)
+                                rs.getBigDecimal(3),
+                                rs.getTime(4),
+                                rs.getLong(5)
                         )
                 );
             }
@@ -120,8 +116,9 @@ public class MySqlRestaurantDao implements RestaurantDao {
                 ret.add(new Meal(
                                 rs.getLong(1),
                                 rs.getString(2),
-                                rs.getTime(3),
-                                rs.getLong(4)
+                                rs.getBigDecimal(3),
+                                rs.getTime(4),
+                                rs.getLong(5)
                         )
                 );
             }
@@ -134,21 +131,42 @@ public class MySqlRestaurantDao implements RestaurantDao {
     }
 
     @Override
-    public List<Restaurant> getRestaurantsByMeal(String mealName) {
+    public Map<Restaurant, List<Meal>> getRestaurantsByMeal(String mealName) {
         Connection conn = null;
-        List<Restaurant> ret = new ArrayList<>();
+        Map<Restaurant, List<Meal>> ret = new HashMap<>();
         try {
             conn = dataSource.getConnection();
+            String mealTableName = "m";
+            String restaurantTableName = "r";
             PreparedStatement stm = conn.prepareStatement(
-                    "SELECT distinct(%s) FROM %s where %s like ? ;".formatted(Meal.COLUMN_RESTAURANT_ID,  Meal.TABLE, Meal.COLUMN_NAME));
+                    "SELECT * FROM %s, %s where %s = %s and %s like ? ;"
+                            .formatted(Meal.TABLE + " " + mealTableName,
+                                       Restaurant.TABLE + " " + restaurantTableName,
+                                       mealTableName + "." + Meal.COLUMN_RESTAURANT_ID,
+                                       restaurantTableName + "." + Restaurant.COLUMN_ID,
+                                       mealTableName + "." + Meal.COLUMN_NAME));
             stm.setString(1,"%" + mealName + "%");
             ResultSet rs = stm.executeQuery();
             while (rs.next()) {
-                Long id = rs.getLong(1);
-                Optional<Restaurant> currentRestaurant = getRestaurantById(id);
-                if(!currentRestaurant.isEmpty()){
-                    ret.add(currentRestaurant.get());
+                Meal meal = new Meal(
+                        rs.getLong(1),
+                        rs.getString(2),
+                        rs.getBigDecimal(3),
+                        rs.getTime(4),
+                        rs.getLong(5)
+                );
+                Restaurant restaurant = new Restaurant(
+                        rs.getLong(6),
+                        rs.getString(7),
+                        rs.getString(8),
+                        rs.getLong(9),
+                        rs.getBigDecimal(10),
+                        rs.getBigDecimal(11)
+                );
+                if (!ret.containsKey(restaurant)){
+                    ret.put(restaurant, new ArrayList<>());
                 }
+                ret.get(restaurant).add(meal);
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -164,16 +182,15 @@ public class MySqlRestaurantDao implements RestaurantDao {
         try {
             conn = dataSource.getConnection();
             PreparedStatement stm = conn.prepareStatement(
-                    "INSERT INTO %s (%s, %s, %s, %s, %s, %s) VALUES (?,?,?,?,?,?);  ;".formatted(
+                    "INSERT INTO %s (%s, %s, %s, %s, %s) VALUES (?,?,?,?,?);  ;".formatted(
                             Restaurant.TABLE,
-                            Restaurant.COLUMN_ID, Restaurant.COLUMN_NAME, Restaurant.COLUMN_LOCATION,
+                            Restaurant.COLUMN_NAME, Restaurant.COLUMN_LOCATION,
                             Restaurant.COLUMN_LIMIT, Restaurant.COLUMN_RATING, Restaurant.COLUMN_BALANCE), Statement.RETURN_GENERATED_KEYS);
-            stm.setLong(1, restaurant.getRestaurantID());
-            stm.setString(2, restaurant.getRestaurantName());
-            stm.setString(3, restaurant.getLocation());
-            stm.setLong(4, restaurant.getLimit());
-            stm.setDouble(5, restaurant.getRating());
-            stm.setDouble(6, restaurant.getBalance());
+            stm.setString(1, restaurant.getRestaurantName());
+            stm.setString(2, restaurant.getLocation());
+            stm.setLong(3, restaurant.getLimit());
+            stm.setBigDecimal(4, restaurant.getRating());
+            stm.setBigDecimal(5, restaurant.getBalance());
             if (stm.executeUpdate() == 1) {
                 ResultSet rs = stm.getGeneratedKeys();
                 rs.next();

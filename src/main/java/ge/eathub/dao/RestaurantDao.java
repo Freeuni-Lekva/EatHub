@@ -4,6 +4,7 @@ import ge.eathub.models.Meal;
 import ge.eathub.models.Restaurant;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 public interface RestaurantDao {
@@ -15,8 +16,7 @@ public interface RestaurantDao {
 
     List<Meal> getMealsBySubName(String mealName, Long restaurantID);
 
-    // TODO: We can have with meal and restaurant
-    List<Restaurant> getRestaurantsByMeal(String mealName);
+    Map<Restaurant, List<Meal>> getRestaurantsByMeal(String mealName);
 
     Restaurant createRestaurant(Restaurant restaurant);
 }

@@ -1,5 +1,6 @@
 package ge.eathub.models;
 
+import java.math.BigDecimal;
 import java.sql.Time;
 import java.util.Objects;
 
@@ -16,12 +17,12 @@ public class Restaurant {
     private String restaurantName;
     private String location;
     private Long limit;
-    private Double rating;
-    private Double balance;
+    private BigDecimal rating;
+    private BigDecimal balance;
 
     public Restaurant(){}
 
-    public Restaurant(Long restaurantID, String restaurantName, String location, Long limit, Double rating, Double balance) {
+    public Restaurant(Long restaurantID, String restaurantName, String location, Long limit, BigDecimal rating, BigDecimal balance) {
         this.restaurantID = restaurantID;
         this.restaurantName = restaurantName;
         this.location = location;
@@ -75,20 +76,20 @@ public class Restaurant {
         return this;
     }
 
-    public Double getRating() {
+    public BigDecimal getRating() {
         return rating;
     }
 
-    public Restaurant setRating(Double rating) {
+    public Restaurant setRating(BigDecimal rating) {
         this.rating = rating;
         return this;
     }
 
-    public Double getBalance() {
+    public BigDecimal getBalance() {
         return balance;
     }
 
-    public Restaurant setBalance(Double balance) {
+    public Restaurant setBalance(BigDecimal balance) {
         this.balance = balance;
         return this;
     }

@@ -22,6 +22,7 @@ CREATE TABLE meals
 (
     meal_id       BIGINT  NOT NULL AUTO_INCREMENT,
     meal_name     VARCHAR(100) NOT NULL,
+    meal_price    DECIMAL NOT NULL,
     cooking_time  TIME    NOT NULL,
     restaurant_id BIGINT  NOT NULL,
     PRIMARY KEY (meal_id),

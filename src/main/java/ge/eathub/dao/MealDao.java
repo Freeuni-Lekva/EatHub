@@ -12,6 +12,5 @@ public interface MealDao {
 
     Meal createMeal(Meal meal);
 
-    // TODO: CHANGE IT
-    boolean updateMeal(Meal meal);
+    boolean updateMeal(Meal meal, Long restaurant_id);
 }
