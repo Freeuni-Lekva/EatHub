@@ -1,5 +1,6 @@
 package ge.eathub.listener;
 
+import ge.eathub.dao.UserDao;
 import ge.eathub.dao.impl.MySqlUserDao;
 import ge.eathub.database.DBConnection;
 import ge.eathub.service.impl.UserServiceImpl;
@@ -19,9 +20,10 @@ public class Listener implements ServletContextListener, HttpSessionListener, Ht
     public void contextInitialized(ServletContextEvent sce) {
         /* This method is called when the servlet context is initialized(when the Web application is deployed). */
         DataSource ds = DBConnection.getMySqlDataSource();
-        MySqlUserDao userDao = new MySqlUserDao(ds);
+        UserDao userDao = new MySqlUserDao(ds);  // change it vano iish.
         sce.getServletContext().setAttribute(NameConstants.USER_SERVICE_DB_ATTR,
                 new UserServiceImpl(userDao));
+        //sce.getServletContext().setAttribute("CHEMI RAGACA", new chemiDao());
     }
 
     @Override

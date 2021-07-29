@@ -31,6 +31,14 @@ public class Restaurant {
         this.balance = balance;
     }
 
+    public Restaurant(String restaurantName, String location, Long limit, BigDecimal rating, BigDecimal balance) {
+        this.restaurantName = restaurantName;
+        this.location = location;
+        this.limit = limit;
+        this.rating = rating;
+        this.balance = balance;
+    }
+
     public Restaurant(Restaurant restaurant){
         this.restaurantID = restaurant.getRestaurantID();
         this.restaurantName = restaurant.getRestaurantName();
@@ -106,5 +114,17 @@ public class Restaurant {
     @Override
     public int hashCode() {
         return Objects.hash(restaurantID, restaurantName, location, limit, rating, balance);
+    }
+
+    @Override
+    public String toString() {
+        return "Restaurant{" +
+                "restaurantID=" + restaurantID +
+                ", restaurantName='" + restaurantName + '\'' +
+                ", location='" + location + '\'' +
+                ", limit=" + limit +
+                ", rating=" + rating +
+                ", balance=" + balance +
+                '}';
     }
 }

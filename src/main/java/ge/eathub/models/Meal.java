@@ -98,4 +98,15 @@ public class Meal{
     public int hashCode() {
         return Objects.hash(mealID, mealName, mealPrice, cookingTime, restaurantID);
     }
+
+    @Override
+    public String toString() {
+        return "Meal{" +
+                "mealID=" + mealID +
+                ", mealName='" + mealName + '\'' +
+                ", mealPrice=" + mealPrice +
+                ", cookingTime=" + cookingTime +
+                ", restaurantID=" + restaurantID +
+                '}';
+    }
 }

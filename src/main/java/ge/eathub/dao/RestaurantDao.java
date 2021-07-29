@@ -10,7 +10,7 @@ import java.util.Optional;
 public interface RestaurantDao {
     List<Restaurant> getAllRestaurant();
 
-    Optional<Restaurant> getRestaurantById(Long userID);
+    Optional<Restaurant> getRestaurantById(Long restaurantID);
 
     List<Meal> getAllMeals(Long restaurantID);
 
