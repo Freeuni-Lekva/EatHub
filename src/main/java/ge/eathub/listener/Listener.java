@@ -1,6 +1,8 @@
 package ge.eathub.listener;
 
+import ge.eathub.dao.RestaurantDao;
 import ge.eathub.dao.UserDao;
+import ge.eathub.dao.impl.MySqlRestaurantDao;
 import ge.eathub.dao.impl.MySqlUserDao;
 import ge.eathub.database.DBConnection;
 import ge.eathub.service.impl.UserServiceImpl;
@@ -23,6 +25,8 @@ public class Listener implements ServletContextListener, HttpSessionListener, Ht
         UserDao userDao = new MySqlUserDao(ds);  // change it vano iish.
         sce.getServletContext().setAttribute(NameConstants.USER_SERVICE_DB_ATTR,
                 new UserServiceImpl(userDao));
+        RestaurantDao restaurantDao = new MySqlRestaurantDao(ds);
+        sce.getServletContext().setAttribute("RESTAURANT_DAO", restaurantDao); // change it
         //sce.getServletContext().setAttribute("CHEMI RAGACA", new chemiDao());
     }
 
