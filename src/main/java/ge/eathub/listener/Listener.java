@@ -26,8 +26,7 @@ public class Listener implements ServletContextListener, HttpSessionListener, Ht
         sce.getServletContext().setAttribute(NameConstants.USER_SERVICE_DB_ATTR,
                 new UserServiceImpl(userDao));
         RestaurantDao restaurantDao = new MySqlRestaurantDao(ds);
-        sce.getServletContext().setAttribute("RESTAURANT_DAO", restaurantDao); // change it
-        //sce.getServletContext().setAttribute("CHEMI RAGACA", new chemiDao());
+        sce.getServletContext().setAttribute(NameConstants.RESTAURANT_DAO, restaurantDao); // change it
     }
 
     @Override

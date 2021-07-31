@@ -20,17 +20,6 @@ public class RestaurantsServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         ServletContext sc = getServletContext();
-//        Cart cart = (Cart) req.getSession().getAttribute("CART");
-//        if (cart == null){
-//            cart = new Cart();
-//            req.getSession().setAttribute("CART", cart);
-//        }
-//        Product product = (Product) req.getSession().getAttribute("PROD");
-//        cart.addInCart(product);
         request.getRequestDispatcher(RESTAURANTS_PAGE).forward(request, response);
-
-
-
-
     }
 }

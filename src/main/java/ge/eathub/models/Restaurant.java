@@ -5,7 +5,7 @@ import java.sql.Time;
 import java.util.Objects;
 
 public class Restaurant {
-    public static final String TABLE = "Restaurants";
+    public static final String TABLE = "restaurants";
     public static final String COLUMN_ID = "restaurant_id";
     public static final String COLUMN_NAME = "restaurant_name";
     public static final String COLUMN_LOCATION = "location";

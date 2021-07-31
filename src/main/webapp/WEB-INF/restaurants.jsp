@@ -3,6 +3,7 @@
 <%@ page import="ge.eathub.dao.impl.MySqlRestaurantDao" %>
 <%@ page import="ge.eathub.models.Restaurant" %>
 <%@ page import="java.util.List" %>
+<%@ page import="ge.eathub.listener.NameConstants" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
     <head>
@@ -13,10 +14,10 @@
         <h1>HII</h1>
         <%
             ServletContext sc = request.getServletContext();
-            MySqlRestaurantDao dao = (MySqlRestaurantDao) sc.getAttribute("RESTAURANT_DAO"); // ამაზე ვკითხო, კონსტანტების ამბავი, ლისენერშიც შესაცვლელი იქნება
+            MySqlRestaurantDao dao = (MySqlRestaurantDao) sc.getAttribute(NameConstants.RESTAURANT_DAO);
             List<Restaurant> restaurants = dao.getAllRestaurant();
             for (Restaurant restaurant : restaurants) {%>
-                <li><a href="show-restaurant.jsp?id=<%=restaurant.getRestaurantID()%> "><%= restaurant.getRestaurantName()%>
+                <li><a href="../show-restaurant.jsp?id=<%=restaurant.getRestaurantID()%> "><%= restaurant.getRestaurantName()%>
                 </li>
             <%}
 
