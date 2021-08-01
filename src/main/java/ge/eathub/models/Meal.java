@@ -91,12 +91,12 @@ public class Meal{
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Meal meal = (Meal) o;
-        return mealID.equals(meal.mealID) && mealName.equals(meal.mealName) && mealPrice.equals(meal.mealPrice) && cookingTime.equals(meal.cookingTime) && restaurantID.equals(meal.restaurantID);
+        return mealID.equals(meal.mealID) && mealName.equals(meal.mealName);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(mealID, mealName, mealPrice, cookingTime, restaurantID);
+        return Objects.hash(mealID, mealName);
     }
 
     @Override

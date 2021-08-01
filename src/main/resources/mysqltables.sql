@@ -43,5 +43,5 @@ CREATE TABLE restaurants
 ALTER TABLE meals
     ADD CONSTRAINT FK_Restaurants_TO_meals
         FOREIGN KEY (restaurant_id)
-            REFERENCES restaurants (restaurant_id) ON DELETE CASCADE;
+            REFERENCES restaurants (restaurant_id);
 

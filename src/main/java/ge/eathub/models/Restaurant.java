@@ -108,12 +108,12 @@ public class Restaurant {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Restaurant that = (Restaurant) o;
-        return restaurantID.equals(that.restaurantID) && restaurantName.equals(that.restaurantName) && location.equals(that.location) && limit.equals(that.limit) && rating.equals(that.rating) && balance.equals(that.balance);
+        return restaurantID.equals(that.restaurantID) && restaurantName.equals(that.restaurantName) && location.equals(that.location);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(restaurantID, restaurantName, location, limit, rating, balance);
+        return Objects.hash(restaurantID, restaurantName, location);
     }
 
     @Override

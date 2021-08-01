@@ -13,7 +13,7 @@ public class InMemoryRestaurantDao implements RestaurantDao {
 
     private List<Restaurant> restaurants;
     private List<Meal> meals;
-    AtomicLong count = new AtomicLong(0);
+    AtomicLong count = new AtomicLong(1);
 
     public InMemoryRestaurantDao(){
         restaurants = new ArrayList<>();
