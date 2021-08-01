@@ -2,26 +2,19 @@ package ge.eathub.dao.impl;
 
 import ge.eathub.dao.UserDao;
 import ge.eathub.database.DBConnection;
-import ge.eathub.models.Role;
 import ge.eathub.models.User;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 
 import javax.sql.DataSource;
-
-import java.math.BigDecimal;
 import java.sql.Connection;
-import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 //@ExtendWith(MockitoExtension.class)
 class MySqlUserDaoTest {
