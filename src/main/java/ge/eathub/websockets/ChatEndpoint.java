@@ -42,7 +42,7 @@ public class ChatEndpoint {
 
             String username = session.getUserPrincipal().getName();
 
-            welcomeUser(session, username);
+            welcomeUser(username);
             broadcastAvailableUsers();
         } catch (Exception e) {
             System.out.println("caught error");
@@ -72,13 +72,12 @@ public class ChatEndpoint {
         t.printStackTrace();
     }
 
-    private void welcomeUser(Session currentSession, String username) {
-        currentSession.getAsyncRemote()
-                .sendObject(new SocketMessage()
-                        .setUsername(username)
-                        .setType(MessageType.WELCOME)
-                        .setRoomID(roomID)
-                        .setContent("Welcome " + username));
+    private void welcomeUser(String username) {
+        broadcast(new SocketMessage()
+                .setUsername(username)
+                .setType(MessageType.WELCOME)
+                .setRoomID(roomID)
+                .setContent("Welcome " + username));
     }
 
     private void broadcastUserDisconnected(String username) {
