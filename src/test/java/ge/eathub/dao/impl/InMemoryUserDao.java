@@ -11,7 +11,7 @@ import java.util.concurrent.atomic.AtomicLong;
 
 public class InMemoryUserDao implements UserDao {
     List<User> users;
-    AtomicLong count = new AtomicLong(0);
+    AtomicLong count = new AtomicLong(1);
 
     public InMemoryUserDao() {
         users = new Vector<>();

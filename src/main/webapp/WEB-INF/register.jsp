@@ -31,5 +31,6 @@
         <input type='submit' value='register'/>
     </form>
 </div>
+<a href="<c:url value="/login"/>"> log in </a>
 </body>
 </html>
