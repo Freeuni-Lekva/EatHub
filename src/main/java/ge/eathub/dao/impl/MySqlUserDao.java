@@ -146,7 +146,7 @@ public class MySqlUserDao implements UserDao {
         } finally {
             DBConnection.closeConnection(conn);
         }
-        throw new UserCreationException("unknown error | user" + user.getUsername());
+        throw new UserCreationException("unknown error | user " + user.getUsername());
     }
 
 }

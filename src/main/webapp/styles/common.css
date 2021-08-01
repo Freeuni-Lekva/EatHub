@@ -1,0 +1,38 @@
+/* Common */
+
+* {
+    margin: 0;
+    padding: 0;
+    font-family: sans-serif;
+    font-size: 13px;
+    outline: 0;
+}
+
+.error {
+    color: #f02323;
+    font-size: 12px;
+}
+
+input[type="text"],
+input[type="number"],
+input[type="password"] {
+    border-radius: 20px;
+    padding: 10px;
+    border: 2px solid gainsboro;
+}
+
+button {
+    border-radius: 20px;
+    padding: 10px;
+    background-color: #0084FF;
+    color: #fff;
+    width: 6em;
+    border: 2px solid #0084FF;
+}
+
+button:hover,
+button:focus {
+    background-color: #0966ff;
+    border-color: #0966ff;
+    cursor: pointer;
+}
