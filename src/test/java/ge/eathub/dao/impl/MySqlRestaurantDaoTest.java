@@ -1,11 +1,10 @@
 package ge.eathub.dao.impl;
 
+import ge.eathub.dao.MealDao;
 import ge.eathub.dao.RestaurantDao;
-import ge.eathub.dao.UserDao;
 import ge.eathub.database.DBConnection;
 import ge.eathub.models.Meal;
 import ge.eathub.models.Restaurant;
-import ge.eathub.models.User;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -14,12 +13,10 @@ import javax.sql.DataSource;
 import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.sql.Time;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class MySqlRestaurantDaoTest {
     private static DataSource ds;
@@ -39,13 +36,16 @@ public class MySqlRestaurantDaoTest {
         Connection conn = null;
         try {
             conn = ds.getConnection();
+            conn.createStatement().execute("SET FOREIGN_KEY_CHECKS = 0");
             conn.createStatement().execute("TRUNCATE TABLE %s;".formatted(Restaurant.TABLE));
+            conn.createStatement().execute("SET FOREIGN_KEY_CHECKS = 1");
         } catch (SQLException throwable) {
             throwable.printStackTrace();
         } finally {
             DBConnection.closeConnection(conn);
         }
     }
+
 
 
     @AfterEach
@@ -60,13 +60,9 @@ public class MySqlRestaurantDaoTest {
         Restaurant restaurant = new Restaurant("Wadi Naxe", "Vake", 1000L, new BigDecimal("3.0"), new BigDecimal("1000.0"));
         Restaurant rest1 = memo.createRestaurant(restaurant);
         Restaurant rest2 = sqlDao.createRestaurant(restaurant);
-        //System.out.println(rest1);
-        //System.out.println(rest2);
         List<Restaurant> list1 = memo.getAllRestaurant();
         List<Restaurant> list2 = sqlDao.getAllRestaurant();
-        //assertEquals(list1.get(0).getRestaurantName(), list2.get(0).getRestaurantName());
         assertEquals(list1.size(), list2.size());
-        // აქ ბაგავს არ შლის მეპს.....
     }
 
 }
