@@ -21,7 +21,7 @@ public class Listener implements ServletContextListener, HttpSessionListener, Ht
     @Override
     public void contextInitialized(ServletContextEvent sce) {
         /* This method is called when the servlet context is initialized(when the Web application is deployed). */
-        DataSource ds = DBConnection.getMySqlDataSource();
+        DataSource ds = DBConnection.getJdbcDataSource();
         UserDao userDao = new MySqlUserDao(ds);  // change it vano iish.
         sce.getServletContext().setAttribute(NameConstants.USER_SERVICE_DB_ATTR,
                 new UserServiceImpl(userDao));

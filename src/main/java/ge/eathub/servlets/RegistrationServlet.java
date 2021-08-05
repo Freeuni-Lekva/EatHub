@@ -1,5 +1,6 @@
 package ge.eathub.servlets;
 
+import ge.eathub.dto.UserDto;
 import ge.eathub.dto.UserRegisterDto;
 import ge.eathub.exceptions.InvalidEmailException;
 import ge.eathub.exceptions.UserCreationException;
@@ -19,7 +20,6 @@ import static ge.eathub.servlets.ServletCommons.*;
 @WebServlet(name = "RegistrationServlet", value = "/register")
 public class RegistrationServlet extends HttpServlet {
     private final static Logger logger = Logger.getLogger(RegistrationServlet.class.getName());
-    private static final String REGISTRATION_PAGE = "/WEB-INF/register.jsp";
     public static final String ERROR_ATTR = "REG_ERROR";
 
     @Override
@@ -47,8 +47,9 @@ public class RegistrationServlet extends HttpServlet {
         } else {
             UserRegisterDto user = new UserRegisterDto(username, password, email);
             try { // TODO send proper errors
-                userService.registerUser(user);
-                request.getRequestDispatcher(LOGIN_PAGE).forward(request, response);
+                UserDto userDto = userService.registerUser(user);
+                request.getSession().setAttribute(UserDto.ATTR,userDto);
+                request.getRequestDispatcher(CONFIRM_PAGE).forward(request, response);
             } catch (InvalidEmailException | UserCreationException e) {
                 request.setAttribute(ERROR_ATTR, e.getMessage());
                 request.getRequestDispatcher(REGISTRATION_PAGE).forward(request, response);

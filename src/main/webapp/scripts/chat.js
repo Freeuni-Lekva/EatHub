@@ -5,7 +5,7 @@ function joinRoom(currentUser, roomID) {
     const request = new XMLHttpRequest();
     console.log(currentUser, roomID)
     //todo change with ajax
-    request.open("POST", "http://" + host + "/join-room?username=" + currentUser + "&room-id=" + roomID);
+    request.open("POST", "http://" + host + "/join-room?room-id=" + roomID);
     // request.setRequestHeader("Content-Type", "application/json");
     request.onreadystatechange = function () {
         if (request.readyState === XMLHttpRequest.DONE) {

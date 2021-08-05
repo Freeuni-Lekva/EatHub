@@ -9,12 +9,17 @@ import java.util.concurrent.TimeUnit;
 public class Authenticator {
 
     private final Cache<String, String> accessTokens;
-    public static final int TOKEN_EXPIRE_TIME_IN_SECONDS = 15;
+    public static final int TOKEN_EXPIRE_TIME_IN_SECONDS = 150;
 
     public Authenticator() {
         accessTokens = CacheBuilder.newBuilder()
-                .expireAfterWrite(TOKEN_EXPIRE_TIME_IN_SECONDS, TimeUnit.MINUTES)
                 .expireAfterAccess(TOKEN_EXPIRE_TIME_IN_SECONDS, TimeUnit.SECONDS)
+                .build();
+    }
+
+    public Authenticator(int expirationMinutesAfterWrite) {
+        accessTokens = CacheBuilder.newBuilder()
+                .expireAfterAccess(expirationMinutesAfterWrite, TimeUnit.MINUTES)
                 .build();
     }
 

@@ -11,6 +11,7 @@ CREATE TABLE users
     email    VARCHAR(64)  NOT NULL,
     balance  DECIMAL      NOT NULL,
     role     VARCHAR(64)  NOT NULL,
+    confirmed BOOLEAN NOT NULL DEFAULT FALSE,
     PRIMARY KEY (user_id),
     UNIQUE (username),
     UNIQUE (email)
@@ -48,7 +49,7 @@ ALTER TABLE meals
 
 
 INSERT INTO users(username, password,
-                  email, balance, role)
-VALUES ("admin", "$2a$10$.gSvGvCf5I85vxP4dklNSuqkwnFGNZxE4S04Dy6aZX76btLZic6Wm",
-        "eathub.freeuni@gmail.com", 1000, "ADMIN");
+                  email, balance, role,confirmed)
+VALUES ('admin', '$2a$10$.gSvGvCf5I85vxP4dklNSuqkwnFGNZxE4S04Dy6aZX76btLZic6Wm',
+        'eathub.freeuni@gmail.com', 1000, 'ADMIN',TRUE);
 

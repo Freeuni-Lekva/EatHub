@@ -14,5 +14,6 @@ public interface UserDao {
 
     User createUser(User user);
 
+    boolean confirmUserRegistration(String username);
 
 }

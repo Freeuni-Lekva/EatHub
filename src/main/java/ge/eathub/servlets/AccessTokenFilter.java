@@ -8,6 +8,7 @@ import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.Optional;
 
@@ -36,6 +37,11 @@ public class AccessTokenFilter implements Filter {
         String token = request.getParameter(ACCESS_TOKEN);
         if (token == null || token.trim().isEmpty()) {
             response.sendError(HttpServletResponse.SC_FORBIDDEN, TOKEN_NOT_FOUNT);
+            return;
+        }
+        HttpSession sess = request.getSession(false);
+        if (sess == null) {
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
             return;
         }
         Optional<String> optionalUsername = authenticator.getUsername(token);
