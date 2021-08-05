@@ -4,22 +4,31 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 
 public class Message implements Serializable {
+    public static final String MESSAGE_ID = "message_id";
+    public static final String USER_ID = "user_id";
+    public static final String ROOM_ID = "room_id";
+    public static final String SEND_TIME = "send_time";
+    public static final String TYPE = "type";
+    public static final String CONTENT = "content";
+
+    private Long messageID;
     private Long userID;
     private Long roomID;
-    private LocalDateTime timeSend;
+    private LocalDateTime sendTime;
     private MessageType type;
     private String content; // this is temporary
 
     public Message() {
     }
 
-    public Message(Long userID, Long roomID, MessageType type,
+    public Message(Long messageID, Long userID, Long roomID, MessageType type,
                    String content) {
+        this.messageID = messageID;
         this.userID = userID;
         this.roomID = roomID;
         this.type = type;
         this.content = content;
-        this.timeSend = LocalDateTime.now();
+        this.sendTime = LocalDateTime.now();
     }
 
 
@@ -42,11 +51,11 @@ public class Message implements Serializable {
     }
 
     public LocalDateTime getTimeSend() {
-        return timeSend;
+        return sendTime;
     }
 
     public Message setTimeSend(LocalDateTime timeSend) {
-        this.timeSend = timeSend;
+        this.sendTime = timeSend;
         return this;
     }
 
@@ -73,9 +82,13 @@ public class Message implements Serializable {
         return "Message{" +
                 "userID=" + userID +
                 ", roomID=" + roomID +
-                ", timeSend=" + timeSend +
+                ", timeSend=" + sendTime +
                 ", type=" + type +
                 ", content='" + content + '\'' +
                 '}';
+    }
+
+    public Long getMessageID() {
+        return messageID;
     }
 }
