@@ -36,7 +36,7 @@ public class RegistrationServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         UserService userService = (UserService) getServletContext()
-                .getAttribute(NameConstants.USER_SERVICE_DB_ATTR);
+                .getAttribute(NameConstants.USER_SERVICE);
         String username = request.getParameter("username");
         String password = request.getParameter("password");
         String email = request.getParameter("email");

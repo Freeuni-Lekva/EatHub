@@ -36,21 +36,22 @@ public class UserServiceImpl implements UserService {
     public UserDto registerUser(UserRegisterDto userDto) throws UserCreationException, InvalidEmailException {
         logger.info("create user " + userDto.getUsername());
 
-
         if (!DEBUG && !EmailValidator.validate(userDto.getEmail())) {
             throw new InvalidEmailException(userDto.getEmail());
         }
-        // send mail asynchronously ???
-        if (DEBUG || Mailer.sendMail(new RegistrationMail(userDto.getUsername(), userDto.getEmail(),
-                authenticator.getAccessToken(userDto.getUsername())))) {
-            logger.info("email was sent");
-            User newUser = new User(userDto.getUsername(),
-                    BCrypt.hashpw(userDto.getPassword(), BCrypt.gensalt()),
-                    userDto.getEmail());
-            User createdUser = userDao.createUser(newUser);
-            return createdUser.toDto();
+        if (userDao.checkInfo(userDto.getUsername(), userDto.getEmail())) {
+            if (DEBUG || Mailer.sendMail(new RegistrationMail(userDto.getUsername(), userDto.getEmail(),
+                    authenticator.getAccessToken(userDto.getUsername())))) {
+                logger.info("email was sent");
+                User newUser = new User(userDto.getUsername(),
+                        BCrypt.hashpw(userDto.getPassword(), BCrypt.gensalt()),
+                        userDto.getEmail());
+                User createdUser = userDao.createUser(newUser);
+                return createdUser.toDto();
+            }
+            throw new InvalidEmailException(userDto.getEmail());
         }
-        throw new InvalidEmailException(userDto.getEmail());
+        throw new UserCreationException("unknown error | user " + userDto.getUsername());
     }
 
     @Override
@@ -70,7 +71,7 @@ public class UserServiceImpl implements UserService {
     public boolean confirmUserRegistration(String token) {
         Optional<String> usernameOpt = authenticator.getUsername(token);
         if (usernameOpt.isPresent()) {
-            logger.info("user regisstration confirmed");
+            logger.info("user registration confirmed");
             return userDao.confirmUserRegistration(usernameOpt.get());
 
         }

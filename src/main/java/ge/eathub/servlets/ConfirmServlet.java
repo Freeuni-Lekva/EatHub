@@ -1,10 +1,7 @@
 package ge.eathub.servlets;
 
-import ge.eathub.dto.UserDto;
 import ge.eathub.listener.NameConstants;
-import ge.eathub.security.Authenticator;
 import ge.eathub.service.UserService;
-import ge.eathub.utils.AuthenticatorFactory;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
@@ -41,7 +38,7 @@ public class ConfirmServlet extends HttpServlet {
     private void confirmToken(HttpServletRequest request, HttpServletResponse response, String token)
             throws ServletException, IOException {
         UserService userService = (UserService) getServletContext()
-                .getAttribute(NameConstants.USER_SERVICE_DB_ATTR);
+                .getAttribute(NameConstants.USER_SERVICE);
         if (userService.confirmUserRegistration(token)) {
             request.getRequestDispatcher(LOGIN_PAGE).forward(request, response);
             return;

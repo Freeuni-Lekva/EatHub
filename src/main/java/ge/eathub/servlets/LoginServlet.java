@@ -34,7 +34,7 @@ public class LoginServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         UserService userService = (UserService) getServletContext()
-                .getAttribute(NameConstants.USER_SERVICE_DB_ATTR);
+                .getAttribute(NameConstants.USER_SERVICE);
         String username = request.getParameter("username");
         String password = request.getParameter("password");
         logger.info("Login POST | name:%s".formatted(username));

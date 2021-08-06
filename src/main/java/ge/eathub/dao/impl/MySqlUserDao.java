@@ -157,9 +157,43 @@ public class MySqlUserDao implements UserDao {
                             User.TABLE, User.COLUMN_CONFIRMED,
                             User.COLUMN_USERNAME));
             stm.setString(1, username);
-            return true;
+            if (stm.executeUpdate() == 1) {
+                return true;
+            }
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            DBConnection.closeConnection(conn);
+        }
+        return false;
+    }
+
+    @Override
+    public boolean checkInfo(String username, String email) {
+        Connection conn = null;
+        try {
+            conn = dataSource.getConnection();
+            PreparedStatement stm = conn.prepareStatement(
+                    "SELECT %s, %s FROM %s WHERE %s=? or %s=? LIMIT 1;".formatted(
+                            User.COLUMN_USERNAME, User.COLUMN_EMAIL, User.TABLE,
+                            User.COLUMN_USERNAME, User.COLUMN_EMAIL));
+            stm.setString(1, username);
+            stm.setString(2, email);
+            ResultSet rs = stm.executeQuery();
+            if (rs.next()) {
+                if (username.equals(rs.getString(1))) {
+                    throw new UsernameAlreadyExistsException(username);
+                }
+                if (email.equals(rs.getString(2))) {
+                    throw new EmailAlreadyExistsException(email);
+                }
+                return false;
+            }
+            return true;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+
         } finally {
             DBConnection.closeConnection(conn);
         }

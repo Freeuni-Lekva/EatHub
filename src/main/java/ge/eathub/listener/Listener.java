@@ -1,7 +1,9 @@
 package ge.eathub.listener;
 
+import ge.eathub.dao.ChatDao;
 import ge.eathub.dao.RestaurantDao;
 import ge.eathub.dao.UserDao;
+import ge.eathub.dao.impl.MySqlChatDao;
 import ge.eathub.dao.impl.MySqlRestaurantDao;
 import ge.eathub.dao.impl.MySqlUserDao;
 import ge.eathub.database.DBConnection;
@@ -21,12 +23,19 @@ public class Listener implements ServletContextListener, HttpSessionListener, Ht
     @Override
     public void contextInitialized(ServletContextEvent sce) {
         /* This method is called when the servlet context is initialized(when the Web application is deployed). */
-        DataSource ds = DBConnection.getJdbcDataSource();
+        ServletContext sc = sce.getServletContext();
+        DataSource ds = DBConnection.getMySqlDataSource();
+
         UserDao userDao = new MySqlUserDao(ds);  // change it vano iish.
-        sce.getServletContext().setAttribute(NameConstants.USER_SERVICE_DB_ATTR,
+        sc.setAttribute(NameConstants.USER_SERVICE,
                 new UserServiceImpl(userDao));
+
         RestaurantDao restaurantDao = new MySqlRestaurantDao(ds);
-        sce.getServletContext().setAttribute(NameConstants.RESTAURANT_DAO, restaurantDao); // change it
+        sc.setAttribute(NameConstants.RESTAURANT_DAO, restaurantDao); // change it
+
+        ChatDao chatDao = new MySqlChatDao(ds);
+        sc.setAttribute(NameConstants.CHAT_DAO, chatDao);
+
     }
 
     @Override

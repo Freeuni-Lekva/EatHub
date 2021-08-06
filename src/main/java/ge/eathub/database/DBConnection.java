@@ -2,7 +2,6 @@ package ge.eathub.database;
 
 import com.mysql.cj.jdbc.MysqlConnectionPoolDataSource;
 import org.apache.ibatis.jdbc.ScriptRunner;
-import org.h2.jdbcx.JdbcDataSource;
 
 import javax.sql.DataSource;
 import java.io.BufferedReader;
@@ -31,14 +30,6 @@ public class DBConnection {
 //            e.printStackTrace();
 //        }
         return ds;
-    }
-
-    public static DataSource getJdbcDataSource(){
-        JdbcDataSource ds = new JdbcDataSource();
-        ds.setUrl("jdbc:h2:file:C:\\Users\\vganjelashvili\\Desktop\\oop\\EatHub\\src\\main\\resources\\data;SCHEMA=EATHUB_DB;AUTO_SERVER=true;DB_CLOSE_DELAY=-1");
-        ds.setUser(DataBaseInfo.USERNAME);
-        ds.setPassword(DataBaseInfo.PASSWORD);
-        return  ds;
     }
 
     public static void closeConnection(Connection conn) {

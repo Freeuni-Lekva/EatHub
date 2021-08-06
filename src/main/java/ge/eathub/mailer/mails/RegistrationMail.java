@@ -16,7 +16,6 @@ public class RegistrationMail extends Mail {
              </body>
             </html>
              """;
-    private String token;
 
     public RegistrationMail(String username, String email, String token) {
         super(email, SUBJECT, MESSAGE.formatted(username, token, URL, token));
