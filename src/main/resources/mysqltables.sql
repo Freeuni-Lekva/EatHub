@@ -52,3 +52,40 @@ INSERT INTO users(username, password,
 VALUES ("admin", "$2a$10$.gSvGvCf5I85vxP4dklNSuqkwnFGNZxE4S04Dy6aZX76btLZic6Wm",
         "eathub.freeuni@gmail.com", 1000, "ADMIN");
 
+INSERT INTO restaurants(restaurant_name, location, max_limit, Balance)
+VALUES ("Test1", "Tbilisi", 1000, 1000);
+
+INSERT INTO restaurants(restaurant_name, location, max_limit, Balance)
+VALUES ("Test2", "Telavi", 2000, 2000);
+
+INSERT INTO restaurants(restaurant_name, location, max_limit, Balance)
+VALUES ("Test3", "Kutaisi", 1000, 1000);
+
+INSERT INTO meals(meal_name, meal_price, cooking_time, restaurant_id)
+VALUES ("Mtsvadi", 12.0, 10, 1);
+
+INSERT INTO meals(meal_name, meal_price, cooking_time, restaurant_id)
+VALUES ("Kababi", 16.0, 12, 1);
+
+INSERT INTO meals(meal_name, meal_price, cooking_time, restaurant_id)
+VALUES ("Khachapuri", 8.0, 17, 1);
+
+INSERT INTO meals(meal_name, meal_price, cooking_time, restaurant_id)
+VALUES ("Mtsvadi", 12.0, 10, 2);
+
+INSERT INTO meals(meal_name, meal_price, cooking_time, restaurant_id)
+VALUES ("Torti", 16.0, 12, 2);
+
+INSERT INTO meals(meal_name, meal_price, cooking_time, restaurant_id)
+VALUES ("Telavis Khachapuri", 9.0, 17, 2);
+
+INSERT INTO meals(meal_name, meal_price, cooking_time, restaurant_id)
+VALUES ("Adjafsandali", 12.0, 10, 3);
+
+INSERT INTO meals(meal_name, meal_price, cooking_time, restaurant_id)
+VALUES ("Kartopili", 7.0, 12, 3);
+
+INSERT INTO meals(meal_name, meal_price, cooking_time, restaurant_id)
+VALUES ("Kitris Mtsnili", 5.0, 5, 3);
+
+
