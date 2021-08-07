@@ -6,6 +6,7 @@
         <exploded>true</exploded>
         <module>EatHub</module>
         <packaging>war</packaging>
+        <unpackNestedArchives>false</unpackNestedArchives>
       </options>
     </properties>
     <root id="root">
@@ -42,6 +43,8 @@
           <element id="library" level="project" name="Maven: io.jsonwebtoken:jjwt-jackson:0.11.2" />
           <element id="library" level="project" name="Maven: javax.xml.bind:jaxb-api:2.3.1" />
           <element id="library" level="project" name="Maven: javax.activation:javax.activation-api:1.2.0" />
+          <element id="library" level="project" name="Maven: com.sun.mail:javax.mail:1.6.2" />
+          <element id="library" level="project" name="Maven: javax.activation:activation:1.1" />
         </element>
       </element>
       <element id="directory" name="META-INF">

@@ -1,5 +1,6 @@
 USE eathub_db;
 
+DROP TABLE IF EXISTS messages;
 DROP TABLE IF EXISTS users;
 
 
@@ -47,6 +48,26 @@ ALTER TABLE meals
         FOREIGN KEY (restaurant_id)
             REFERENCES restaurants (restaurant_id);
 
+CREATE TABLE messages
+(
+    message_id BIGINT       NOT NULL AUTO_INCREMENT,
+    user_id    BIGINT       NOT NULL,
+    room_id    BIGINT       NOT NULL,
+    send_time  VARCHAR(40)  NOT NULL,
+    type       VARCHAR(30)  NOT NULL,
+    content    VARCHAR(400) NOT NULL,
+    PRIMARY KEY (message_id)
+);
+
+ALTER TABLE messages
+    ADD CONSTRAINT FK_users_TO_messages
+        FOREIGN KEY (user_id)
+            REFERENCES users (user_id);
+#
+# ALTER TABLE messages
+#     ADD CONSTRAINT FK_rooms_TO_messages
+#         FOREIGN KEY (room_id)
+#             REFERENCES rooms (room_id);
 
 INSERT INTO users(username, password,
                   email, balance, role, confirmed)
@@ -58,9 +79,11 @@ VALUES ('admin', '$2a$10$.gSvGvCf5I85vxP4dklNSuqkwnFGNZxE4S04Dy6aZX76btLZic6Wm',
         'ainau18@freeuni.edu.ge', 1000, 'ADMIN', TRUE),
        ('botko', '$2a$10$.gSvGvCf5I85vxP4dklNSuqkwnFGNZxE4S04Dy6aZX76btLZic6Wm',
         'gbotk18@freeuni.edu.ge', 1000, 'ADMIN', TRUE),
+       ('nika', '$2a$10$.gSvGvCf5I85vxP4dklNSuqkwnFGNZxE4S04Dy6aZX76btLZic6Wm',
+        'nshug18@gmail.com', 1000, 'ADMIN', TRUE),
        ('test', '$2a$10$.gSvGvCf5I85vxP4dklNSuqkwnFGNZxE4S04Dy6aZX76btLZic6Wm',
             'vanoganjelashvili@gmail.com', 1000, 'ADMIN', FALSE),
-       ('asd', '$2a$10$.gSvGvCf5I85vxP4dklNSuqkwnFGNZxE4S04Dy6aZX76btLZic6Wm',
-        'nshug18@gmail.com', 1000, 'CUSTOMER', FALSE);
+       ('leo', '$2a$10$.gSvGvCf5I85vxP4dklNSuqkwnFGNZxE4S04Dy6aZX76btLZic6Wm',
+        'lirem18@gmail.com', 1000, 'CUSTOMER', FALSE);
 ;
 

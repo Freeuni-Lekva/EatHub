@@ -13,6 +13,7 @@
     <title>Chat</title>
 </head>
 <body>
+<div id="title">Join Room</div>
 <div style="display: block" id="contacts"></div>
 <div style="display: block" id="chat">
     <div id="messages" autofocus></div>

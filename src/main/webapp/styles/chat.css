@@ -5,6 +5,7 @@
     background-color: #0084FF;
     font-size: 20px;
     padding: 10px 20px 10px 20px;
+    text-align: center;
     color: #fff;
 }
 
@@ -84,6 +85,10 @@
     color: dimgrey;
     font-size: 10px;
 }
+#messages .message.received .time {
+    color: dimgrey;
+    font-size: 10px;
+}
 
 #messages .message.sent {
     right: 0;
@@ -100,6 +105,11 @@
 }
 
 #messages .message.sent .sender {
+    color: #0084FF;
+    font-size: 10px;
+}
+
+#messages .message.sent .time {
     color: #0084FF;
     font-size: 10px;
 }

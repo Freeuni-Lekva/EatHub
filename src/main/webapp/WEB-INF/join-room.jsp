@@ -13,13 +13,13 @@
 
 </head>
 <body>
-<div id="title">join room</div>
-<form id="join-room" onsubmit="return false;">
-    <input type="number" id="roomID" placeholder="room ID"/>
+<div id="title">Join Room</div>
+<form id="join" onsubmit="return false;">
+    <input type="number" id="roomID" placeholder="room ID" required min=1 />
     <% UserDto user = ((UserDto) request.getSession().getAttribute(UserDto.ATTR));%>
     <button class="button" onclick="joinRoom('<%= user.getUsername()%>',  roomID.value)">Join room chat
     </button>
-    <span class="error" id="authentication-error"></span>
+    <span class="error" id="join-error"></span>
 </form>
 </body>
 </html>

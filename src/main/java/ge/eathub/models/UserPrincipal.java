@@ -5,9 +5,10 @@ import java.security.Principal;
 public class UserPrincipal implements Principal {
 
     private final String username;
-
-    public UserPrincipal(String username) {
+    private final Long userID;
+    public UserPrincipal(String username, Long userID) {
         this.username = username;
+        this.userID = userID;
     }
 
     @Override
@@ -15,4 +16,7 @@ public class UserPrincipal implements Principal {
         return username;
     }
 
+    public Long getUserID() {
+        return userID;
+    }
 }

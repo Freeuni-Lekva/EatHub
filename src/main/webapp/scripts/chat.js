@@ -17,7 +17,7 @@ function joinRoom(currentUser, roomID) {
                     let auth = request.getResponseHeader("Authorization")
                     console.log(auth);
                     if (!auth) {
-                        document.getElementById("authentication-error").innerHTML =
+                        document.getElementById("join-error").innerHTML =
                             "no auth";
                         break;
                     }
@@ -29,11 +29,11 @@ function joinRoom(currentUser, roomID) {
                     joinChat(token, currentUser, roomID);
                     break;
                 case 403:
-                    document.getElementById("authentication-error").innerHTML =
+                    document.getElementById("join-error").innerHTML =
                         "Oops... These credentials are invalid.";
                     break;
                 default:
-                    document.getElementById("authentication-error").innerHTML =
+                    document.getElementById("join-error").innerHTML =
                         "Oops... Looks like something is broken.";
             }
         }
@@ -58,6 +58,7 @@ function openSocket(accessToken, roomID, currentUser) {
     }
     chatSocket.onopen = function (event) {
         // window.open("http://" + host + "/chat.jsp")
+        document.getElementById("title").innerHTML = "Room - " + roomID;
         // document.getElementById("join-room").style.display = "none";
         document.getElementById("contacts").style.display = "block";
         document.getElementById("chat").style.display = "block";
@@ -73,7 +74,8 @@ function openSocket(accessToken, roomID, currentUser) {
                     displayConnectedUserMessage(webSocketMessage.username, currentUser);
                     break;
                 case "text":
-                    displayMessage(webSocketMessage.username, webSocketMessage.content, currentUser);
+                    displayMessage(webSocketMessage.username, webSocketMessage.content, currentUser,
+                        webSocketMessage.sendTime);
                     break;
                 case "goodbye":
                     displayDisconnectedUserMessage(webSocketMessage.username);
@@ -94,8 +96,6 @@ function sendMessage() {
     if (text) {
         document.getElementById("message").value = "";
         const socketMessage = {
-            username: null,
-            roomID: null,
             content: text,
             type: "text"
         }
@@ -103,24 +103,30 @@ function sendMessage() {
     }
 }
 
-function displayMessage(username, text, currentUser) {
-    const sentByCurrentUer = currentUser === username;
+function displayMessage(username, text, currentUser, sendTime) {
+    const sentByCurrentUser = currentUser === username;
     const message = document.createElement("div");
-    message.setAttribute("class", sentByCurrentUer === true ? "message sent" : "message received");
+    message.setAttribute("class", sentByCurrentUser ? "message sent" : "message received");
     message.dataset.sender = username;
     const sender = document.createElement("span");
     sender.setAttribute("class", "sender");
-    sender.appendChild(document.createTextNode(sentByCurrentUer === true ? "You" : username));
+    sender.appendChild(document.createTextNode(sentByCurrentUser ? "You" : username));
     message.appendChild(sender);
     const content = document.createElement("span");
     content.setAttribute("class", "content");
     content.appendChild(document.createTextNode(text));
     message.appendChild(content);
+    const time = document.createElement("span");
+    time.setAttribute("class", "time");
+    time.appendChild(document.createTextNode(sendTime));
     const messages = document.getElementById("messages");
     const lastMessage = messages.lastChild;
     if (lastMessage && lastMessage.dataset.sender && lastMessage.dataset.sender === username) {
+        lastMessage.lastChild.remove();
         message.className += " same-sender-previous-message";
     }
+    message.appendChild(time);
+    
     messages.appendChild(message);
     messages.scrollTop = messages.scrollHeight;
 }
@@ -129,7 +135,7 @@ function displayConnectedUserMessage(username, currentUser) {
     const sentByCurrentUer = currentUser === username;
     const message = document.createElement("div");
     message.setAttribute("class", "message event");
-    const text = sentByCurrentUer === true ? "Welcome " + username : username + " joined the chat";
+    const text = sentByCurrentUer? "Welcome " + username : username + " joined the chat";
     const content = document.createElement("span");
     content.setAttribute("class", "content");
     content.appendChild(document.createTextNode(text));
