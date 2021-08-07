@@ -16,18 +16,20 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.logging.Logger;
 
+import static ge.eathub.servlets.ServletCommons.*;
+
 @WebServlet(name = "LoginServlet", value = "/login")
 public class LoginServlet extends HttpServlet {
     private final static Logger logger = Logger.getLogger(LoginServlet.class.getName());
-    private static final String LOGIN_PAGE = "/WEB-INF/login.jsp";
-    private static final String USER_START_PAGE = "/WEB-INF/start.jsp";
     public static final String ERROR_ATTR = "LOGIN_ERROR";
     public static final String ADMIN_PAGE = "/WEB-INF/admin.jsp";
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        request.getRequestDispatcher(LOGIN_PAGE).forward(request, response);
+        if (!checkUserSession(request, response, USER_START_PAGE)) {
+            request.getRequestDispatcher(LOGIN_PAGE).forward(request, response);
+        }
     }
 
     @Override
