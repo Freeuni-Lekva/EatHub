@@ -3,12 +3,16 @@
 <%@ page import="ge.eathub.servlets.LoginServlet" %>
 <%@ page import="ge.eathub.servlets.AdminServlet" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<!DOCTYPE html>
 <html>
+<meta charset="utf-8" >
+
 <head>
   <title> Admin </title>
 </head>
 <body>
 <div>
+
 
   <% String error = (String) request.getAttribute(AdminServlet.ERROR_ATTR);
     if (error != null) {%>
@@ -24,7 +28,6 @@
   <label><%=success%>
   </label>
   <% }%>
-
 
   <h4>Update or add new restaurant</h4>
   <form action="<c:url value="/admin?restaurant"/>" method="post">
@@ -108,7 +111,6 @@
 
     <input type='submit' value='submit'/>
   </form>
-
 
 
 </div>

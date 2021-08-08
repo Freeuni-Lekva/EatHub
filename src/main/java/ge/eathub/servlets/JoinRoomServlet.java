@@ -26,6 +26,8 @@ public class JoinRoomServlet extends HttpServlet {
         } else {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         }
+        response.setContentType("text/html;charset=UTF-8");
+        request.setCharacterEncoding("UTF-8");
 
     }
 
@@ -50,5 +52,7 @@ public class JoinRoomServlet extends HttpServlet {
             response.getWriter().write("room for user ");
             e.printStackTrace();
         }
+        response.setContentType("text/html;charset=UTF-8");
+        request.setCharacterEncoding("UTF-8");
     }
 }

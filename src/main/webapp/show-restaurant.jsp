@@ -4,7 +4,10 @@
 <%@ page import="java.util.List" %>
 <%@ page import="ge.eathub.models.Meal" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<!DOCTYPE html>
 <html>
+<meta charset="utf-8" >
+
   <head>
   </head>
   <body>

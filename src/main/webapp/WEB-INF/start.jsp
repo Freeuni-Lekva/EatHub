@@ -1,7 +1,10 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page import="ge.eathub.dto.UserDto" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<!DOCTYPE html>
 <html>
+<meta charset="utf-8" >
+
 <head>
     <title> EAT HUB </title>
 </head>
