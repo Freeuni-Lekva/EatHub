@@ -125,4 +125,18 @@ public class MySqlRestaurantDaoTest {
         assertEquals(1,mp.size());
     }
 
+    @Test
+    void updateRestaurant(){
+        RestaurantDao memo = new InMemoryRestaurantDao();
+        Restaurant restaurant = new Restaurant("Wadi Naxe", "Vake", 1000L, new BigDecimal("3.0"), new BigDecimal("1000.0"));
+        Restaurant restMemo1 = memo.createRestaurant(restaurant);
+        Restaurant rest1 = sqlDao.createRestaurant(restaurant);
+        long id = rest1.getRestaurantID();
+        long inMemoryID = restMemo1.getRestaurantID();
+        memo.updateRestaurant(inMemoryID,  new Restaurant("Modi naxe", "Vaja", 1000L, new BigDecimal("3.0"), new BigDecimal("1000.0")));
+        sqlDao.updateRestaurant(id, new Restaurant("Modi naxe", "Vaja", 1000L, new BigDecimal("3.0"), new BigDecimal("1000.0")));
+        assertEquals(sqlDao.getRestaurantById(id).get().getRestaurantName(), "Modi naxe");
+        assertEquals(memo.getRestaurantById(id).get().getRestaurantName(), "Modi naxe");
+    }
+
 }

@@ -5,6 +5,7 @@ import ge.eathub.dto.UserLoginDto;
 import ge.eathub.exceptions.InvalidUserPasswordException;
 import ge.eathub.exceptions.UserNotFoundException;
 import ge.eathub.listener.NameConstants;
+import ge.eathub.models.Role;
 import ge.eathub.service.UserService;
 
 import javax.servlet.ServletException;
@@ -21,6 +22,7 @@ import static ge.eathub.servlets.ServletCommons.*;
 public class LoginServlet extends HttpServlet {
     private final static Logger logger = Logger.getLogger(LoginServlet.class.getName());
     public static final String ERROR_ATTR = "LOGIN_ERROR";
+    public static final String ADMIN_PAGE = "/WEB-INF/admin.jsp";
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -46,7 +48,11 @@ public class LoginServlet extends HttpServlet {
             try { // TODO send proper errors
                 UserDto usr = userService.loginUser(user);
                 request.getSession().setAttribute(UserDto.ATTR, usr);
-                request.getRequestDispatcher(USER_START_PAGE).forward(request, response);
+                if(usr.getRole().equals(Role.CUSTOMER)) {
+                    request.getRequestDispatcher(USER_START_PAGE).forward(request, response);
+                }else{
+                    request.getRequestDispatcher(ADMIN_PAGE).forward(request, response);
+                }
             } catch (UserNotFoundException | InvalidUserPasswordException e) {
                 request.setAttribute(ERROR_ATTR, e.getMessage());
                 request.getRequestDispatcher(LOGIN_PAGE).forward(request, response);
