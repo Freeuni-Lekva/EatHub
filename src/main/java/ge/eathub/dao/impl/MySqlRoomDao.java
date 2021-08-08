@@ -211,4 +211,49 @@ public class MySqlRoomDao implements RoomDao {
             DBConnection.closeConnection(conn);
         }
     }
+
+    @Override
+    public boolean userInRoom (Long userID, Long roomID) {
+        Connection conn = null;
+        try {
+            conn = dataSource.getConnection();
+            PreparedStatement stm = conn.prepareStatement(
+                    "select * from %s where %s = ? and %s = ?;".formatted(
+                            UserRoom.TABLE,
+                            UserRoom.ROOM_ID,
+                            UserRoom.USER_ID));
+            stm.setLong(1, roomID);
+            stm.setLong(2, userID);
+            return stm.executeQuery().next();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            DBConnection.closeConnection(conn);
+        }
+        return false;
+    }
+
+    @Override
+    public boolean mealInRoom(Long mealID, Long roomID) {
+        Connection conn = null;
+        try {
+            conn = dataSource.getConnection();
+            PreparedStatement stm = conn.prepareStatement(
+                    "select * from %s INNER JOIN %s ON %s = %s WHERE %s = ? AND %s = ?;".formatted(
+                            Meal.TABLE,
+                            Room.TABLE,
+                            Meal.TABLE + "." + Meal.COLUMN_RESTAURANT_ID,
+                            Room.TABLE + "." + Room.RESTAURANT_ID,
+                            Meal.COLUMN_ID,
+                            Room.ROOM_ID));
+            stm.setLong(1, mealID);
+            stm.setLong(2, roomID);
+            return stm.executeQuery().next();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            DBConnection.closeConnection(conn);
+        }
+        return false;
+    }
 }

@@ -16,6 +16,8 @@ public interface OrderDao {
     List<Meal> roomMeals(Long roomID);
 
     // Order updateOrder(Order order);
-    // მინუსებში არ წავიდეს, 0-ს რომ ჩამოცდება არ გამოგრჩეს
+
     Optional<Order> updateOrder(Order order, Integer quantity);
+
+    boolean removeOrder (Order order);
 }

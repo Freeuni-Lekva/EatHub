@@ -6,6 +6,7 @@ import ge.eathub.exceptions.MealUpdateException;
 import ge.eathub.models.Meal;
 import ge.eathub.models.Order;
 import ge.eathub.models.Room;
+import ge.eathub.models.UserRoom;
 
 import javax.sql.DataSource;
 import java.sql.*;
@@ -173,5 +174,24 @@ public class MySqlOrderDao implements OrderDao {
             DBConnection.closeConnection(conn);
         }
         return Optional.empty();
+    }
+
+    @Override
+    public boolean removeOrder(Order order) {
+        Connection conn = null;
+        try {
+            conn = dataSource.getConnection();
+            PreparedStatement stm = conn.prepareStatement(
+                    "DELETE FROM %s WHERE %s = ?;".formatted(
+                            Order.TABLE,
+                            Order.ORDER_ID));
+            stm.setLong(1, order.getOrderID());
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            DBConnection.closeConnection(conn);
+        }
+        return false;
     }
 }

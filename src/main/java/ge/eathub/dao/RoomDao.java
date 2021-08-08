@@ -24,5 +24,9 @@ public interface RoomDao {
 
     void addUserIntoRoom(Long roomID, Long userID);
 
+    boolean userInRoom (Long roomID, Long userID);
+
+    boolean mealInRoom(Long mealID, Long roomID);
+
     //boolean removeUserFromRoom(Long roomID, Long userID);
 }
