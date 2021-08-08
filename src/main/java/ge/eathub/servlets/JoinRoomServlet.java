@@ -21,13 +21,13 @@ public class JoinRoomServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        response.setContentType("text/html;charset=UTF-8");
+        request.setCharacterEncoding("UTF-8");
         if (request.getSession().getAttribute(UserDto.ATTR) != null) {
             request.getRequestDispatcher("/WEB-INF/join-room.jsp").forward(request, response);
         } else {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         }
-        response.setContentType("text/html;charset=UTF-8");
-        request.setCharacterEncoding("UTF-8");
 
     }
 
@@ -37,6 +37,8 @@ public class JoinRoomServlet extends HttpServlet {
         UserService userService = (UserService) getServletContext()
                 .getAttribute(NameConstants.USER_SERVICE_DB_ATTR);
         UserDto usr = (UserDto) request.getSession().getAttribute(UserDto.ATTR);
+        response.setContentType("text/html;charset=UTF-8");
+        request.setCharacterEncoding("UTF-8");
         try {
             String username = request.getParameter("username");
             Long roomID = Long.valueOf(request.getParameter("room-id"));
@@ -52,7 +54,5 @@ public class JoinRoomServlet extends HttpServlet {
             response.getWriter().write("room for user ");
             e.printStackTrace();
         }
-        response.setContentType("text/html;charset=UTF-8");
-        request.setCharacterEncoding("UTF-8");
     }
 }

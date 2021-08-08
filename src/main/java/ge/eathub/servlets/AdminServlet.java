@@ -42,6 +42,7 @@ public class AdminServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
+        request.setCharacterEncoding("UTF-8");
         Session session = (Session) request.getSession(false);
         if (session != null) {
             UserDto user = (UserDto) request.getSession().getAttribute(UserDto.ATTR);
@@ -72,9 +73,6 @@ public class AdminServlet extends HttpServlet {
             doRestaurant(request, response);
         }
         request.getRequestDispatcher(ADMIN_PAGE).forward(request, response);
-
-
-
     }
 
 
