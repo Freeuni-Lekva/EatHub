@@ -6,16 +6,20 @@ import java.math.BigDecimal;
 
 public class UserDto {
     public static final String ATTR = "userDto";
+    private Long userID;
     private String username;
     private String email;
     private BigDecimal balance;
     private Role role;
+    private Boolean confirmed;
 
-    public UserDto(String username, String email, BigDecimal balance, Role role) {
+    public UserDto(Long userID, String username, String email, BigDecimal balance, Role role, Boolean confirmed) {
+        this.userID = userID;
         this.username = username;
         this.email = email;
         this.balance = balance;
         this.role = role;
+        this.confirmed = confirmed;
     }
 
     public UserDto() {
@@ -60,4 +64,21 @@ public class UserDto {
     public static UserDto builder() {
         return new UserDto();
     }
+
+    public Long getUserID() {
+        return this.userID;
+    }
+
+    public void setUserID(Long userID) {
+        this.userID = userID;
+    }
+
+    public Boolean getConfirmed() {
+        return confirmed;
+    }
+
+    public void setConfirmed(Boolean confirmed) {
+        this.confirmed = confirmed;
+    }
+
 }

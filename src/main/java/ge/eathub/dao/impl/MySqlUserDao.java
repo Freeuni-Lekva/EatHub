@@ -30,9 +30,7 @@ public class MySqlUserDao implements UserDao {
         try {
             conn = dataSource.getConnection();
             PreparedStatement stm = conn.prepareStatement(
-                    "SELECT %s, %s, %s, %s, %s, %s FROM %s ;".formatted(User.COLUMN_ID,
-                            User.COLUMN_USERNAME, User.COLUMN_PASSWORD, User.COLUMN_EMAIL,
-                            User.COLUMN_BALANCE, User.COLUMN_ROLE, User.TABLE));
+                    "SELECT * FROM %s ;".formatted(User.TABLE));
             ResultSet rs = stm.executeQuery();
             while (rs.next()) {
                 ret.add(new User(
@@ -41,7 +39,8 @@ public class MySqlUserDao implements UserDao {
                                 rs.getString(3),
                                 rs.getString(4),
                                 rs.getBigDecimal(5),
-                                Role.valueOf(rs.getString(6))
+                                Role.valueOf(rs.getString(6)),
+                                rs.getBoolean(7)
                         )
                 );
             }
@@ -59,9 +58,8 @@ public class MySqlUserDao implements UserDao {
         try {
             conn = dataSource.getConnection();
             PreparedStatement stm = conn.prepareStatement(
-                    "SELECT %s, %s, %s, %s, %s, %s FROM %s where %s = ?;".formatted(User.COLUMN_ID,
-                            User.COLUMN_USERNAME, User.COLUMN_PASSWORD, User.COLUMN_EMAIL,
-                            User.COLUMN_BALANCE, User.COLUMN_ROLE, User.TABLE, User.COLUMN_ID));
+                    "SELECT * FROM %s where %s = ?;".formatted(
+                            User.TABLE, User.COLUMN_ID));
             stm.setLong(1, userID);
             ResultSet rs = stm.executeQuery();
             rs.next();
@@ -71,7 +69,8 @@ public class MySqlUserDao implements UserDao {
                     rs.getString(3),
                     rs.getString(4),
                     rs.getBigDecimal(5),
-                    Role.valueOf(rs.getString(6))
+                    Role.valueOf(rs.getString(6)),
+                    rs.getBoolean(7)
             ));
         } catch (SQLException e) {
             e.printStackTrace();
@@ -87,9 +86,7 @@ public class MySqlUserDao implements UserDao {
         try {
             conn = dataSource.getConnection();
             PreparedStatement stm = conn.prepareStatement(
-                    "SELECT %s, %s, %s, %s, %s, %s FROM %s where %s = ?;".formatted(User.COLUMN_ID,
-                            User.COLUMN_USERNAME, User.COLUMN_PASSWORD, User.COLUMN_EMAIL,
-                            User.COLUMN_BALANCE, User.COLUMN_ROLE, User.TABLE, User.COLUMN_USERNAME));
+                    "SELECT * FROM %s where %s = ?;".formatted(User.TABLE, User.COLUMN_USERNAME));
             stm.setString(1, username);
             ResultSet rs = stm.executeQuery();
             rs.next();
@@ -99,7 +96,8 @@ public class MySqlUserDao implements UserDao {
                     rs.getString(3),
                     rs.getString(4),
                     rs.getBigDecimal(5),
-                    Role.valueOf(rs.getString(6))
+                    Role.valueOf(rs.getString(6)),
+                    rs.getBoolean(7)
             ));
         } catch (SQLException e) {
             e.printStackTrace();
@@ -149,4 +147,56 @@ public class MySqlUserDao implements UserDao {
         throw new UserCreationException("unknown error | user " + user.getUsername());
     }
 
+    @Override
+    public boolean confirmUserRegistration(String username) {
+        Connection conn = null;
+        try {
+            conn = dataSource.getConnection();
+            PreparedStatement stm = conn.prepareStatement(
+                    "UPDATE %s SET %s=TRUE where %s = ?;".formatted(
+                            User.TABLE, User.COLUMN_CONFIRMED,
+                            User.COLUMN_USERNAME));
+            stm.setString(1, username);
+            if (stm.executeUpdate() == 1) {
+                return true;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            DBConnection.closeConnection(conn);
+        }
+        return false;
+    }
+
+    @Override
+    public boolean checkInfo(String username, String email) {
+        Connection conn = null;
+        try {
+            conn = dataSource.getConnection();
+            PreparedStatement stm = conn.prepareStatement(
+                    "SELECT %s, %s FROM %s WHERE %s=? or %s=? LIMIT 1;".formatted(
+                            User.COLUMN_USERNAME, User.COLUMN_EMAIL, User.TABLE,
+                            User.COLUMN_USERNAME, User.COLUMN_EMAIL));
+            stm.setString(1, username);
+            stm.setString(2, email);
+            ResultSet rs = stm.executeQuery();
+            if (rs.next()) {
+                if (username.equals(rs.getString(1))) {
+                    throw new UsernameAlreadyExistsException(username);
+                }
+                if (email.equals(rs.getString(2))) {
+                    throw new EmailAlreadyExistsException(email);
+                }
+                return false;
+            }
+            return true;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+
+        } finally {
+            DBConnection.closeConnection(conn);
+        }
+        return false;
+    }
 }

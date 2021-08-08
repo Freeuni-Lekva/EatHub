@@ -1,6 +1,6 @@
 package ge.eathub.security;
 
-import ge.eathub.models.User;
+import ge.eathub.dto.UserDto;
 import ge.eathub.models.UserPrincipal;
 
 import javax.servlet.http.HttpServletRequest;
@@ -9,15 +9,15 @@ import java.security.Principal;
 
 public class AuthenticatedRequest extends HttpServletRequestWrapper {
 
-    private final String username;
+    private final UserDto user;
 
-    public AuthenticatedRequest(HttpServletRequest request, String username) {
+    public AuthenticatedRequest(HttpServletRequest request, UserDto user) {
         super(request);
-        this.username = username;
+        this.user = user;
     }
 
     @Override
     public Principal getUserPrincipal() {
-        return new UserPrincipal(username);
+        return new UserPrincipal(user.getUsername(),user.getUserID());
     }
 }

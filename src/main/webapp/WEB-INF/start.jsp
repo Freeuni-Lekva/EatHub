@@ -1,7 +1,9 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page import="ge.eathub.dto.UserDto" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<html>
+<!doctype html>
+<html lang="en">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <head>
     <title> EAT HUB </title>
 </head>
@@ -9,6 +11,8 @@
 <div>
     <% UserDto user = (UserDto) request.getSession().getAttribute(UserDto.ATTR);%>
     <h1>Hello <%= user.getUsername() %>
+    </h1>
+    <h1>UserID <%= user.getUserID() %>
     </h1>
     <h2>email <%= user.getEmail() %>
     </h2>
