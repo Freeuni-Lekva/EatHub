@@ -13,6 +13,7 @@ import javax.validation.constraints.NotNull;
 public interface UserService {
 
     void registerUser(@NotNull UserRegisterDto userDto) throws UserCreationException, InvalidEmailException;
+
     UserDto loginUser(@NotNull UserLoginDto userDto) throws UserNotFoundException, InvalidUserPasswordException;
 
 }

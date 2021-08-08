@@ -15,7 +15,6 @@ import java.util.Optional;
 public class MySqlMealDao implements MealDao {
 
     private final DataSource dataSource;
-    public static final int MYSQL_DUPLICATE_ERROR_CODE = 1062;
 
     public MySqlMealDao(DataSource dataSource) {
         this.dataSource = dataSource;
@@ -81,7 +80,7 @@ public class MySqlMealDao implements MealDao {
         try {
             conn = dataSource.getConnection();
             PreparedStatement stm = conn.prepareStatement(
-                    "INSERT INTO %s (%s, %s, %s, %s) VALUES (?,?,?,?);  ;".formatted(
+                    "INSERT INTO %s (%s, %s, %s, %s) VALUES (?,?,?,?);".formatted(
                             Meal.TABLE,
                             Meal.COLUMN_NAME,
                             Meal.COLUMN_PRICE,

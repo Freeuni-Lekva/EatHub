@@ -13,7 +13,6 @@ import java.util.*;
 public class MySqlRestaurantDao implements RestaurantDao {
 
     private final DataSource dataSource;
-    public static final int MYSQL_DUPLICATE_ERROR_CODE = 1062;
 
     public MySqlRestaurantDao(DataSource dataSource) {
         this.dataSource = dataSource;
