@@ -52,7 +52,7 @@ public class JoinRoomServlet extends HttpServlet {
             Authenticator auth = AuthenticatorFactory.get();
             String token = auth.getAccessToken(user.getUsername());
             response.setHeader("Authorization", BASIC_AUTH + token);
-            request.getRequestDispatcher("/WEB-INF/chat.jsp").forward(request, response);
+            request.getRequestDispatcher("/WEB-INF/room.jsp").forward(request, response);
         } catch (Exception e) {
             response.setStatus(HttpServletResponse.SC_FORBIDDEN);
             response.setContentType("text/plain");
