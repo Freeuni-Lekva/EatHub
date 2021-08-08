@@ -1,12 +1,13 @@
 package ge.eathub.dao.impl;
 
 import ge.eathub.dao.RestaurantDao;
-import ge.eathub.exceptions.RestauranCreationException;
+import ge.eathub.exceptions.RestaurantCreationException;
 import ge.eathub.models.Meal;
 import ge.eathub.models.Restaurant;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 public class InMemoryRestaurantDao implements RestaurantDao {
@@ -54,6 +55,23 @@ public class InMemoryRestaurantDao implements RestaurantDao {
     }
 
     @Override
+    public boolean updateRestaurant(long restaurantID, Restaurant restaurant) {
+        Optional<Restaurant> optRestaurant = restaurants.stream().filter(m -> m.getRestaurantID().
+                equals(restaurantID)).findAny();
+        optRestaurant.ifPresent(new Consumer<Restaurant>() {
+            @Override
+            public void accept(Restaurant optRestaurant) {
+                optRestaurant.setRestaurantName(restaurant.getRestaurantName());
+                optRestaurant.setBalance(restaurant.getBalance());
+                optRestaurant.setLimit(restaurant.getLimit());
+                optRestaurant.setRating(restaurant.getRating());
+                optRestaurant.setLocation(restaurant.getLocation());
+            }
+        });
+        return !optRestaurant.isEmpty();
+    }
+
+    @Override
     public Restaurant createRestaurant(Restaurant restaurant) {
         if (restaurants.stream().noneMatch(u ->
                 u.getRestaurantID().equals(restaurant.getRestaurantID()))) {
@@ -61,6 +79,6 @@ public class InMemoryRestaurantDao implements RestaurantDao {
             restaurants.add(newRestaurant);
             return newRestaurant;
         }
-        throw new RestauranCreationException(restaurant.getRestaurantName());
+        throw new RestaurantCreationException(restaurant.getRestaurantName());
     }
 }
