@@ -18,5 +18,7 @@ public interface RestaurantDao {
 
     Map<Restaurant, List<Meal>> getRestaurantsByMeal(String mealName);
 
+    boolean updateRestaurant(long restaurantID, Restaurant restaurant);
+
     Restaurant createRestaurant(Restaurant restaurant);
 }

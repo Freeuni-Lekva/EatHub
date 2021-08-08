@@ -2,7 +2,7 @@ package ge.eathub.dao.impl;
 
 import ge.eathub.dao.RestaurantDao;
 import ge.eathub.database.DBConnection;
-import ge.eathub.exceptions.RestauranCreationException;
+import ge.eathub.exceptions.RestaurantCreationException;
 import ge.eathub.models.Meal;
 import ge.eathub.models.Restaurant;
 
@@ -176,6 +176,33 @@ public class MySqlRestaurantDao implements RestaurantDao {
     }
 
     @Override
+    public boolean updateRestaurant(long restaurantID, Restaurant restaurant) {
+        Connection conn = null;
+        try {
+            conn = dataSource.getConnection();
+            PreparedStatement stm = conn.prepareStatement(
+                    "UPDATE %s SET %s = ?,  %s = ? , %s = ?, %s = ?, %s = ? where %s = ?;".formatted(
+                            Restaurant.TABLE,
+                            Restaurant.COLUMN_NAME, Restaurant.COLUMN_LOCATION,
+                            Restaurant.COLUMN_LIMIT, Restaurant.COLUMN_RATING, Restaurant.COLUMN_BALANCE, Restaurant.COLUMN_ID), Statement.RETURN_GENERATED_KEYS);
+            stm.setString(1, restaurant.getRestaurantName());
+            stm.setString(2, restaurant.getLocation());
+            stm.setLong(3, restaurant.getLimit());
+            stm.setBigDecimal(4, restaurant.getRating());
+            stm.setBigDecimal(5, restaurant.getBalance());
+            stm.setLong(6, restaurantID);
+            if (stm.executeUpdate() == 1) {
+                return true;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            DBConnection.closeConnection(conn);
+        }
+        throw new RestaurantCreationException("unknown error | restaurant " + restaurant.getRestaurantName());
+    }
+
+    @Override
     public Restaurant createRestaurant(Restaurant restaurant) {
         Connection conn = null;
         try {
@@ -201,6 +228,6 @@ public class MySqlRestaurantDao implements RestaurantDao {
         } finally {
             DBConnection.closeConnection(conn);
         }
-        throw new RestauranCreationException("unknown error | restaurant " + restaurant.getRestaurantName());
+        throw new RestaurantCreationException("unknown error | restaurant " + restaurant.getRestaurantName());
     }
 }
