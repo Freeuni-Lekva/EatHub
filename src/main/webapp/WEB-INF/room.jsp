@@ -17,7 +17,7 @@
 
     <div id="room-restaurant-meals">
 <%--        <jsp:include page="../show-restaurant.jsp"> <jsp:param name="id" value="1"/> </jsp:include>--%>
-        <img src="../images/churchkhela2.jpg" alt="churchkhela" >
+        <img src="../images/churchkhela.jpg" alt="churchkhela" >
     </div>
 </div>
 </body>

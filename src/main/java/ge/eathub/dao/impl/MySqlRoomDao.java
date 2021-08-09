@@ -160,13 +160,14 @@ public class MySqlRoomDao implements RoomDao {
         try {
             conn = dataSource.getConnection();
             PreparedStatement stm = conn.prepareStatement(
-                    "select %s, %s, %s, %s, %s, %s  from %s INNER JOIN %s ON ? = ? where ? = ?;".formatted(
+                    "select %s, %s, %s, %s, %s, %s, %s  from %s INNER JOIN %s ON ? = ? where ? = ?;".formatted(
                             User.TABLE + "." + User.COLUMN_ID,
                             User.TABLE + "." + User.COLUMN_USERNAME,
                             User.TABLE + "." + User.COLUMN_PASSWORD,
                             User.TABLE + "." + User.COLUMN_EMAIL,
                             User.TABLE + "." + User.COLUMN_BALANCE,
                             User.TABLE + "." + User.COLUMN_ROLE,
+                            User.TABLE + "." + User.COLUMN_CONFIRMED,
                             UserRoom.TABLE,
                             User.TABLE));
             stm.setString(1, User.TABLE + "." + User.COLUMN_ID);
@@ -181,7 +182,8 @@ public class MySqlRoomDao implements RoomDao {
                                 rs.getString(3),
                                 rs.getString(4),
                                 rs.getBigDecimal(5),
-                                Role.valueOf(rs.getString(6))
+                                Role.valueOf(rs.getString(6)),
+                                rs.getBoolean(7)
                         )
                 );
             }
