@@ -49,4 +49,14 @@ public class InMemoryUserDao implements UserDao {
         }
         throw new UserCreationException(user.getUsername());
     }
+
+    @Override
+    public boolean confirmUserRegistration(String username) {
+        return false;
+    }
+
+    @Override
+    public boolean checkInfo(String username, String email) {
+        return false;
+    }
 }

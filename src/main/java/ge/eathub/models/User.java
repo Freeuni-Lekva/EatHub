@@ -13,6 +13,7 @@ public class User {
     public static final String COLUMN_EMAIL = "email";
     public static final String COLUMN_BALANCE = "balance";
     public static final String COLUMN_ROLE = "role";
+    public static final String COLUMN_CONFIRMED = "confirmed";
 
     private Long userID; // autoincrement
     private String username;
@@ -20,20 +21,23 @@ public class User {
     private String email;
     private BigDecimal balance = BigDecimal.TEN;
     private Role role = Role.CUSTOMER;
+    private Boolean confirmed;
 
     public User(String username, String password, String email) {
         this.username = username;
         this.password = password;
         this.email = email;
+        this.confirmed = false;
     }
 
-    public User(Long userID, String username, String password, String email, BigDecimal balance, Role role) {
+    public User(Long userID, String username, String password, String email, BigDecimal balance, Role role, Boolean confirmed) {
         this.userID = userID;
         this.username = username;
         this.password = password;
         this.email = email;
         this.balance = balance;
         this.role = role;
+        this.confirmed = confirmed;
     }
 
     public User(User user) {
@@ -43,6 +47,7 @@ public class User {
         this.email = user.getEmail();
         this.balance = user.getBalance();
         this.role = user.getRole();
+        this.confirmed = user.getConfirmed();
     }
 
     public User() {
@@ -107,13 +112,21 @@ public class User {
         return this;
     }
 
+    public Boolean getConfirmed() {
+        return confirmed;
+    }
+
+    public void setConfirmed(Boolean confirmed) {
+        this.confirmed = confirmed;
+    }
+
     public UserDto toDto() {
 //        return UserDto.builder()
 //                .setUsername(username)
 //                .setEmail(email)
 //                .setBalance(balance)
 //                .setRole(role);
-        return new UserDto(userID, username, email, balance, role);
+        return new UserDto(userID, username, email, balance, role, confirmed);
     }
 
     @Override

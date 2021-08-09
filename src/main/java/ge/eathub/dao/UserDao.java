@@ -14,5 +14,7 @@ public interface UserDao {
 
     User createUser(User user);
 
+    boolean confirmUserRegistration(String username);
 
+    boolean checkInfo(String username, String email) ;
 }
