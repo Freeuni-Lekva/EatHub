@@ -1,8 +1,12 @@
 USE eathub_db;
 
+DROP TABLE IF EXISTS orders;
+DROP TABLE IF EXISTS user_room;
 DROP TABLE IF EXISTS messages;
 DROP TABLE IF EXISTS users;
-
+DROP TABLE IF EXISTS meals;
+DROP TABLE IF EXISTS rooms;
+DROP TABLE IF EXISTS restaurants;
 
 CREATE TABLE users
 (
@@ -19,7 +23,6 @@ CREATE TABLE users
 );
 
 
-DROP TABLE IF EXISTS meals;
 CREATE TABLE meals
 (
     meal_id       BIGINT       NOT NULL AUTO_INCREMENT,
@@ -31,7 +34,6 @@ CREATE TABLE meals
 );
 
 
-DROP TABLE IF EXISTS restaurants;
 CREATE TABLE restaurants
 (
     restaurant_id   BIGINT       NOT NULL AUTO_INCREMENT,
@@ -43,10 +45,6 @@ CREATE TABLE restaurants
     PRIMARY KEY (restaurant_id)
 );
 
-ALTER TABLE meals
-    ADD CONSTRAINT FK_Restaurants_TO_meals
-        FOREIGN KEY (restaurant_id)
-            REFERENCES restaurants (restaurant_id);
 
 CREATE TABLE messages
 (
@@ -58,6 +56,68 @@ CREATE TABLE messages
     content    VARCHAR(400) NOT NULL,
     PRIMARY KEY (message_id)
 );
+
+ALTER TABLE meals
+    ADD CONSTRAINT FK_Restaurants_TO_meals
+        FOREIGN KEY (restaurant_id)
+            REFERENCES restaurants (restaurant_id);
+
+CREATE TABLE rooms
+(
+    room_id       BIGINT  NOT NULL AUTO_INCREMENT,
+    restaurant_id BIGINT  NOT NULL,
+    active     BOOLEAN NOT NULL,
+    PRIMARY KEY (room_id)
+);
+
+ALTER TABLE rooms
+    ADD CONSTRAINT FK_restaurants_TO_rooms
+        FOREIGN KEY (restaurant_id)
+            REFERENCES restaurants (restaurant_id);
+
+CREATE TABLE orders
+(
+    order_id BIGINT  NOT NULL AUTO_INCREMENT,
+    user_id  BIGINT  NOT NULL,
+    meal_id  BIGINT  NOT NULL,
+    room_id  BIGINT  NOT NULL,
+    quantity NUMERIC NOT NULL DEFAULT 1,
+    PRIMARY KEY (order_id)
+);
+
+ALTER TABLE orders
+    ADD CONSTRAINT FK_users_TO_orders
+        FOREIGN KEY (user_id)
+            REFERENCES users (user_id);
+
+ALTER TABLE orders
+    ADD CONSTRAINT FK_meals_TO_orders
+        FOREIGN KEY (meal_id)
+            REFERENCES meals (meal_id);
+
+ALTER TABLE orders
+    ADD CONSTRAINT FK_rooms_TO_orders
+        FOREIGN KEY (room_id)
+            REFERENCES rooms (room_id);
+
+ALTER TABLE orders
+    ADD CONSTRAINT UQ_order_id UNIQUE (order_id);
+
+CREATE TABLE user_room
+(
+    room_id BIGINT NOT NULL,
+    user_id BIGINT NOT NULL
+);
+
+ALTER TABLE user_room
+    ADD CONSTRAINT FK_rooms_TO_user_room
+        FOREIGN KEY (room_id)
+            REFERENCES rooms (room_id);
+
+ALTER TABLE user_room
+    ADD CONSTRAINT FK_users_TO_user_room
+        FOREIGN KEY (user_id)
+            REFERENCES users (user_id);
 
 ALTER TABLE messages
     ADD CONSTRAINT FK_users_TO_messages

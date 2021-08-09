@@ -27,11 +27,13 @@ public class Listener implements ServletContextListener, HttpSessionListener, Ht
         /* This method is called when the servlet context is initialized(when the Web application is deployed). */
         ServletContext sc = sce.getServletContext();
         DataSource ds = DBConnection.getMySqlDataSource();
+
         UserDao userDao = new MySqlUserDao(ds);  
         sc.setAttribute(NameConstants.USER_SERVICE,
                 new UserServiceImpl(userDao));
 
         RestaurantDao restaurantDao = new MySqlRestaurantDao(ds);
+
         sc.setAttribute(NameConstants.RESTAURANT_DAO, restaurantDao); 
 
         MealDao mealDao = new MySqlMealDao(ds);

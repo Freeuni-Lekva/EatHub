@@ -18,13 +18,15 @@ public interface RoomDao {
 
     // Optional<Room> getUserByUsername(String username);
 
-    Optional<Room> getUserByID (Long userID);
+    List<Room> getRoomsByUserID (Long userID);
 
     List<User> getUsersByRoomID(Long roomID);
 
     void addUserIntoRoom(Long roomID, Long userID);
 
-    boolean removeUserFromRoom(Long roomID, Long userID);
+    boolean userInRoom (Long roomID, Long userID);
 
-    List<Message> getMessagesByRoomID(Long roomID);
+    boolean mealInRoom(Long mealID, Long roomID);
+
+    //boolean removeUserFromRoom(Long roomID, Long userID);
 }

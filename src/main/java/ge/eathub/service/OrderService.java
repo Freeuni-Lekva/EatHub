@@ -2,10 +2,12 @@ package ge.eathub.service;
 
 import ge.eathub.models.Order;
 
+import java.util.Optional;
+
 public interface OrderService {
-    Order addOrder(Long userID, Long mealID, Long roomID, Integer quantity);
+    Optional<Order> addOrder(Long userID, Long mealID, Long roomID, Integer quantity);
 
-    Order updateOrder(Order order);
+    Optional<Order> updateOrder(Order order);
 
-    void removeOrder(Order order);
+    boolean removeOrder(Order order);
 }
