@@ -7,6 +7,7 @@ import ge.eathub.models.Meal;
 import ge.eathub.models.Order;
 import ge.eathub.models.Room;
 import ge.eathub.models.UserRoom;
+import org.mockito.internal.matchers.Or;
 
 import javax.sql.DataSource;
 import java.sql.*;
@@ -194,4 +195,61 @@ public class MySqlOrderDao implements OrderDao {
         }
         return false;
     }
+
+    @Override
+    public Optional<Order> getOrderByID(Long userID, Long roomID, Long mealID) {
+        Connection conn = null;
+        try {
+            conn = dataSource.getConnection();
+            PreparedStatement stm = conn.prepareStatement(
+                    "SELECT * FROM %s where %s = ? and %s = ? and %s = ? ;".formatted(Order.TABLE, Order.USER_ID, Order.ROOM_ID, Order.MEAL_ID));
+            stm.setLong(1, userID);
+            stm.setLong(2, roomID);
+            stm.setLong(3, mealID);
+            ResultSet rs = stm.executeQuery();
+            rs.next();
+            return Optional.of(new Order(
+                            rs.getLong(1),
+                            rs.getLong(2),
+                            rs.getLong(3),
+                            rs.getInt(4)
+                    )
+            );
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            DBConnection.closeConnection(conn);
+        }
+        return Optional.empty();
+    }
+
+    @Override
+    public List<Order> getAll(Long userID, Long roomID) {
+        Connection conn = null;
+        List<Order> orders = new ArrayList<>();
+        try {
+            conn = dataSource.getConnection();
+            PreparedStatement stm = conn.prepareStatement(
+                    "SELECT * FROM %s where %s = ? and %s = ? ;".formatted(Order.TABLE, Order.USER_ID, Order.ROOM_ID));
+            stm.setLong(1, userID);
+            stm.setLong(2, roomID);
+            ResultSet rs = stm.executeQuery();
+            while (rs.next()) {
+                orders.add(new Order(
+                            rs.getLong(1),
+                            rs.getLong(2),
+                            rs.getLong(3),
+                            rs.getInt(4)
+                    )
+                );
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            DBConnection.closeConnection(conn);
+        }
+        return orders;
+    }
+
+
 }

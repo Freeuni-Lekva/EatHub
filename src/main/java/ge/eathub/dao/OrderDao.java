@@ -2,6 +2,7 @@ package ge.eathub.dao;
 
 import ge.eathub.models.Meal;
 import ge.eathub.models.Order;
+import org.checkerframework.checker.nullness.Opt;
 
 import java.util.List;
 import java.util.Optional;
@@ -20,4 +21,9 @@ public interface OrderDao {
     Optional<Order> updateOrder(Order order, Integer quantity);
 
     boolean removeOrder (Order order);
+
+    Optional<Order> getOrderByID(Long userID, Long roomID, Long mealID);
+
+    List<Order> getAll(Long userID, Long roomID);
+
 }
