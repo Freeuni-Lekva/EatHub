@@ -27,6 +27,8 @@ public class LoginServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        response.setContentType("text/html;charset=UTF-8");
+        request.setCharacterEncoding("UTF-8");
         if (!checkUserSession(request, response, USER_START_PAGE)) {
             request.getRequestDispatcher(LOGIN_PAGE).forward(request, response);
         }
@@ -37,6 +39,8 @@ public class LoginServlet extends HttpServlet {
             throws ServletException, IOException {
         UserService userService = (UserService) getServletContext()
                 .getAttribute(NameConstants.USER_SERVICE);
+        response.setContentType("text/html;charset=UTF-8");
+        request.setCharacterEncoding("UTF-8");
         String username = request.getParameter("username");
         String password = request.getParameter("password");
         logger.info("Login POST | name:%s".formatted(username));

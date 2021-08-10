@@ -13,8 +13,6 @@ import ge.eathub.models.Restaurant;
 import ge.eathub.models.Role;
 import ge.eathub.service.AdminService;
 import ge.eathub.service.impl.AdminServiceImpl;
-import ge.eathub.utils.MealValidator;
-import ge.eathub.utils.RestaurantValidator;
 
 import javax.jms.Session;
 import javax.servlet.ServletException;
@@ -43,7 +41,8 @@ public class AdminServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
+        response.setContentType("text/html;charset=UTF-8");
+        request.setCharacterEncoding("UTF-8");
         Session session = (Session) request.getSession(false);
         if (session != null) {
             UserDto user = (UserDto) request.getSession().getAttribute(UserDto.ATTR);
@@ -66,16 +65,17 @@ public class AdminServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        response.setContentType("text/html;charset=UTF-8");
+        request.setCharacterEncoding("UTF-8");
         if (request.getQueryString().equals("meal")) {
             doMeal(request, response);
         } else if (request.getQueryString().equals("restaurant")) {
             doRestaurant(request, response);
         }
         request.getRequestDispatcher(ADMIN_PAGE).forward(request, response);
-
-
-
     }
+
+
 
     private void doRestaurant(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String restaurantID = request.getParameter("restaurant_id");

@@ -26,6 +26,8 @@ public class RegistrationServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         logger.info("Registration get");
+        response.setContentType("text/html;charset=UTF-8");
+        request.setCharacterEncoding("UTF-8");
         if (!checkUserSession(request, response, USER_START_PAGE)) {
             request.getRequestDispatcher(REGISTRATION_PAGE).forward(request, response);
         }
@@ -37,6 +39,7 @@ public class RegistrationServlet extends HttpServlet {
             throws ServletException, IOException {
         UserService userService = (UserService) getServletContext()
                 .getAttribute(NameConstants.USER_SERVICE);
+        request.setCharacterEncoding("UTF-8");
         String username = request.getParameter("username");
         String password = request.getParameter("password");
         String email = request.getParameter("email");

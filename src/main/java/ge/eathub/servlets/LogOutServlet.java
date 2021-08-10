@@ -14,6 +14,8 @@ import static ge.eathub.servlets.ServletCommons.INDEX_PAGE;
 public class LogOutServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        response.setContentType("text/html;charset=UTF-8");
+        request.setCharacterEncoding("UTF-8");
         HttpSession sess = request.getSession(false);
         if (sess != null) {
             sess.invalidate();
