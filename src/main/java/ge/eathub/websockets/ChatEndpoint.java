@@ -2,21 +2,23 @@ package ge.eathub.websockets;
 
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import ge.eathub.dao.ChatDao;
+import ge.eathub.models.UserPrincipal;
+import ge.eathub.models.chat.Message;
 import ge.eathub.models.chat.MessageType;
 import ge.eathub.utils.ObjectMapperFactory;
-import ge.eathub.models.chat.SocketMessage;
-
-import javax.enterprise.context.Dependent;
 import javax.websocket.*;
 import javax.websocket.server.ServerEndpoint;
 import java.security.Principal;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.stream.Collectors;
 
-@Dependent
+import static ge.eathub.listener.NameConstants.CHAT_DAO;
+
 @ServerEndpoint(
         value = "/chat",
         encoders = MessageEncoder.class,
@@ -25,11 +27,14 @@ import java.util.stream.Collectors;
 public class ChatEndpoint {
 
     private static final Map<Long, Set<Session>> activeUsers = new ConcurrentHashMap<>();
-    Long roomID;
-
+    private Long roomID;
+    private ChatDao chatDao;
+    private Long userID;
     @OnOpen
     public void onOpen(Session session, EndpointConfig config) throws SessionException {
         try {
+            chatDao = (ChatDao) session.getUserProperties().get(CHAT_DAO);
+//            session.
             roomID = Long.valueOf(session.getRequestParameterMap().get("room-id").get(0));
             Set<Session> ses = activeUsers.getOrDefault(roomID, null);
             if (ses == null) {
@@ -40,8 +45,12 @@ public class ChatEndpoint {
                 ses.add(session);
             }
 
-            String username = session.getUserPrincipal().getName();
+            UserPrincipal user = (UserPrincipal) session.getUserPrincipal();
+            String username = user.getName();
+            userID = user.getUserID();
 
+            List<Message> messagesByRoomID = chatDao.getMessagesByRoomID(roomID);
+            sendOldMessages(session, messagesByRoomID);
             welcomeUser(username);
             broadcastAvailableUsers();
         } catch (Exception e) {
@@ -52,10 +61,21 @@ public class ChatEndpoint {
 
     }
 
+    private void sendOldMessages(Session session, List<Message> messages) {
+        RemoteEndpoint.Async asyncRemote = session.getAsyncRemote();
+        messages.forEach(asyncRemote::sendObject);
+    }
+
     @OnMessage
-    public void onMessage(Session session, SocketMessage message) {
+    public void onMessage(Session session, Message message) {
         System.out.println("on message :" + message);
-        broadcast(message.setUsername(session.getUserPrincipal().getName()));
+        message = message
+                .setCurrentDateTime()
+                .setRoomID(roomID)
+                .setUsername(session.getUserPrincipal().getName())
+                .setUserID(userID);
+        broadcast(message);
+        chatDao.saveMessage(message);
     }
 
     @OnClose
@@ -73,15 +93,20 @@ public class ChatEndpoint {
     }
 
     private void welcomeUser(String username) {
-        broadcast(new SocketMessage()
+        Message message = new Message()
+                .setCurrentDateTime()
+                .setUserID(userID)
                 .setUsername(username)
                 .setType(MessageType.WELCOME)
                 .setRoomID(roomID)
-                .setContent("Welcome " + username));
+                .setContent("Welcome " + username);
+        broadcast(message);
+        chatDao.saveMessage(message);
     }
 
     private void broadcastUserDisconnected(String username) {
-        broadcast(new SocketMessage().setUsername(username)
+        // Save THIS?
+        broadcast(new Message().setUsername(username)
                 .setType(MessageType.GOODBYE)
                 .setRoomID(roomID)
                 .setContent("Goodbye " + username));
@@ -131,7 +156,7 @@ public class ChatEndpoint {
         }
     }
 
-    private void broadcast(SocketMessage message) {
+    private void broadcast(Message message) {
 //        synchronized (sessions) {
         Set<Session> sessions = activeUsers.get(roomID);
         sessions.forEach(session -> {

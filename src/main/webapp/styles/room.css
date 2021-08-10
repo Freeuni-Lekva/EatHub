@@ -1,0 +1,16 @@
+
+#room {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+
+}
+
+#room-chat {
+    width: 50vw;
+}
+
+#room-restaurant-meals {
+    width: 50vw;
+}

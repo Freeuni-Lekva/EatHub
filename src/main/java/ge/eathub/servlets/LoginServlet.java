@@ -38,7 +38,7 @@ public class LoginServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         UserService userService = (UserService) getServletContext()
-                .getAttribute(NameConstants.USER_SERVICE_DB_ATTR);
+                .getAttribute(NameConstants.USER_SERVICE);
         response.setContentType("text/html;charset=UTF-8");
         request.setCharacterEncoding("UTF-8");
         String username = request.getParameter("username");

@@ -33,7 +33,7 @@ public class AuthenticationServlet extends HttpServlet {
         req.setCharacterEncoding("UTF-8");
         UserLoginDto credentials = mapper.readValue(req.getReader(), UserLoginDto.class);
         UserService userService = (UserService) getServletContext()
-                .getAttribute(NameConstants.USER_SERVICE_DB_ATTR);
+                .getAttribute(NameConstants.USER_SERVICE);
         try {
             UserDto userDto = userService.loginUser(credentials);
             String token = authenticator.getAccessToken(userDto.getUsername());

@@ -1,12 +1,10 @@
 package ge.eathub.listener;
 
-import ge.eathub.dao.MealDao;
-import ge.eathub.dao.RestaurantDao;
-import ge.eathub.dao.UserDao;
-import ge.eathub.dao.impl.MySqlMealDao;
-import ge.eathub.dao.impl.MySqlRestaurantDao;
-import ge.eathub.dao.impl.MySqlUserDao;
+import ge.eathub.dao.*;
+import ge.eathub.dao.impl.*;
 import ge.eathub.database.DBConnection;
+import ge.eathub.service.impl.OrderServiceImpl;
+import ge.eathub.service.impl.RoomServiceImpl;
 import ge.eathub.service.impl.UserServiceImpl;
 
 import javax.servlet.*;
@@ -23,14 +21,30 @@ public class Listener implements ServletContextListener, HttpSessionListener, Ht
     @Override
     public void contextInitialized(ServletContextEvent sce) {
         /* This method is called when the servlet context is initialized(when the Web application is deployed). */
+        ServletContext sc = sce.getServletContext();
         DataSource ds = DBConnection.getMySqlDataSource();
-        UserDao userDao = new MySqlUserDao(ds);
-        sce.getServletContext().setAttribute(NameConstants.USER_SERVICE_DB_ATTR,
+
+        UserDao userDao = new MySqlUserDao(ds);  
+        sc.setAttribute(NameConstants.USER_SERVICE,
                 new UserServiceImpl(userDao));
+
+        RoomDao roomDao = new MySqlRoomDao(ds);
+        sc.setAttribute(NameConstants.ORDER_SERVICE,
+                new OrderServiceImpl(roomDao,userDao, new MySqlOrderDao(ds)));
+
+        sc.setAttribute(NameConstants.ROOM_SERVICE,
+                new RoomServiceImpl(roomDao, userDao));
+
         RestaurantDao restaurantDao = new MySqlRestaurantDao(ds);
-        sce.getServletContext().setAttribute(NameConstants.RESTAURANT_DAO, restaurantDao); // change it
+
+        sc.setAttribute(NameConstants.RESTAURANT_DAO, restaurantDao); 
+
         MealDao mealDao = new MySqlMealDao(ds);
-        sce.getServletContext().setAttribute(NameConstants.MEAL_DAO, mealDao); // change it
+        sce.getServletContext().setAttribute(NameConstants.MEAL_DAO, mealDao);
+
+
+        ChatDao chatDao = new MySqlChatDao(ds);
+        sc.setAttribute(NameConstants.CHAT_DAO, chatDao); 
     }
 
     @Override

@@ -14,7 +14,7 @@
     <%
       ServletContext sc = request.getServletContext();
       MySqlRestaurantDao dao = (MySqlRestaurantDao) sc.getAttribute(NameConstants.RESTAURANT_DAO);
-      String id = request.getQueryString().substring(3);
+      String id = request.getParameter("id");
       long restaurantID = Long.parseLong(id);
       List<Meal> meals = dao.getAllMeals(restaurantID);
       for (Meal meal : meals) {%>
