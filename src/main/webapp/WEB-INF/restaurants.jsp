@@ -7,12 +7,17 @@
 <%@ page import="ge.eathub.models.Meal" %>
 <%@ page import="java.util.Map" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<!DOCTYPE html>
+
 <html>
+<meta charset="utf-8" >
+
     <head>
         <title>Restaurant</title>
 
     </head>
     <body>
+    <h1>გამარჯობა</h1>
         <h1>Welcome to the Restaurant Page</h1>
 
         <h4>Filter</h4>

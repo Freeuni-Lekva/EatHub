@@ -19,6 +19,8 @@ public class JoinRoomServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        response.setContentType("text/html;charset=UTF-8");
+        request.setCharacterEncoding("UTF-8");
         UserDto user = (UserDto) request.getSession().getAttribute(UserDto.ATTR);
         if (user == null) {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
@@ -35,6 +37,8 @@ public class JoinRoomServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        response.setContentType("text/html;charset=UTF-8");
+        request.setCharacterEncoding("UTF-8");
         UserDto user = (UserDto) request.getSession().getAttribute(UserDto.ATTR);
         if (user == null) {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
@@ -45,7 +49,6 @@ public class JoinRoomServlet extends HttpServlet {
             request.getRequestDispatcher(CONFIRM_PAGE).forward(request, response);
             return;
         }
-        try {
             Long roomID = Long.valueOf(request.getParameter("room-id"));
             //TODO CHECK ROOM WITH ROOM SERVICE
             response.setStatus(HttpServletResponse.SC_OK);
