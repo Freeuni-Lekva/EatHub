@@ -14,6 +14,14 @@ public class Order {
     private Long roomID;
     private Integer quantity;
 
+    public Order(Long orderID, Long userID, Long mealID, Long roomID, Integer quantity) {
+        this.orderID = orderID;
+        this.userID = userID;
+        this.mealID = mealID;
+        this.roomID = roomID;
+        this.quantity = quantity;
+    }
+
     public Order(Long userID, Long mealID, Long roomID, Integer quantity) {
         this.userID = userID;
         this.mealID = mealID;

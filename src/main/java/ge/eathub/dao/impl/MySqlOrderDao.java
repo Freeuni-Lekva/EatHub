@@ -183,6 +183,7 @@ public class MySqlOrderDao implements OrderDao {
                             Order.TABLE,
                             Order.ORDER_ID));
             stm.setLong(1, order.getOrderID());
+            stm.executeUpdate();
             return true;
         } catch (SQLException e) {
             e.printStackTrace();
@@ -208,7 +209,9 @@ public class MySqlOrderDao implements OrderDao {
                             rs.getLong(1),
                             rs.getLong(2),
                             rs.getLong(3),
-                            rs.getInt(4)
+                            rs.getLong(4),
+                            rs.getInt(5)
+
                     )
             );
         } catch (SQLException e) {

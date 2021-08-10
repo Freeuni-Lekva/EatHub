@@ -12,7 +12,6 @@
 <script>window.onload = () => {
     <% UserDto user = ((UserDto) request.getSession().getAttribute(UserDto.ATTR));
       Room room = ((Room) request.getSession().getAttribute("NEW_ROOM"));%>
-    console.log('<%= user.getUsername()%>', <%=room.getRoomID()%>);
     joinRoom('<%= user.getUsername()%>', <%=room.getRoomID()%>);
 }</script>
 

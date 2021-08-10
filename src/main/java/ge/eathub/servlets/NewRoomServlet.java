@@ -7,9 +7,7 @@ import ge.eathub.models.Meal;
 import ge.eathub.models.Order;
 import ge.eathub.models.Room;
 import ge.eathub.service.RoomService;
-import ge.eathub.service.UserService;
 import ge.eathub.service.impl.OrderServiceImpl;
-import org.mockito.internal.matchers.Or;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -18,9 +16,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 import static ge.eathub.servlets.ServletCommons.CONFIRM_PAGE;
@@ -45,12 +41,11 @@ public class NewRoomServlet extends HttpServlet {
                 .getAttribute(NameConstants.ROOM_SERVICE);
         long id = Long.parseLong(request.getParameter("id"));
         Optional<Room> room = roomService.createRoom(user, id);
-        System.out.println("ID in new Room Servlet : " + room.get().getRoomID());
-        if (room.isPresent()){
+        if (room.isPresent()) {
             Room newRoom = room.get();
             request.getSession().setAttribute("NEW_ROOM", newRoom);
             request.getRequestDispatcher(ServletCommons.NEW_ROOM_PAGE).forward(request, response);
-        }else{
+        } else {
             // TODO: ERROR NOTIFICATION
         }
     }
@@ -65,18 +60,18 @@ public class NewRoomServlet extends HttpServlet {
         long restaurantID = room.getRestaurantID();
         List<Meal> meals = dao.getAllMeals(restaurantID);
         List<Order> orders = orderService.getAll(user.getUserID(), room.getRoomID());
-        for (Meal meal : meals){
+        for (Meal meal : meals) {
             int quantity = Integer.parseInt(request.getParameter(meal.getMealID().toString()));
             System.out.println(meal.getMealID() + ": " + quantity);
             Optional<Order> order = orderService.getOrderByID(user.getUserID(), room.getRoomID(), meal.getMealID());
-            if (order.isPresent()){
-                if (quantity == 0){
+            if (order.isPresent()) {
+                if (quantity == 0) {
                     orderService.removeOrder(order.get());
-                }else{
+                } else {
                     order.get().setQuantity(quantity);
                     orderService.updateOrder(order.get());
                 }
-            }else{
+            } else {
                 orderService.addOrder(user.getUserID(), meal.getMealID(), room.getRoomID(), quantity);
             }
         }

@@ -200,6 +200,7 @@ public class MySqlRoomDao implements RoomDao {
                             UserRoom.USER_ID));
             stm.setLong(1, roomID);
             stm.setLong(2, userID);
+            stm.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {

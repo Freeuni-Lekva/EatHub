@@ -47,10 +47,11 @@
                 }
             %>
             <li>
-                <%="Meal Name: " + meal.getMealName() + " Price: " + meal.getMealPrice()%> <input type='number'
-                                                                                                  name="<%=meal.getMealID()%>"
-                                                                                                  min="0"
-                                                                                                  value="<%=amount%>">
+                <%="Meal Name: " + meal.getMealName() + " Price: " + meal.getMealPrice() + " ID=" + meal.getMealID()%>
+                <input type='number'
+                       name="<%=meal.getMealID()%>"
+                       min="0"
+                       value="<%=amount%>">
             </li>
             <%}%>
             <input type='submit' value='submit'/><br>

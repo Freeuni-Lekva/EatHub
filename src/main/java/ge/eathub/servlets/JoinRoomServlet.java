@@ -40,16 +40,15 @@ public class JoinRoomServlet extends HttpServlet {
         try {
             Long roomID = Long.valueOf(request.getParameter("room-id"));
             RoomService roomService = (RoomService) getServletContext().getAttribute(NameConstants.ROOM_SERVICE);
-            if (roomService.checkUser(roomID, user.getUserID())) {
-                response.setStatus(HttpServletResponse.SC_OK);
-                Authenticator auth = AuthenticatorFactory.get();
-                String token = auth.getAccessToken(user.getUsername());
-                response.setHeader("Authorization", BASIC_AUTH + token);
-                request.getRequestDispatcher(ROOM_PAGE).forward(request, response);
-            } else {
-                System.out.println(roomID + " : IN ELSE STATEMENT");
-                response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-            }
+            //if (roomService.checkUser(roomID, user.getUserID())) {
+            response.setStatus(HttpServletResponse.SC_OK);
+            Authenticator auth = AuthenticatorFactory.get();
+            String token = auth.getAccessToken(user.getUsername());
+            response.setHeader("Authorization", BASIC_AUTH + token);
+            request.getRequestDispatcher(ROOM_PAGE).forward(request, response);
+            //} else {
+            //   response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+            //} // TODO: extra // 's
         } catch (Exception e) {
             response.setStatus(HttpServletResponse.SC_FORBIDDEN);
             response.setContentType("text/plain");

@@ -42,6 +42,7 @@ public class OrderServiceImpl implements OrderService {
     public boolean removeOrder(Order order) {
         if (roomDao.userInRoom(order.getRoomID(), order.getUserID()) &&
                 roomDao.mealInRoom(order.getMealID(), order.getRoomID()) && order.getQuantity() >= 0) {
+            System.out.println("RemoveOrdershi shevida");
             return orderDao.removeOrder(order);
         }
         return false;
