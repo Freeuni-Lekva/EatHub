@@ -238,7 +238,8 @@ public class MySqlOrderDao implements OrderDao {
                                 rs.getLong(1),
                                 rs.getLong(2),
                                 rs.getLong(3),
-                                rs.getInt(4)
+                                rs.getLong(4),
+                                rs.getInt(5)
                         )
                 );
             }

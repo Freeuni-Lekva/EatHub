@@ -72,7 +72,9 @@ public class NewRoomServlet extends HttpServlet {
                     orderService.updateOrder(order.get());
                 }
             } else {
-                orderService.addOrder(user.getUserID(), meal.getMealID(), room.getRoomID(), quantity);
+                if (quantity > 0) {
+                    orderService.addOrder(user.getUserID(), meal.getMealID(), room.getRoomID(), quantity);
+                }
             }
         }
         request.setAttribute(NameConstants.ORDER_SERVICE, orderService);

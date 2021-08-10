@@ -11,6 +11,9 @@
 <%@ page import="ge.eathub.service.impl.RoomServiceImpl" %>
 <%@ page import="ge.eathub.service.impl.OrderServiceImpl" %>
 <%@ page import="ge.eathub.service.OrderService" %>
+<%@ page import="ge.eathub.dao.MealDao" %>
+<%@ page import="ge.eathub.dao.impl.MySqlMealDao" %>
+<%@ page import="java.math.BigDecimal" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!doctype html>
@@ -47,16 +50,31 @@
                 }
             %>
             <li>
-                <%="Meal Name: " + meal.getMealName() + " Price: " + meal.getMealPrice() + " ID=" + meal.getMealID()%>
+                <%="Meal Name: '" + meal.getMealName() + "' Price: " + meal.getMealPrice()%>
                 <input type='number'
                        name="<%=meal.getMealID()%>"
                        min="0"
                        value="<%=amount%>">
             </li>
             <%}%>
-            <input type='submit' value='submit'/><br>
+                <input type='submit' value='submit'/><br>
         </form>
+
+        <h4>Chosen Meals:</h4>
+        <%
+            MySqlMealDao mealDao = (MySqlMealDao) sc.getAttribute(NameConstants.MEAL_DAO);
+            List<Order> orders = orderService.getAll(user.getUserID(), room.getRoomID());
+            BigDecimal totalCost = new BigDecimal(0);
+            for (Order order : orders){
+                Meal meal = mealDao.getMealById(order.getMealID()).get();
+                totalCost = totalCost.add(meal.getMealPrice().multiply(new BigDecimal(order.getQuantity())));
+                %>
+                <li><%=meal.getMealName() + ", amount = " + order.getQuantity() + "."%></li>
+            <%}%>
+            <h4>Total Cost: <%=totalCost%></h4>
+
     </div>
+
 </div>
 </body>
 </html>
