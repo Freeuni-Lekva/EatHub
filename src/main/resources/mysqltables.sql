@@ -55,7 +55,7 @@ CREATE TABLE messages
     room_id    BIGINT       NOT NULL,
     send_time  VARCHAR(40)  NOT NULL,
     type       VARCHAR(30)  NOT NULL,
-    content    VARCHAR(400) NOT NULL,
+    content    VARCHAR(10000) NOT NULL,
     PRIMARY KEY (message_id)
 );
 

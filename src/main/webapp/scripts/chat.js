@@ -53,8 +53,6 @@ function openSocket(accessToken, roomID, currentUser) {
     chatSocket = new WebSocket("ws://" + host + "/chat?access-token=" + accessToken + "&room-id=" + roomID);
     chatSocket.onerror = function (ev) {
         console.log(ev.type);
-        // document.getElementById("authentication-error").innerHTML = "Oops... These credentials are invalid.";
-
     }
     chatSocket.onopen = function (event) {
         // window.open("http://" + host + "/chat.jsp")
@@ -77,6 +75,10 @@ function openSocket(accessToken, roomID, currentUser) {
                     displayMessage(webSocketMessage.username, webSocketMessage.content, currentUser,
                         webSocketMessage.sendTime);
                     break;
+                case "image":
+                    displayMessage(webSocketMessage.username, webSocketMessage.content, currentUser,
+                        webSocketMessage.sendTime, true);
+                    break;
                 case "goodbye":
                     displayDisconnectedUserMessage(webSocketMessage.username);
                     break;
@@ -92,18 +94,42 @@ function openSocket(accessToken, roomID, currentUser) {
 }
 
 function sendMessage() {
-    const text = document.getElementById("message").value;
-    if (text) {
+    const text = document.getElementById("message").value.trim();
+    if (text !== '') {
         document.getElementById("message").value = "";
-        const socketMessage = {
-            content: text,
-            type: "text"
-        }
-        chatSocket.send(JSON.stringify(socketMessage));
+        sendText(text)
+    }
+    const input = document.querySelector('input');
+    if (input.files) {
+        let file = input.files[0];
+        input.value = '';
+        sendImage(file);
     }
 }
 
-function displayMessage(username, text, currentUser, sendTime) {
+function sendText(text) {
+    let socketMessage = {
+        content: text,
+        type: "text"
+    }
+    chatSocket.send(JSON.stringify(socketMessage));
+}
+
+function sendImage(file) {
+    console.log(file)
+    const reader = new FileReader();
+    reader.onload = function (event) {
+        console.log(event.target.result)
+        let socketMessage = {
+            content: event.target.result,
+            type: "image"
+        }
+        chatSocket.send(JSON.stringify(socketMessage));
+    }
+    reader.readAsDataURL(file);
+}
+
+function displayMessage(username, cont, currentUser, sendTime, isText = false) {
     const sentByCurrentUser = currentUser === username;
     const message = document.createElement("div");
     message.setAttribute("class", sentByCurrentUser ? "message sent" : "message received");
@@ -114,7 +140,14 @@ function displayMessage(username, text, currentUser, sendTime) {
     message.appendChild(sender);
     const content = document.createElement("span");
     content.setAttribute("class", "content");
-    content.appendChild(document.createTextNode(text));
+    if (isText) {
+        const img = document.createElement("img");
+        img.src = cont;
+        img.alt = "Sent Image";
+        content.appendChild(img);
+    } else {
+        content.appendChild(document.createTextNode(cont));
+    }
     message.appendChild(content);
     const time = document.createElement("span");
     time.setAttribute("class", "time");
@@ -126,7 +159,7 @@ function displayMessage(username, text, currentUser, sendTime) {
         message.className += " same-sender-previous-message";
     }
     message.appendChild(time);
-    
+
     messages.appendChild(message);
     messages.scrollTop = messages.scrollHeight;
 }
@@ -135,7 +168,7 @@ function displayConnectedUserMessage(username, currentUser) {
     const sentByCurrentUer = currentUser === username;
     const message = document.createElement("div");
     message.setAttribute("class", "message event");
-    const text = sentByCurrentUer? "Welcome " + username : username + " joined the chat";
+    const text = sentByCurrentUer ? "Welcome " + username : username + " joined the chat";
     const content = document.createElement("span");
     content.setAttribute("class", "content");
     content.appendChild(document.createTextNode(text));

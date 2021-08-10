@@ -6,6 +6,7 @@
 <div style="display: block" id="chat">
     <div id="messages" autofocus></div>
     <form id="chat-controls" onsubmit="return false;">
+        <input  type="file"  name="img" accept="image/*" id="asd" placeholder=" choose image"/>
         <input type="text" id="message" placeholder="Enter a message"/>
         <button class="button" onclick="sendMessage()">Send</button>
     </form>
