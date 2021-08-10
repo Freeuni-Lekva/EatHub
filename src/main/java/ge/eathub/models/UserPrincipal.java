@@ -6,6 +6,7 @@ public class UserPrincipal implements Principal {
 
     private final String username;
     private final Long userID;
+
     public UserPrincipal(String username, Long userID) {
         this.username = username;
         this.userID = userID;

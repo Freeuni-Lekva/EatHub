@@ -31,7 +31,6 @@ public class UserServiceImpl implements UserService {
         this.userDao = userDao;
     }
 
-    // TODO Send registration email
     @Override
     public UserDto registerUser(UserRegisterDto userDto) throws UserCreationException, InvalidEmailException {
         logger.info("create user " + userDto.getUsername());
@@ -42,7 +41,7 @@ public class UserServiceImpl implements UserService {
         if (userDao.checkInfo(userDto.getUsername(), userDto.getEmail())) {
             if (DEBUG || Mailer.sendMail(new RegistrationMail(userDto.getUsername(), userDto.getEmail(),
                     authenticator.getAccessToken(userDto.getUsername())))) {
-                logger.info("email was sent");
+                logger.info("email was sent to user "+ userDto.getUsername());
                 User newUser = new User(userDto.getUsername(),
                         BCrypt.hashpw(userDto.getPassword(), BCrypt.gensalt()),
                         userDto.getEmail());

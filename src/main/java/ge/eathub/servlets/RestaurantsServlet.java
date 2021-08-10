@@ -1,14 +1,15 @@
 package ge.eathub.servlets;
 
-import ge.eathub.dao.MealDao;
 import ge.eathub.dao.RestaurantDao;
 import ge.eathub.listener.NameConstants;
 import ge.eathub.models.Meal;
 import ge.eathub.models.Restaurant;
 
-import javax.servlet.*;
-import javax.servlet.http.*;
-import javax.servlet.annotation.*;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
@@ -23,45 +24,42 @@ public class RestaurantsServlet extends HttpServlet {
     public static final String SUCCESS_MEALS_ATTR = "FILTER MEAL EXECUTED";
 
 
-
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         logger.info("restaurants get");
-        response.setContentType("text/html;charset=UTF-8");
-        request.setCharacterEncoding("UTF-8");
+        ServletCommons.setEncoding(request, response);
         request.getRequestDispatcher(RESTAURANTS_PAGE).forward(request, response);
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        ServletContext sc = getServletContext();
-        response.setContentType("text/html;charset=UTF-8");
-        request.setCharacterEncoding("UTF-8");
+        ServletCommons.setEncoding(request, response);
         String option = request.getQueryString();
-        if (option.equals("filter")){
+        if (option.equals("filter")) {
             doFilter(request, response);
         }
     }
 
-    private void doFilter(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
-        String name = request.getParameter("filter_meal_name");
+    private void doFilter(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String name = request.getParameter("filter_meal_name").trim();
         String option = request.getParameter("filter_option");
         RestaurantDao restaurantDao = (RestaurantDao) getServletContext().getAttribute(NameConstants.RESTAURANT_DAO);
-        if (option.equals("with_restaurants")){
+        if (option.equals("with_restaurants")) {
             HashMap<Restaurant, List<Meal>> map = (HashMap<Restaurant, List<Meal>>) restaurantDao.getRestaurantsByMeal(name);
-            if (map.isEmpty()){
-                request.setAttribute(ERROR_ATTR, "No meal found on that name:"  + name);
-            }else {
-                request.setAttribute(SUCCESS_RESTAURANT_ATTR,  map);
+            if (map.isEmpty()) {
+                request.setAttribute(ERROR_ATTR, "No meal found on that name:" + name);
+            } else {
+                request.setAttribute(SUCCESS_RESTAURANT_ATTR, map);
             }
-        }else if(option.equals("only_meals")){
-            if (request.getParameter("filter_restaurant_id").isEmpty()){
+        } else if (option.equals("only_meals")) {
+            if (request.getParameter("filter_restaurant_id").isEmpty()) {
                 request.setAttribute(ERROR_ATTR, "Missing restaurant ID");
-            }else{
+            } else {
                 long id = Long.parseLong(request.getParameter("filter_restaurant_id"));
                 List<Meal> meals = restaurantDao.getMealsBySubName(name, id);
-                if (meals.isEmpty()) request.setAttribute(ERROR_ATTR, "No meal found on that name: '"  + name + "' in a restaurant with ID: " + id);
-                else request.setAttribute(SUCCESS_MEALS_ATTR,meals);
+                if (meals.isEmpty())
+                    request.setAttribute(ERROR_ATTR, "No meal found on that name: '" + name + "' in a restaurant with ID: " + id);
+                else request.setAttribute(SUCCESS_MEALS_ATTR, meals);
             }
         }
         request.getRequestDispatcher(RESTAURANTS_PAGE).forward(request, response);

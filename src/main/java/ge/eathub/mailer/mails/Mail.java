@@ -1,9 +1,9 @@
 package ge.eathub.mailer.mails;
 
 public class Mail {
-    private String to;
-    private String subject;
-    private String message;
+    private final String to;
+    private final String subject;
+    private final String message;
 
     public String getTo() {
         return to;

@@ -2,12 +2,8 @@ package ge.eathub.dao.impl;
 
 import ge.eathub.dao.OrderDao;
 import ge.eathub.database.DBConnection;
-import ge.eathub.exceptions.MealUpdateException;
 import ge.eathub.models.Meal;
 import ge.eathub.models.Order;
-import ge.eathub.models.Room;
-import ge.eathub.models.UserRoom;
-import org.mockito.internal.matchers.Or;
 
 import javax.sql.DataSource;
 import java.sql.*;
@@ -95,7 +91,7 @@ public class MySqlOrderDao implements OrderDao {
                             Order.USER_ID,
                             Order.ROOM_ID
                     ));
-            stm.setLong(1,userID);
+            stm.setLong(1, userID);
             stm.setLong(2, roomID);
             ResultSet rs = stm.executeQuery();
             while (rs.next()) {
@@ -236,11 +232,11 @@ public class MySqlOrderDao implements OrderDao {
             ResultSet rs = stm.executeQuery();
             while (rs.next()) {
                 orders.add(new Order(
-                            rs.getLong(1),
-                            rs.getLong(2),
-                            rs.getLong(3),
-                            rs.getInt(4)
-                    )
+                                rs.getLong(1),
+                                rs.getLong(2),
+                                rs.getLong(3),
+                                rs.getInt(4)
+                        )
                 );
             }
         } catch (SQLException e) {

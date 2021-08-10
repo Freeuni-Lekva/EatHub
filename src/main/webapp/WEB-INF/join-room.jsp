@@ -15,7 +15,7 @@
 </head>
 <body>
 <form id="join" onsubmit="return false;">
-    <input type="number" id="roomID" placeholder="room ID" required min=1 />
+    <input type="number" id="roomID" placeholder="room ID" required min=1/>
     <% UserDto user = ((UserDto) request.getSession().getAttribute(UserDto.ATTR));%>
     <button class="button" onclick="joinRoom('<%= user.getUsername()%>',  roomID.value)">Join room chat
     </button>

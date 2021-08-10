@@ -3,12 +3,15 @@ package ge.eathub.servlets;
 import ge.eathub.listener.NameConstants;
 import ge.eathub.service.UserService;
 
-import javax.servlet.*;
-import javax.servlet.http.*;
-import javax.servlet.annotation.*;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-import static ge.eathub.servlets.ServletCommons.*;
+import static ge.eathub.servlets.ServletCommons.CONFIRM_PAGE;
+import static ge.eathub.servlets.ServletCommons.LOGIN_PAGE;
 
 @WebServlet(name = "ConfirmServlet", value = "/confirm")
 public class ConfirmServlet extends HttpServlet {
@@ -18,6 +21,7 @@ public class ConfirmServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        ServletCommons.setEncoding(request, response);
         String token = request.getParameter(CONFIRM_TOKEN);
         if (token == null) {
             request.getRequestDispatcher(CONFIRM_PAGE).forward(request, response);
@@ -30,6 +34,7 @@ public class ConfirmServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        ServletCommons.setEncoding(request, response);
         String token = request.getParameter(CONFIRM_TOKEN);
         confirmToken(request, response, token);
 

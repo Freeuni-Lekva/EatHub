@@ -5,7 +5,6 @@ import ge.eathub.database.DBConnection;
 import ge.eathub.exceptions.MealCreationException;
 import ge.eathub.exceptions.MealUpdateException;
 import ge.eathub.models.Meal;
-import ge.eathub.models.UserRoom;
 
 import javax.sql.DataSource;
 import java.sql.*;

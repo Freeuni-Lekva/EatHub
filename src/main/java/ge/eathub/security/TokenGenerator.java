@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import ge.eathub.utils.ObjectMapperFactory;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtBuilder;
-
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Encoders;
@@ -12,13 +11,11 @@ import io.jsonwebtoken.jackson.io.JacksonDeserializer;
 import io.jsonwebtoken.jackson.io.JacksonSerializer;
 import io.jsonwebtoken.security.Keys;
 
-import java.security.Key;
-
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 import javax.xml.bind.DatatypeConverter;
+import java.security.Key;
 import java.security.SecureRandom;
-import java.util.Base64;
 import java.util.Date;
 
 public class TokenGenerator {

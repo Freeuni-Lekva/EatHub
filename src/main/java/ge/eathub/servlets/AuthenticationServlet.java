@@ -27,28 +27,23 @@ public class AuthenticationServlet extends HttpServlet {
 
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        resp.setContentType("text/html;charset=UTF-8");
-        req.setCharacterEncoding("UTF-8");
-        UserLoginDto credentials = mapper.readValue(req.getReader(), UserLoginDto.class);
+        UserLoginDto credentials = mapper.readValue(request.getReader(), UserLoginDto.class);
         UserService userService = (UserService) getServletContext()
                 .getAttribute(NameConstants.USER_SERVICE);
         try {
             UserDto userDto = userService.loginUser(credentials);
             String token = authenticator.getAccessToken(userDto.getUsername());
-            resp.setStatus(HttpServletResponse.SC_OK);
-            resp.setContentType("application/json");
-            mapper.writeValue(resp.getWriter(), new AccessToken(token));
+            response.setStatus(HttpServletResponse.SC_OK);
+            response.setContentType("application/json");
+            mapper.writeValue(response.getWriter(), new AccessToken(token));
 //            resp.sendRedirect("/chat.jsp");
         } catch (InvalidUserPasswordException e) {
-            resp.setStatus(HttpServletResponse.SC_FORBIDDEN);
-            resp.setContentType("text/plain");
-            resp.getWriter().write("Invalid credentials");
+            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+            response.setContentType("text/plain");
+            response.getWriter().write("Invalid credentials");
             e.printStackTrace();
         }
     }
-
-
-
 }

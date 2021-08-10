@@ -18,6 +18,6 @@ public class AuthenticatedRequest extends HttpServletRequestWrapper {
 
     @Override
     public Principal getUserPrincipal() {
-        return new UserPrincipal(user.getUsername(),user.getUserID());
+        return new UserPrincipal(user.getUsername(), user.getUserID());
     }
 }

@@ -1,7 +1,5 @@
 package ge.eathub.dto;
 
-import ge.eathub.models.User;
-
 public class UserRegisterDto {
     private String username;
     private String password;

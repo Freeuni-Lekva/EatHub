@@ -7,6 +7,7 @@ import ge.eathub.models.UserPrincipal;
 import ge.eathub.models.chat.Message;
 import ge.eathub.models.chat.MessageType;
 import ge.eathub.utils.ObjectMapperFactory;
+
 import javax.websocket.*;
 import javax.websocket.server.ServerEndpoint;
 import java.security.Principal;
@@ -30,6 +31,7 @@ public class ChatEndpoint {
     private Long roomID;
     private ChatDao chatDao;
     private Long userID;
+
     @OnOpen
     public void onOpen(Session session, EndpointConfig config) throws SessionException {
         try {
