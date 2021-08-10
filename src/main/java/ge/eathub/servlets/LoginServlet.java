@@ -22,14 +22,12 @@ import static ge.eathub.servlets.ServletCommons.*;
 public class LoginServlet extends HttpServlet {
     private final static Logger logger = Logger.getLogger(LoginServlet.class.getName());
     public static final String ERROR_ATTR = "LOGIN_ERROR";
-    public static final String ADMIN_PAGE = "/WEB-INF/admin.jsp";
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
-        request.setCharacterEncoding("UTF-8");
-        if (!checkUserSession(request, response, USER_START_PAGE)) {
+        ServletCommons.setEncoding(request, response);
+        if (checkUserSession(request, response, USER_START_PAGE)) {
             request.getRequestDispatcher(LOGIN_PAGE).forward(request, response);
         }
     }
@@ -39,8 +37,7 @@ public class LoginServlet extends HttpServlet {
             throws ServletException, IOException {
         UserService userService = (UserService) getServletContext()
                 .getAttribute(NameConstants.USER_SERVICE);
-        response.setContentType("text/html;charset=UTF-8");
-        request.setCharacterEncoding("UTF-8");
+        ServletCommons.setEncoding(request, response);
         String username = request.getParameter("username");
         String password = request.getParameter("password");
         logger.info("Login POST | name:%s".formatted(username));
@@ -52,9 +49,9 @@ public class LoginServlet extends HttpServlet {
             try { // TODO send proper errors
                 UserDto usr = userService.loginUser(user);
                 request.getSession().setAttribute(UserDto.ATTR, usr);
-                if(usr.getRole().equals(Role.CUSTOMER)) {
+                if (usr.getRole().equals(Role.CUSTOMER)) {
                     request.getRequestDispatcher(USER_START_PAGE).forward(request, response);
-                }else{
+                } else {
                     request.getRequestDispatcher(ADMIN_PAGE).forward(request, response);
                 }
             } catch (UserNotFoundException | InvalidUserPasswordException e) {

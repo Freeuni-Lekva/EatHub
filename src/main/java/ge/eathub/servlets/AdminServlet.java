@@ -36,19 +36,16 @@ public class AdminServlet extends HttpServlet {
     public static final String SUCCESS_ATTR = "ADD/UPDATE_EXECUTED";
 
 
-
-
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
-        request.setCharacterEncoding("UTF-8");
+        ServletCommons.setEncoding(request, response);
         Session session = (Session) request.getSession(false);
         if (session != null) {
             UserDto user = (UserDto) request.getSession().getAttribute(UserDto.ATTR);
             if (user != null) {
                 if (user.getRole().equals(Role.ADMIN)) {
-                    request.getRequestDispatcher("/WEB-INF/admin.jsp").forward(request, response);
+                    request.getRequestDispatcher(ADMIN_PAGE).forward(request, response);
                 } else {
                     response.setStatus(HttpServletResponse.SC_FORBIDDEN);
                 }
@@ -59,7 +56,6 @@ public class AdminServlet extends HttpServlet {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         }
     }
-
 
 
     @Override
@@ -76,14 +72,13 @@ public class AdminServlet extends HttpServlet {
     }
 
 
-
     private void doRestaurant(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String restaurantID = request.getParameter("restaurant_id");
         String restaurant_name = request.getParameter("restaurant_name");
         String location = request.getParameter("location");
         long limit = Long.parseLong(request.getParameter("limit"));
-        BigDecimal balance = BigDecimal.valueOf(Double.valueOf(request.getParameter("balance")));
-        BigDecimal rating = BigDecimal.valueOf(Double.valueOf(request.getParameter("rating")));
+        BigDecimal balance = BigDecimal.valueOf(Double.parseDouble(request.getParameter("balance")));
+        BigDecimal rating = BigDecimal.valueOf(Double.parseDouble(request.getParameter("rating")));
         String option = request.getParameter("option");
         RestaurantDao restaurantDao = (RestaurantDao) getServletContext().getAttribute(NameConstants.RESTAURANT_DAO);
         MealDao mealDao = (MealDao) getServletContext().getAttribute(NameConstants.MEAL_DAO);
@@ -94,17 +89,17 @@ public class AdminServlet extends HttpServlet {
                 try {
                     adminService.updateRestaurant(restID, new Restaurant(restaurant_name, location, limit, rating, balance));
                     request.setAttribute(SUCCESS_ATTR, "Restaurant: " + restaurant_name + " updated successfully");
-                }catch (RestaurantUpdateException ex){
+                } catch (RestaurantUpdateException ex) {
                     request.setAttribute(ERROR_ATTR, ex.getMessage());
                 }
-            }else{
+            } else {
                 request.setAttribute(ERROR_ATTR, "restaurant id is empty and update isn't available");
             }
         } else if (option.equals("add")) {
-            try{
+            try {
                 adminService.addRestaurant(new Restaurant(restaurant_name, location, limit, rating, balance));
                 request.setAttribute(SUCCESS_ATTR, "Restaurant: " + restaurant_name + " created successfully");
-            }catch (RestaurantCreationException ex){
+            } catch (RestaurantCreationException ex) {
                 request.setAttribute(ERROR_ATTR, ex.getMessage());
             }
         }
@@ -114,7 +109,7 @@ public class AdminServlet extends HttpServlet {
         String option = request.getParameter("meal_option");
         String name = request.getParameter("meal_name");
         double mealPrice = Double.parseDouble(request.getParameter("meal_price"));
-        Long time = Long.parseLong(request.getParameter("cooking_time"));
+        long time = Long.parseLong(request.getParameter("cooking_time"));
         Long restaurantID = Long.parseLong(request.getParameter("meal_restaurant_id"));
         String mealID = request.getParameter("meal_id");
         RestaurantDao restaurantDao = (RestaurantDao) getServletContext().getAttribute(NameConstants.RESTAURANT_DAO);
@@ -123,21 +118,21 @@ public class AdminServlet extends HttpServlet {
         if (option.equals("update")) {
             if (!mealID.isEmpty()) {
                 long meal_ID = Long.parseLong(mealID);
-                try{
-                    if (adminService.updateMeal(restaurantID, new Meal(meal_ID, name, new BigDecimal(mealPrice), new Time(time), restaurantID))){
+                try {
+                    if (adminService.updateMeal(restaurantID, new Meal(meal_ID, name, new BigDecimal(mealPrice), new Time(time), restaurantID))) {
                         request.setAttribute(SUCCESS_ATTR, "Meal: " + name + " updated successfully");
                     }
-                }catch (MealUpdateException ex){
+                } catch (MealUpdateException ex) {
                     request.setAttribute(ERROR_ATTR, ex.getMessage());
                 }
-            }else{
+            } else {
                 request.setAttribute(ERROR_ATTR, "Meal id is empty and update isn't available");
             }
         } else if (option.equals("add")) {
             try {
                 adminService.addMeal(new Meal(name, new BigDecimal(mealPrice), new Time(time), restaurantID));
                 request.setAttribute(SUCCESS_ATTR, "Meal: " + name + " added successfully");
-            }catch (MealCreationException ex){
+            } catch (MealCreationException ex) {
                 request.setAttribute(ERROR_ATTR, ex.getMessage());
             }
         }

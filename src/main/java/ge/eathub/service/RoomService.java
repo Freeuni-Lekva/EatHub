@@ -8,7 +8,7 @@ import java.util.Optional;
 public interface RoomService {
     Optional<Room> createRoom(UserDto user, Long restaurantID);
 
-    boolean inviteUser(String username, Long roomID);
+    boolean inviteUser(String fromUsername, String invitedUsername, Long roomID);
 
-    boolean checkUser(Long username, Long roomID);
+    boolean checkUser(Long userID, Long roomID);
 }

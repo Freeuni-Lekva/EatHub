@@ -1,6 +1,5 @@
 package ge.eathub.service.impl;
 
-import ge.eathub.dao.MealDao;
 import ge.eathub.dao.OrderDao;
 import ge.eathub.dao.RoomDao;
 import ge.eathub.dao.UserDao;
@@ -50,7 +49,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public Optional<Order> getOrderByID(Long userID, Long roomID, Long mealID) {
-        if (roomDao.userInRoom(roomID, userID)){
+        if (roomDao.userInRoom(roomID, userID)) {
             return orderDao.getOrderByID(userID, roomID, mealID);
         }
         return Optional.empty();
@@ -58,7 +57,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public List<Order> getAll(Long userID, Long roomID) {
-        if (roomDao.userInRoom(roomID, userID)){
+        if (roomDao.userInRoom(roomID, userID)) {
             return orderDao.getAll(userID, roomID);
         }
         return new ArrayList<>();

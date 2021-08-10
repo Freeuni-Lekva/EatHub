@@ -7,9 +7,14 @@ import ge.eathub.service.impl.OrderServiceImpl;
 import ge.eathub.service.impl.RoomServiceImpl;
 import ge.eathub.service.impl.UserServiceImpl;
 
-import javax.servlet.*;
-import javax.servlet.http.*;
-import javax.servlet.annotation.*;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletContextEvent;
+import javax.servlet.ServletContextListener;
+import javax.servlet.annotation.WebListener;
+import javax.servlet.http.HttpSessionAttributeListener;
+import javax.servlet.http.HttpSessionBindingEvent;
+import javax.servlet.http.HttpSessionEvent;
+import javax.servlet.http.HttpSessionListener;
 import javax.sql.DataSource;
 
 @WebListener
@@ -24,27 +29,27 @@ public class Listener implements ServletContextListener, HttpSessionListener, Ht
         ServletContext sc = sce.getServletContext();
         DataSource ds = DBConnection.getMySqlDataSource();
 
-        UserDao userDao = new MySqlUserDao(ds);  
+        UserDao userDao = new MySqlUserDao(ds);
         sc.setAttribute(NameConstants.USER_SERVICE,
                 new UserServiceImpl(userDao));
 
         RoomDao roomDao = new MySqlRoomDao(ds);
         sc.setAttribute(NameConstants.ORDER_SERVICE,
-                new OrderServiceImpl(roomDao,userDao, new MySqlOrderDao(ds)));
+                new OrderServiceImpl(roomDao, userDao, new MySqlOrderDao(ds)));
 
         sc.setAttribute(NameConstants.ROOM_SERVICE,
                 new RoomServiceImpl(roomDao, userDao));
 
         RestaurantDao restaurantDao = new MySqlRestaurantDao(ds);
 
-        sc.setAttribute(NameConstants.RESTAURANT_DAO, restaurantDao); 
+        sc.setAttribute(NameConstants.RESTAURANT_DAO, restaurantDao);
 
         MealDao mealDao = new MySqlMealDao(ds);
         sce.getServletContext().setAttribute(NameConstants.MEAL_DAO, mealDao);
 
 
         ChatDao chatDao = new MySqlChatDao(ds);
-        sc.setAttribute(NameConstants.CHAT_DAO, chatDao); 
+        sc.setAttribute(NameConstants.CHAT_DAO, chatDao);
     }
 
     @Override

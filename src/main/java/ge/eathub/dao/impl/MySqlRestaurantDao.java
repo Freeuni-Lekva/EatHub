@@ -108,7 +108,7 @@ public class MySqlRestaurantDao implements RestaurantDao {
             conn = dataSource.getConnection();
             PreparedStatement stm = conn.prepareStatement(
                     "SELECT * FROM %s where %s like ? and %s = ?;".formatted(Meal.TABLE, Meal.COLUMN_NAME, Meal.COLUMN_RESTAURANT_ID));
-            stm.setString(1,"%" + mealName + "%");
+            stm.setString(1, "%" + mealName + "%");
             stm.setLong(2, restaurantID);
             ResultSet rs = stm.executeQuery();
             while (rs.next()) {
@@ -140,11 +140,11 @@ public class MySqlRestaurantDao implements RestaurantDao {
             PreparedStatement stm = conn.prepareStatement(
                     "SELECT * FROM %s, %s where %s = %s and %s like ? ;"
                             .formatted(Meal.TABLE + " " + mealTableName,
-                                       Restaurant.TABLE + " " + restaurantTableName,
-                                       mealTableName + "." + Meal.COLUMN_RESTAURANT_ID,
-                                       restaurantTableName + "." + Restaurant.COLUMN_ID,
-                                       mealTableName + "." + Meal.COLUMN_NAME));
-            stm.setString(1,"%" + mealName + "%");
+                                    Restaurant.TABLE + " " + restaurantTableName,
+                                    mealTableName + "." + Meal.COLUMN_RESTAURANT_ID,
+                                    restaurantTableName + "." + Restaurant.COLUMN_ID,
+                                    mealTableName + "." + Meal.COLUMN_NAME));
+            stm.setString(1, "%" + mealName + "%");
             ResultSet rs = stm.executeQuery();
             while (rs.next()) {
                 Meal meal = new Meal(
@@ -162,7 +162,7 @@ public class MySqlRestaurantDao implements RestaurantDao {
                         rs.getBigDecimal(10),
                         rs.getBigDecimal(11)
                 );
-                if (!ret.containsKey(restaurant)){
+                if (!ret.containsKey(restaurant)) {
                     ret.put(restaurant, new ArrayList<>());
                 }
                 ret.get(restaurant).add(meal);

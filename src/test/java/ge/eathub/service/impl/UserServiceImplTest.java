@@ -43,7 +43,7 @@ class UserServiceImplTest {
     @Test
     public void registerUserException() {
         UserService userService = new UserServiceImpl(daoMockito);
-        when(daoMockito.createUser(any())).thenThrow(UserCreationException.class);
+//        when(daoMockito.createUser(any())).thenThrow(UserCreationException.class);
         try (MockedStatic<Mailer> mailer = Mockito.mockStatic(Mailer.class)) {
             mailer.when(() -> Mailer.sendMail(any(), any(), any())).thenReturn(true);
             assertThrows(UserCreationException.class, () -> userService.registerUser(new UserRegisterDto("asd", "asd", "asd@asd.com")));

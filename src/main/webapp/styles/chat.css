@@ -1,4 +1,3 @@
-
 /* Title Bar */
 
 #title {
@@ -85,6 +84,7 @@
     color: dimgrey;
     font-size: 10px;
 }
+
 #messages .message.received .time {
     color: dimgrey;
     font-size: 10px;

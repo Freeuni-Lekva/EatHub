@@ -14,23 +14,27 @@ public class Order {
     private Long roomID;
     private Integer quantity;
 
-    public Order (Long userID, Long mealID, Long roomID, Integer quantity) {
+    public Order(Long userID, Long mealID, Long roomID, Integer quantity) {
         this.userID = userID;
         this.mealID = mealID;
         this.roomID = roomID;
         this.quantity = quantity;
     }
 
-    public Order (Long userID, Long mealID, Long roomID) {
+    public Order(Long userID, Long mealID, Long roomID) {
         this.userID = userID;
         this.mealID = mealID;
         this.roomID = roomID;
         quantity = 1;
     }
 
-    public Long getOrderID() { return orderID;}
+    public Long getOrderID() {
+        return orderID;
+    }
 
-    public void setOrderID(Long orderID) {this.orderID = orderID;}
+    public void setOrderID(Long orderID) {
+        this.orderID = orderID;
+    }
 
     public Long getUserID() {
         return userID;

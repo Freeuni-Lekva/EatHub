@@ -26,9 +26,8 @@ public class RegistrationServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         logger.info("Registration get");
-        response.setContentType("text/html;charset=UTF-8");
-        request.setCharacterEncoding("UTF-8");
-        if (!checkUserSession(request, response, USER_START_PAGE)) {
+        ServletCommons.setEncoding(request, response);
+        if (checkUserSession(request, response, USER_START_PAGE)) {
             request.getRequestDispatcher(REGISTRATION_PAGE).forward(request, response);
         }
     }
@@ -39,7 +38,7 @@ public class RegistrationServlet extends HttpServlet {
             throws ServletException, IOException {
         UserService userService = (UserService) getServletContext()
                 .getAttribute(NameConstants.USER_SERVICE);
-        request.setCharacterEncoding("UTF-8");
+        ServletCommons.setEncoding(request, response);
         String username = request.getParameter("username");
         String password = request.getParameter("password");
         String email = request.getParameter("email");
@@ -49,9 +48,9 @@ public class RegistrationServlet extends HttpServlet {
             request.getRequestDispatcher(REGISTRATION_PAGE).forward(request, response);
         } else {
             UserRegisterDto user = new UserRegisterDto(username, password, email);
-            try { // TODO send proper errors
+            try {
                 UserDto userDto = userService.registerUser(user);
-                request.getSession().setAttribute(UserDto.ATTR,userDto);
+                request.getSession().setAttribute(UserDto.ATTR, userDto);
                 request.getRequestDispatcher(CONFIRM_PAGE).forward(request, response);
             } catch (InvalidEmailException | UserCreationException e) {
                 request.setAttribute(ERROR_ATTR, e.getMessage());

@@ -1,7 +1,9 @@
 package ge.eathub.servlets;
 
 import ge.eathub.dto.UserDto;
+import ge.eathub.listener.NameConstants;
 import ge.eathub.security.Authenticator;
+import ge.eathub.service.RoomService;
 import ge.eathub.utils.AuthenticatorFactory;
 
 import javax.servlet.ServletException;
@@ -11,7 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-import static ge.eathub.servlets.ServletCommons.CONFIRM_PAGE;
+import static ge.eathub.servlets.ServletCommons.*;
 
 @WebServlet(name = "JoinRoomServlet", value = "/join-room")
 public class JoinRoomServlet extends HttpServlet {
@@ -19,43 +21,34 @@ public class JoinRoomServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
-        request.setCharacterEncoding("UTF-8");
+        ServletCommons.setEncoding(request, response);
         UserDto user = (UserDto) request.getSession().getAttribute(UserDto.ATTR);
-        if (user == null) {
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        if (checkUser(request, response, user)) {
             return;
         }
-        if (!user.getConfirmed()) {
-            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-            request.getRequestDispatcher(CONFIRM_PAGE).forward(request, response);
-            return;
-        }
-        request.getRequestDispatcher("/WEB-INF/join-room.jsp").forward(request, response);
+        request.getRequestDispatcher(JOIN_ROOM_PAGE).forward(request, response);
 
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
-        request.setCharacterEncoding("UTF-8");
+        ServletCommons.setEncoding(request, response);
         UserDto user = (UserDto) request.getSession().getAttribute(UserDto.ATTR);
-        if (user == null) {
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        if (checkUser(request, response, user)) {
             return;
         }
-        if (!user.getConfirmed()) {
-            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-            request.getRequestDispatcher(CONFIRM_PAGE).forward(request, response);
-            return;
-        }
+        try {
             Long roomID = Long.valueOf(request.getParameter("room-id"));
-            //TODO CHECK ROOM WITH ROOM SERVICE
-            response.setStatus(HttpServletResponse.SC_OK);
-            Authenticator auth = AuthenticatorFactory.get();
-            String token = auth.getAccessToken(user.getUsername());
-            response.setHeader("Authorization", BASIC_AUTH + token);
-            request.getRequestDispatcher("/WEB-INF/room.jsp").forward(request, response);
+            RoomService roomService = (RoomService) getServletContext().getAttribute(NameConstants.ROOM_SERVICE);
+            if (roomService.checkUser(user.getUserID(), roomID)) {
+                response.setStatus(HttpServletResponse.SC_OK);
+                Authenticator auth = AuthenticatorFactory.get();
+                String token = auth.getAccessToken(user.getUsername());
+                response.setHeader("Authorization", BASIC_AUTH + token);
+                request.getRequestDispatcher(ROOM_PAGE).forward(request, response);
+            } else {
+                response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+            }
         } catch (Exception e) {
             response.setStatus(HttpServletResponse.SC_FORBIDDEN);
             response.setContentType("text/plain");

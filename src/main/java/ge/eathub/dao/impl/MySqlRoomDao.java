@@ -2,20 +2,13 @@ package ge.eathub.dao.impl;
 
 import ge.eathub.dao.RoomDao;
 import ge.eathub.database.DBConnection;
-import ge.eathub.exceptions.EmailAlreadyExistsException;
-import ge.eathub.exceptions.MealCreationException;
-import ge.eathub.exceptions.UserCreationException;
-import ge.eathub.exceptions.UsernameAlreadyExistsException;
 import ge.eathub.models.*;
-import ge.eathub.models.chat.Message;
 
 import javax.sql.DataSource;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
-import static ge.eathub.dao.impl.MySqlConstants.MYSQL_DUPLICATE_ERROR_CODE;
 
 public class MySqlRoomDao implements RoomDao {
 
@@ -215,7 +208,7 @@ public class MySqlRoomDao implements RoomDao {
     }
 
     @Override
-    public boolean userInRoom (Long userID, Long roomID) {
+    public boolean userInRoom(Long userID, Long roomID) {
         Connection conn = null;
         try {
             conn = dataSource.getConnection();

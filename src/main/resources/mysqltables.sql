@@ -48,11 +48,11 @@ CREATE TABLE restaurants
 
 CREATE TABLE messages
 (
-    message_id BIGINT       NOT NULL AUTO_INCREMENT,
-    user_id    BIGINT       NOT NULL,
-    room_id    BIGINT       NOT NULL,
-    send_time  VARCHAR(40)  NOT NULL,
-    type       VARCHAR(30)  NOT NULL,
+    message_id BIGINT         NOT NULL AUTO_INCREMENT,
+    user_id    BIGINT         NOT NULL,
+    room_id    BIGINT         NOT NULL,
+    send_time  VARCHAR(40)    NOT NULL,
+    type       VARCHAR(30)    NOT NULL,
     content    VARCHAR(10000) NOT NULL,
     PRIMARY KEY (message_id)
 );
@@ -66,7 +66,7 @@ CREATE TABLE rooms
 (
     room_id       BIGINT  NOT NULL AUTO_INCREMENT,
     restaurant_id BIGINT  NOT NULL,
-    active     BOOLEAN NOT NULL,
+    active        BOOLEAN NOT NULL,
     PRIMARY KEY (room_id)
 );
 
@@ -136,51 +136,48 @@ VALUES ('admin', '$2a$10$.gSvGvCf5I85vxP4dklNSuqkwnFGNZxE4S04Dy6aZX76btLZic6Wm',
        ('vano', '$2a$10$.gSvGvCf5I85vxP4dklNSuqkwnFGNZxE4S04Dy6aZX76btLZic6Wm',
         'vganj18@freeuni.edu.ge', 1000, 'CUSTOMER', TRUE),
        ('alex', '$2a$10$.gSvGvCf5I85vxP4dklNSuqkwnFGNZxE4S04Dy6aZX76btLZic6Wm',
-        'ainau18@freeuni.edu.ge', 1000, 'ADMIN', TRUE),
+        'ainau18@freeuni.edu.ge', 1000, 'CUSTOMER', TRUE),
        ('botko', '$2a$10$.gSvGvCf5I85vxP4dklNSuqkwnFGNZxE4S04Dy6aZX76btLZic6Wm',
-        'gbotk18@freeuni.edu.ge', 1000, 'ADMIN', TRUE),
+        'gbotk18@freeuni.edu.ge', 1000, 'CUSTOMER', TRUE),
        ('nika', '$2a$10$.gSvGvCf5I85vxP4dklNSuqkwnFGNZxE4S04Dy6aZX76btLZic6Wm',
-        'nshug18@gmail.com', 1000, 'ADMIN', TRUE),
+        'nshug18@gmail.com', 1000, 'CUSTOMER', TRUE),
        ('test', '$2a$10$.gSvGvCf5I85vxP4dklNSuqkwnFGNZxE4S04Dy6aZX76btLZic6Wm',
-            'vanoganjelashvili@gmail.com', 1000, 'ADMIN', FALSE),
+        'vanoganjelashvili@gmail.com', 1000, 'ADMIN', FALSE),
        ('leo', '$2a$10$.gSvGvCf5I85vxP4dklNSuqkwnFGNZxE4S04Dy6aZX76btLZic6Wm',
         'lirem18@gmail.com', 1000, 'CUSTOMER', FALSE);
 ;
 
 INSERT INTO restaurants(restaurant_name, location, max_limit, Balance)
-VALUES ("Test1", "Tbilisi", 1000, 1000);
+VALUES ('თბილისურა', 'Tbilisi', 1000, 1000),
+       ('ალაზანი', 'Telavi', 2000, 2000),
+       ('სტალინსკი', 'Gori', 2000, 2600),
+       ('ქუთეისური', 'Kutaisi', 1000, 1000),
+       ('Tiflis Veranda Restaurant', 'Tbilisi', 1000, 1000);
 
-INSERT INTO restaurants(restaurant_name, location, max_limit, Balance)
-VALUES ("Test2", "Telavi", 2000, 2000);
-
-INSERT INTO restaurants(restaurant_name, location, max_limit, Balance)
-VALUES ("Test3", "Kutaisi", 1000, 1000);
 
 INSERT INTO meals(meal_name, meal_price, cooking_time, restaurant_id)
-VALUES ("Mtsvadi", 12.0, 10, 1);
+VALUES ('მწვადი', 12.0, 10, 1),
+       ('ქაბაბი', 16.0, 12, 1),
+       ('ხაჭაპური', 8.0, 17, 1),
+       ('მწვადი', 12.0, 10, 2),
+       ('ტორტი', 16.0, 12, 2),
+       ('ხაჭაპური', 9.0, 17, 2),
+       ('აჩმა', 12.0, 10, 3),
+       ('ხინკალი', 7.0, 12, 3),
+       ('გორული კოტლეტი', 1, 4, 3),
+       ('კიტრის მწნილი', 5.0, 5, 3),
+       ('იმერული ხაჭაპური', 8.0, 17, 4),
+       ('აჭარული ხაჭაპური', 9.0, 10, 4),
+       ('მწვადი', 12.0, 10, 4),
+       ('ტორტი', 16.0, 12, 4),
+       ('Omlete', 15.0, 5, 5),
+       ('Chicken Massaman', 17.0, 20, 5),
+       ('khinkali', 8.0, 10, 5);
+INSERT
+INTO rooms(restaurant_id, active)
+VALUES (3, true);
 
-INSERT INTO meals(meal_name, meal_price, cooking_time, restaurant_id)
-VALUES ("Kababi", 16.0, 12, 1);
-
-INSERT INTO meals(meal_name, meal_price, cooking_time, restaurant_id)
-VALUES ("Khachapuri", 8.0, 17, 1);
-
-INSERT INTO meals(meal_name, meal_price, cooking_time, restaurant_id)
-VALUES ("Mtsvadi", 12.0, 10, 2);
-
-INSERT INTO meals(meal_name, meal_price, cooking_time, restaurant_id)
-VALUES ("Torti", 16.0, 12, 2);
-
-INSERT INTO meals(meal_name, meal_price, cooking_time, restaurant_id)
-VALUES ("Telavis Khachapuri", 9.0, 17, 2);
-
-INSERT INTO meals(meal_name, meal_price, cooking_time, restaurant_id)
-VALUES ("Adjafsandali", 12.0, 10, 3);
-
-INSERT INTO meals(meal_name, meal_price, cooking_time, restaurant_id)
-VALUES ("Kartopili", 7.0, 12, 3);
-
-INSERT INTO meals(meal_name, meal_price, cooking_time, restaurant_id)
-VALUES ("Kitris Mtsnili", 5.0, 5, 3);
-
-
+INSERT INTO user_room(room_id, user_id)
+VALUES (1, 2),
+       (1, 3),
+       (1, 4)

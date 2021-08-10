@@ -28,10 +28,10 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     public boolean addMeal(Meal meal) {
-        if (!MealValidator.validate(meal)){
+        if (!MealValidator.validate(meal)) {
             throw new MealCreationException("The given data is incorrect");
         }
-        if (restaurantDao.getRestaurantById(meal.getRestaurantID()).isEmpty()){
+        if (restaurantDao.getRestaurantById(meal.getRestaurantID()).isEmpty()) {
             throw new MealCreationException("Restaurant id is not in database");
         }
         mealDao.createMeal(meal);
@@ -40,13 +40,13 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     public boolean updateMeal(long restaurantID, Meal meal) {
-        if (!MealValidator.validate(meal)){
+        if (!MealValidator.validate(meal)) {
             throw new MealUpdateException("The given data is incorrect (negative values are impossible)");
         }
         if (mealDao.getMealById(meal.getMealID()).isEmpty()) {
             throw new MealUpdateException("Meal with that id is not in database");
         }
-        if (restaurantDao.getRestaurantById(restaurantID).isEmpty()){
+        if (restaurantDao.getRestaurantById(restaurantID).isEmpty()) {
             throw new MealUpdateException("Restaurant with that id is not in database");
         }
         mealDao.updateMeal(meal, restaurantID);
@@ -55,10 +55,10 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     public boolean updateRestaurant(long restaurantID, Restaurant restaurant) {
-        if (!RestaurantValidator.validate(restaurant)){
+        if (!RestaurantValidator.validate(restaurant)) {
             throw new RestaurantUpdateException("The given data is incorrect (negative values are impossible)");
         }
-        if(restaurantDao.getRestaurantById(restaurantID).isEmpty()){
+        if (restaurantDao.getRestaurantById(restaurantID).isEmpty()) {
             throw new RestaurantUpdateException("Restaurant with that id is not in database");
         }
         restaurantDao.updateRestaurant(restaurantID, restaurant);
@@ -67,7 +67,7 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     public boolean addRestaurant(Restaurant restaurant) {
-        if (!RestaurantValidator.validate(restaurant)){
+        if (!RestaurantValidator.validate(restaurant)) {
             throw new RestaurantCreationException("The given data is incorrect (negative values are impossible)");
         }
         restaurantDao.createRestaurant(restaurant);
