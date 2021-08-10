@@ -10,5 +10,5 @@ public interface RoomService {
 
     boolean inviteUser(String fromUsername, String invitedUsername, Long roomID);
 
-    boolean checkUser(Long userID, Long roomID);
+    boolean checkUser(Long roomID, Long userID);
 }

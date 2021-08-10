@@ -208,7 +208,7 @@ public class MySqlRoomDao implements RoomDao {
     }
 
     @Override
-    public boolean userInRoom(Long userID, Long roomID) {
+    public boolean userInRoom(Long roomID, Long userID) {
         Connection conn = null;
         try {
             conn = dataSource.getConnection();

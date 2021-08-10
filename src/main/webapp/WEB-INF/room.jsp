@@ -1,3 +1,16 @@
+<%@ page import="ge.eathub.dao.impl.MySqlRestaurantDao" %>
+<%@ page import="ge.eathub.models.Meal" %>
+<%@ page import="ge.eathub.listener.NameConstants" %>
+<%@ page import="java.util.List" %>
+<%@ page import="ge.eathub.models.Room" %>
+<%@ page import="ge.eathub.dto.UserDto" %>
+<%@ page import="ge.eathub.service.RoomService" %>
+<%@ page import="java.util.Optional" %>
+<%@ page import="org.mockito.internal.matchers.Or" %>
+<%@ page import="ge.eathub.models.Order" %>
+<%@ page import="ge.eathub.service.impl.RoomServiceImpl" %>
+<%@ page import="ge.eathub.service.impl.OrderServiceImpl" %>
+<%@ page import="ge.eathub.service.OrderService" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!doctype html>
@@ -16,8 +29,32 @@
     </div>
 
     <div id="room-restaurant-meals">
-<%--        <jsp:include page="../show-restaurant.jsp"> <jsp:param name="id" value="1"/> </jsp:include>--%>
-        <img src="../images/churchkhela.jpg" alt="churchkhela" >
+        <form action="<c:url value="/newRoom"/>" method="post">
+            <%
+                ServletContext sc = request.getServletContext();
+                MySqlRestaurantDao dao = (MySqlRestaurantDao) sc.getAttribute(NameConstants.RESTAURANT_DAO);
+                Room room = ((Room) request.getSession().getAttribute("NEW_ROOM"));
+                long restaurantID = room.getRestaurantID();
+                List<Meal> meals = dao.getAllMeals(restaurantID);
+                UserDto user = (UserDto) request.getSession().getAttribute(UserDto.ATTR);
+                OrderServiceImpl orderService = (OrderServiceImpl) sc.getAttribute(NameConstants.ORDER_SERVICE);
+                for (Meal meal : meals) {%>
+            <%
+                Optional<Order> order = orderService.getOrderByID(user.getUserID(), room.getRoomID(), meal.getMealID());
+                int amount = 0;
+                if (order.isPresent()) {
+                    amount = order.get().getQuantity();
+                }
+            %>
+            <li>
+                <%="Meal Name: " + meal.getMealName() + " Price: " + meal.getMealPrice()%> <input type='number'
+                                                                                                  name="<%=meal.getMealID()%>"
+                                                                                                  min="0"
+                                                                                                  value="<%=amount%>">
+            </li>
+            <%}%>
+            <input type='submit' value='submit'/><br>
+        </form>
     </div>
 </div>
 </body>

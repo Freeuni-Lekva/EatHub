@@ -43,7 +43,7 @@ public class RoomServiceImpl implements RoomService {
     }
 
     @Override
-    public boolean checkUser(Long userID, Long roomID) {
-        return roomDao.userInRoom(userID, roomID);
+    public boolean checkUser(Long roomID, Long userID) {
+        return roomDao.userInRoom(roomID, userID);
     }
 }
