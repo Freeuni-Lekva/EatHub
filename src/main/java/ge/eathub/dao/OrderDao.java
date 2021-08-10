@@ -4,6 +4,7 @@ import ge.eathub.models.Meal;
 import ge.eathub.models.Order;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface OrderDao {
     Order createOrder(Long userID, Long mealID, Long roomID, Integer quantity);
@@ -14,7 +15,9 @@ public interface OrderDao {
 
     List<Meal> roomMeals(Long roomID);
 
-    Order updateOrder(Order order);
-    // მინუსებში არ წავიდეს, 0-ს რომ ჩამოცდება არ გამოგრჩეს
-    Order updateOrder(Long orderID, Integer quantity);
+    // Order updateOrder(Order order);
+
+    Optional<Order> updateOrder(Order order, Integer quantity);
+
+    boolean removeOrder (Order order);
 }

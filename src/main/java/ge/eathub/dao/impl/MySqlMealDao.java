@@ -5,6 +5,7 @@ import ge.eathub.database.DBConnection;
 import ge.eathub.exceptions.MealCreationException;
 import ge.eathub.exceptions.MealUpdateException;
 import ge.eathub.models.Meal;
+import ge.eathub.models.UserRoom;
 
 import javax.sql.DataSource;
 import java.sql.*;
@@ -15,7 +16,6 @@ import java.util.Optional;
 public class MySqlMealDao implements MealDao {
 
     private final DataSource dataSource;
-    public static final int MYSQL_DUPLICATE_ERROR_CODE = 1062;
 
     public MySqlMealDao(DataSource dataSource) {
         this.dataSource = dataSource;
@@ -81,7 +81,7 @@ public class MySqlMealDao implements MealDao {
         try {
             conn = dataSource.getConnection();
             PreparedStatement stm = conn.prepareStatement(
-                    "INSERT INTO %s (%s, %s, %s, %s) VALUES (?,?,?,?);  ;".formatted(
+                    "INSERT INTO %s (%s, %s, %s, %s) VALUES (?,?,?,?);".formatted(
                             Meal.TABLE,
                             Meal.COLUMN_NAME,
                             Meal.COLUMN_PRICE,
@@ -107,7 +107,7 @@ public class MySqlMealDao implements MealDao {
 
 
     @Override
-    public boolean updateMeal(Meal meal, Long restaurant_id) {
+    public boolean updateMeal(Meal meal, Long restaurantID) {
         Connection conn = null;
         try {
             conn = dataSource.getConnection();
@@ -123,7 +123,7 @@ public class MySqlMealDao implements MealDao {
             stm.setBigDecimal(2, meal.getMealPrice());
             stm.setTime(3, meal.getCookingTime());
             stm.setLong(4, meal.getMealID());
-            stm.setLong(5, restaurant_id);
+            stm.setLong(5, restaurantID);
             if (stm.executeUpdate() == 1) {
                 return true;
             }
@@ -134,4 +134,5 @@ public class MySqlMealDao implements MealDao {
         }
         throw new MealUpdateException("unknown error | meal" + meal.getMealName());
     }
+
 }
