@@ -7,6 +7,8 @@ import ge.eathub.dao.UserDao;
 import ge.eathub.models.Order;
 import ge.eathub.service.OrderService;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 public class OrderServiceImpl implements OrderService {
@@ -14,7 +16,7 @@ public class OrderServiceImpl implements OrderService {
     private final UserDao userDao;
     private final OrderDao orderDao;
 
-    public OrderServiceImpl(RoomDao roomDao, UserDao userDao, OrderDao orderDao, MealDao mealDao) {
+    public OrderServiceImpl(RoomDao roomDao, UserDao userDao, OrderDao orderDao) {
         this.roomDao = roomDao;
         this.userDao = userDao;
         this.orderDao = orderDao;
@@ -44,5 +46,21 @@ public class OrderServiceImpl implements OrderService {
             return orderDao.removeOrder(order);
         }
         return false;
+    }
+
+    @Override
+    public Optional<Order> getOrderByID(Long userID, Long roomID, Long mealID) {
+        if (roomDao.userInRoom(roomID, userID)){
+            return orderDao.getOrderByID(userID, roomID, mealID);
+        }
+        return Optional.empty();
+    }
+
+    @Override
+    public List<Order> getAll(Long userID, Long roomID) {
+        if (roomDao.userInRoom(roomID, userID)){
+            return orderDao.getAll(userID, roomID);
+        }
+        return new ArrayList<>();
     }
 }

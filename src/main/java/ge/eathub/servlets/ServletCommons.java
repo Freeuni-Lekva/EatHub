@@ -14,6 +14,7 @@ public class ServletCommons {
     public static final String LOGIN_PAGE = "/WEB-INF/login.jsp";
     public static final String CONFIRM_PAGE = "/WEB-INF/confirm.jsp";
     public static final String REGISTRATION_PAGE = "/WEB-INF/register.jsp";
+    public static final String NEW_ROOM_PAGE = "/WEB-INF/newRoom.jsp";
     public static final String INDEX_PAGE = "index.jsp";
 
 
