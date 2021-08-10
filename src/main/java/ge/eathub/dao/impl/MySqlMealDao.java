@@ -51,7 +51,6 @@ public class MySqlMealDao implements MealDao {
     @Override
     public Optional<Meal> getMealById(Long mealID) {
         Connection conn = null;
-        List<Meal> ret = new ArrayList<>();
         try {
             conn = dataSource.getConnection();
             PreparedStatement stm = conn.prepareStatement(
