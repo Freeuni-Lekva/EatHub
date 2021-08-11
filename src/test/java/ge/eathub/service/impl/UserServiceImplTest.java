@@ -9,6 +9,7 @@ import ge.eathub.exceptions.InvalidUserPasswordException;
 import ge.eathub.exceptions.UserCreationException;
 import ge.eathub.exceptions.UserNotFoundException;
 import ge.eathub.mailer.Mailer;
+import ge.eathub.models.User;
 import ge.eathub.service.UserService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -33,7 +34,8 @@ class UserServiceImplTest {
     @Test
     public void registerUserTest1() {
         UserService userService = new UserServiceImpl(daoMockito);
-        when(daoMockito.createUser(any())).thenReturn(null);
+        when(daoMockito.createUser(any())).thenReturn(new User());
+        when(daoMockito.checkInfo(any(),any())).thenReturn(true);
         try (MockedStatic<Mailer> mailer = Mockito.mockStatic(Mailer.class)) {
             mailer.when(() -> Mailer.sendMail(any(), any(), any())).thenReturn(true);
             userService.registerUser(new UserRegisterDto("asd", "asd", "asd@asd.com"));
@@ -43,7 +45,8 @@ class UserServiceImplTest {
     @Test
     public void registerUserException() {
         UserService userService = new UserServiceImpl(daoMockito);
-//        when(daoMockito.createUser(any())).thenThrow(UserCreationException.class);
+        when(daoMockito.checkInfo(any(),any())).thenReturn(true);
+        when(daoMockito.createUser(any())).thenThrow(UserCreationException.class);
         try (MockedStatic<Mailer> mailer = Mockito.mockStatic(Mailer.class)) {
             mailer.when(() -> Mailer.sendMail(any(), any(), any())).thenReturn(true);
             assertThrows(UserCreationException.class, () -> userService.registerUser(new UserRegisterDto("asd", "asd", "asd@asd.com")));

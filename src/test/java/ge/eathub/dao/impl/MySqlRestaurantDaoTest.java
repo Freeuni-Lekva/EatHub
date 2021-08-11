@@ -34,7 +34,12 @@ public class MySqlRestaurantDaoTest {
         ds = DBConnection.getMySqlDataSource();
         sqlDao = new MySqlRestaurantDao(ds);
         mealDao = new MySqlMealDao(ds);
-        cleanDB();
+        InitDB.executeSqlFile(ds);
+    }
+
+    @AfterEach
+    void tearDown() {
+        InitDB.executeSqlFile(ds);
     }
 
     //    @BeforeEach
@@ -54,11 +59,6 @@ public class MySqlRestaurantDaoTest {
     }
 
 
-
-    @AfterEach
-    void tearDown() {
-        cleanDB();
-    }
 
 
     @Test
