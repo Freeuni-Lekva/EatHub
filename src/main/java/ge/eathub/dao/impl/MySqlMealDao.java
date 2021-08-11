@@ -56,15 +56,16 @@ public class MySqlMealDao implements MealDao {
                     "SELECT * FROM %s where %s = ? ;".formatted(Meal.TABLE, Meal.COLUMN_ID));
             stm.setLong(1, mealID);
             ResultSet rs = stm.executeQuery();
-            rs.next();
-            return Optional.of(new Meal(
-                            rs.getLong(1),
-                            rs.getString(2),
-                            rs.getBigDecimal(3),
-                            rs.getTime(4),
-                            rs.getLong(5)
-                    )
-            );
+            if (rs.next()) {
+                return Optional.of(new Meal(
+                                rs.getLong(1),
+                                rs.getString(2),
+                                rs.getBigDecimal(3),
+                                rs.getTime(4),
+                                rs.getLong(5)
+                        )
+                );
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {

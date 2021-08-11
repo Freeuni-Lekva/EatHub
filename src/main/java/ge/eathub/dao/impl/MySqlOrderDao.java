@@ -163,6 +163,7 @@ public class MySqlOrderDao implements OrderDao {
             stm.setInt(1, quantity);
             stm.setLong(2, order.getOrderID());
             if (stm.executeUpdate() == 1) {
+                order.setQuantity(quantity);
                 return Optional.of(order);
             }
         } catch (SQLException e) {
@@ -183,8 +184,9 @@ public class MySqlOrderDao implements OrderDao {
                             Order.TABLE,
                             Order.ORDER_ID));
             stm.setLong(1, order.getOrderID());
-            stm.executeUpdate();
-            return true;
+            if (stm.executeUpdate() == 1) {
+                return true;
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
@@ -204,16 +206,17 @@ public class MySqlOrderDao implements OrderDao {
             stm.setLong(2, roomID);
             stm.setLong(3, mealID);
             ResultSet rs = stm.executeQuery();
-            rs.next();
-            return Optional.of(new Order(
-                            rs.getLong(1),
-                            rs.getLong(2),
-                            rs.getLong(3),
-                            rs.getLong(4),
-                            rs.getInt(5)
+            if (rs.next()) {
+                return Optional.of(new Order(
+                                rs.getLong(1),
+                                rs.getLong(2),
+                                rs.getLong(3),
+                                rs.getLong(4),
+                                rs.getInt(5)
 
-                    )
-            );
+                        )
+                );
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {

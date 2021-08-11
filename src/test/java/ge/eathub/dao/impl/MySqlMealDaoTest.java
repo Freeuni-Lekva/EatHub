@@ -105,7 +105,6 @@ public class MySqlMealDaoTest {
         MealDao memoDao = new InMemoryMealDao();
         Meal memoMeal = memoDao.createMeal(meal);
         Meal sqlMeal = sqlDao.createMeal(meal);
-        System.out.println(sqlDao.getMealById(sqlMeal.getMealID()));
         assertEquals(sqlMeal, memoMeal);
     }
 

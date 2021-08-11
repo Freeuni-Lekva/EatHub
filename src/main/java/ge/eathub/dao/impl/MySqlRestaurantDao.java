@@ -55,15 +55,16 @@ public class MySqlRestaurantDao implements RestaurantDao {
                     "SELECT * FROM %s where %s = ?;".formatted(Restaurant.TABLE, Restaurant.COLUMN_ID));
             stm.setLong(1, restaurantID);
             ResultSet rs = stm.executeQuery();
-            rs.next();
-            return Optional.of(new Restaurant(
-                    rs.getLong(1),
-                    rs.getString(2),
-                    rs.getString(3),
-                    rs.getLong(4),
-                    rs.getBigDecimal(5),
-                    rs.getBigDecimal(6)
-            ));
+            if (rs.next()) {
+                return Optional.of(new Restaurant(
+                        rs.getLong(1),
+                        rs.getString(2),
+                        rs.getString(3),
+                        rs.getLong(4),
+                        rs.getBigDecimal(5),
+                        rs.getBigDecimal(6)
+                ));
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {

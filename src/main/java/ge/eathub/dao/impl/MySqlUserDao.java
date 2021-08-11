@@ -62,16 +62,17 @@ public class MySqlUserDao implements UserDao {
                             User.TABLE, User.COLUMN_ID));
             stm.setLong(1, userID);
             ResultSet rs = stm.executeQuery();
-            rs.next();
-            return Optional.of(new User(
-                    rs.getLong(1),
-                    rs.getString(2),
-                    rs.getString(3),
-                    rs.getString(4),
-                    rs.getBigDecimal(5),
-                    Role.valueOf(rs.getString(6)),
-                    rs.getBoolean(7)
-            ));
+            if (rs.next()) {
+                return Optional.of(new User(
+                        rs.getLong(1),
+                        rs.getString(2),
+                        rs.getString(3),
+                        rs.getString(4),
+                        rs.getBigDecimal(5),
+                        Role.valueOf(rs.getString(6)),
+                        rs.getBoolean(7)
+                ));
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
@@ -89,16 +90,17 @@ public class MySqlUserDao implements UserDao {
                     "SELECT * FROM %s where %s = ?;".formatted(User.TABLE, User.COLUMN_USERNAME));
             stm.setString(1, username);
             ResultSet rs = stm.executeQuery();
-            rs.next();
-            return Optional.of(new User(
-                    rs.getLong(1),
-                    rs.getString(2),
-                    rs.getString(3),
-                    rs.getString(4),
-                    rs.getBigDecimal(5),
-                    Role.valueOf(rs.getString(6)),
-                    rs.getBoolean(7)
-            ));
+            if(rs.next()) {
+                return Optional.of(new User(
+                        rs.getLong(1),
+                        rs.getString(2),
+                        rs.getString(3),
+                        rs.getString(4),
+                        rs.getBigDecimal(5),
+                        Role.valueOf(rs.getString(6)),
+                        rs.getBoolean(7)
+                ));
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
