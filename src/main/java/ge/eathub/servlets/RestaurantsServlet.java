@@ -52,18 +52,16 @@ public class RestaurantsServlet extends HttpServlet {
                 request.setAttribute(SUCCESS_RESTAURANT_ATTR, map);
             }
         } else if (option.equals("only_meals")) {
-            if (request.getParameter("filter_restaurant_id").isEmpty()) {
-                request.setAttribute(ERROR_ATTR, "Missing restaurant ID");
-            } else {
-                long id = Long.parseLong(request.getParameter("filter_restaurant_id"));
-                List<Meal> meals = restaurantDao.getMealsBySubName(name, id);
-                if (meals.isEmpty())
-                    request.setAttribute(ERROR_ATTR, "No meal found on that name: '" + name + "' in a restaurant with ID: " + id);
-                else request.setAttribute(SUCCESS_MEALS_ATTR, meals);
+            long id = Long.parseLong(request.getParameter("filter_restaurant_id"));
+            List<Meal> meals = restaurantDao.getMealsBySubName(name, id);
+            if (meals.isEmpty())
+                request.setAttribute(ERROR_ATTR, "No meal found on that name: '" + name + "' in a restaurant with ID: " + id);
+            else {
+                request.setAttribute(SUCCESS_MEALS_ATTR, meals);
             }
+
         }
         request.getRequestDispatcher(RESTAURANTS_PAGE).forward(request, response);
     }
-
 
 }

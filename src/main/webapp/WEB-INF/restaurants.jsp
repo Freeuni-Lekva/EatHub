@@ -19,6 +19,8 @@
 <h1>Welcome to the Restaurant Page</h1>
 
 <h4>Filter</h4>
+
+
 <form action="<c:url value="/restaurants?filter"/>" method="post">
 
     <label> Filter:
@@ -29,17 +31,46 @@
     </label><br>
 
     <label> Meal name:
-        <input type='text' placeholder='meal_name:' name='filter_meal_name' required/>
+        <input type='text' placeholder='meal_name:' name='filter_meal_name' id="meal_name" required/>
     </label>
     <br>
 
-    <label>Restaurant ID:
-        <input type='number' placeholder='0:' name='filter_restaurant_id'/>
+    <label id="restID">
     </label>
-    <br>
 
     <input type='submit' value='submit'/>
 </form>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+<script type="text/javascript">
+    function listQ() {
+        var e = document.getElementById("filter_option");
+        if ("only_meals" === e.options[e.selectedIndex].value) {
+            document.getElementById("restID").innerHTML = "Restaurant ID: <input type='number' min='0' placeholder='0:' name='filter_restaurant_id' required/> <br>";
+        } else if ("with_restaurants" === e.options[e.selectedIndex].value) {
+            document.getElementById("restID").innerHTML = "";
+        }
+    }
+
+    document.getElementById("filter_option").addEventListener("click", listQ);
+
+    // $(document).ready(function () {
+    //     $('#meal_name').on("change", function () {
+    //         $.ajax({
+    //             type:"POST",
+    //             url:"restaurants?filter",
+    //             data:{ meal_name: $("#meal_name").text()},
+    //             success:function(data){
+    //                 $("#meal_name").html(data);
+    //             }
+    //         });
+    //     })
+    // });
+
+
+</script>
+
 
     <% String error = (String) request.getAttribute(RestaurantsServlet.ERROR_ATTR);
     if (error != null) {%>

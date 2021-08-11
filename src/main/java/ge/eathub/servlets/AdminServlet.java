@@ -84,16 +84,12 @@ public class AdminServlet extends HttpServlet {
         MealDao mealDao = (MealDao) getServletContext().getAttribute(NameConstants.MEAL_DAO);
         AdminService adminService = new AdminServiceImpl(restaurantDao, mealDao);
         if (option.equals("update")) {
-            if (!restaurantID.isEmpty()) {
-                long restID = Long.parseLong(restaurantID);
-                try {
-                    adminService.updateRestaurant(restID, new Restaurant(restaurant_name, location, limit, rating, balance));
-                    request.setAttribute(SUCCESS_ATTR, "Restaurant: " + restaurant_name + " updated successfully");
-                } catch (RestaurantUpdateException ex) {
-                    request.setAttribute(ERROR_ATTR, ex.getMessage());
-                }
-            } else {
-                request.setAttribute(ERROR_ATTR, "restaurant id is empty and update isn't available");
+            long restID = Long.parseLong(restaurantID);
+            try {
+                adminService.updateRestaurant(restID, new Restaurant(restaurant_name, location, limit, rating, balance));
+                request.setAttribute(SUCCESS_ATTR, "Restaurant: " + restaurant_name + " updated successfully");
+            } catch (RestaurantUpdateException ex) {
+                request.setAttribute(ERROR_ATTR, ex.getMessage());
             }
         } else if (option.equals("add")) {
             try {
@@ -116,17 +112,13 @@ public class AdminServlet extends HttpServlet {
         MealDao mealDao = (MealDao) getServletContext().getAttribute(NameConstants.MEAL_DAO);
         AdminService adminService = new AdminServiceImpl(restaurantDao, mealDao);
         if (option.equals("update")) {
-            if (!mealID.isEmpty()) {
-                long meal_ID = Long.parseLong(mealID);
-                try {
-                    if (adminService.updateMeal(restaurantID, new Meal(meal_ID, name, new BigDecimal(mealPrice), new Time(time), restaurantID))) {
-                        request.setAttribute(SUCCESS_ATTR, "Meal: " + name + " updated successfully");
-                    }
-                } catch (MealUpdateException ex) {
-                    request.setAttribute(ERROR_ATTR, ex.getMessage());
+            long meal_ID = Long.parseLong(mealID);
+            try {
+                if (adminService.updateMeal(restaurantID, new Meal(meal_ID, name, new BigDecimal(mealPrice), new Time(time), restaurantID))) {
+                    request.setAttribute(SUCCESS_ATTR, "Meal: " + name + " updated successfully");
                 }
-            } else {
-                request.setAttribute(ERROR_ATTR, "Meal id is empty and update isn't available");
+            } catch (MealUpdateException ex) {
+                request.setAttribute(ERROR_ATTR, ex.getMessage());
             }
         } else if (option.equals("add")) {
             try {

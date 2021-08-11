@@ -31,16 +31,15 @@
     <form action="<c:url value="/admin?restaurant"/>" method="post">
 
         <label> Operation:
-            <select name="option" id="option">
+            <select name="option" id="admin_option">
                 <option value="add">add</option>
                 <option value="update">update</option>
             </select>
         </label><br>
 
-        <label>Restaurant ID:
-            <input type='number' placeholder='0:' name='restaurant_id'/>
+        <label id="label_restID">
         </label>
-        <br>
+
         <label> Restaurant name:
             <input type='text' placeholder='restaurant_name:' name='restaurant_name' required/>
         </label>
@@ -50,18 +49,18 @@
         </label>
         <br>
         <label>Limit:
-            <input type='number' placeholder='0:' name='limit' required/>
+            <input type='number' min="0" placeholder='0:' name='limit' required/>
         </label>
         <br>
 
         <label>Rating:
-            <input type='number' step="0.01" placeholder='0:' name='rating' required/>
+            <input type='number' min="0" step="0.01" placeholder='0:' name='rating' required/>
         </label>
         <br>
 
 
         <label>Balance:
-            <input type='number' step="0.1" placeholder='0:' name='balance' required/>
+            <input type='number' min="0" step="0.1" placeholder='0:' name='balance' required/>
         </label>
         <br>
 
@@ -79,36 +78,64 @@
             </select>
         </label><br>
 
-        <label>Meal ID:
-            <input type='number' placeholder='0:' name='meal_id'/>
+        <label id="admin_meal_ID">
         </label>
-        <br>
+
         <label> Meal name:
             <input type='text' placeholder='meal_name:' name='meal_name' required/>
         </label>
         <br>
 
         <label>Meal price:
-            <input type='number' step="0.5" placeholder='0:' name='meal_price' required/>
+            <input type='number' min="0" step="0.5" placeholder='0:' name='meal_price' required/>
         </label>
         <br>
 
         <label>Cooking time:
-            <input type='number' placeholder='0:' name='cooking_time' required/>
+            <input type='number' min="0" placeholder='0:' name='cooking_time' required/>
         </label>
         <br>
 
 
-        <label>Restaurant ID:
-            <input type='number' placeholder='0:' name='meal_restaurant_id' required/>
+        <label >Restaurant ID:
+            <input type='number' min="0" placeholder='0:' name='meal_restaurant_id' required/>
         </label>
         <br>
 
         <input type='submit' value='submit'/>
     </form>
-
-
 </div>
+
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+<script type="text/javascript">
+    function updateRestaurants() {
+        var e = document.getElementById("admin_option");
+        if ("update" === e.options[e.selectedIndex].value) {
+            document.getElementById("label_restID").innerHTML = "Restaurant ID: <input type='number' min='0' placeholder='0:' name='restaurant_id' required/> <br>";
+        } else if ("add" === e.options[e.selectedIndex].value) {
+            document.getElementById("label_restID").innerHTML = "";
+        }
+    }
+
+    document.getElementById("admin_option").addEventListener("click", updateRestaurants);
+
+
+    function updateMeals() {
+        var e = document.getElementById("meal_option");
+        if ("update" === e.options[e.selectedIndex].value) {
+            document.getElementById("admin_meal_ID").innerHTML = "Meal ID: <input type='number' min='0' placeholder='0:' name='meal_id' required/> <br>";
+        } else if ("add" === e.options[e.selectedIndex].value) {
+            document.getElementById("admin_meal_ID").innerHTML = "";
+        }
+    }
+
+    document.getElementById("meal_option").addEventListener("click", updateMeals);
+
+
+</script>
+
 
 </body>
 </html>
