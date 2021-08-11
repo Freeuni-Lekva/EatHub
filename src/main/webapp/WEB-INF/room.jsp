@@ -4,14 +4,9 @@
 <%@ page import="java.util.List" %>
 <%@ page import="ge.eathub.models.Room" %>
 <%@ page import="ge.eathub.dto.UserDto" %>
-<%@ page import="ge.eathub.service.RoomService" %>
 <%@ page import="java.util.Optional" %>
-<%@ page import="org.mockito.internal.matchers.Or" %>
 <%@ page import="ge.eathub.models.Order" %>
-<%@ page import="ge.eathub.service.impl.RoomServiceImpl" %>
 <%@ page import="ge.eathub.service.impl.OrderServiceImpl" %>
-<%@ page import="ge.eathub.service.OrderService" %>
-<%@ page import="ge.eathub.dao.MealDao" %>
 <%@ page import="ge.eathub.dao.impl.MySqlMealDao" %>
 <%@ page import="java.math.BigDecimal" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
@@ -36,7 +31,7 @@
             <%
                 ServletContext sc = request.getServletContext();
                 MySqlRestaurantDao dao = (MySqlRestaurantDao) sc.getAttribute(NameConstants.RESTAURANT_DAO);
-                Room room = ((Room) request.getSession().getAttribute("NEW_ROOM"));
+                Room room = ((Room) request.getSession().getAttribute(Room.ATTR));
                 long restaurantID = room.getRestaurantID();
                 List<Meal> meals = dao.getAllMeals(restaurantID);
                 UserDto user = (UserDto) request.getSession().getAttribute(UserDto.ATTR);
@@ -57,7 +52,7 @@
                        value="<%=amount%>">
             </li>
             <%}%>
-                <input type='submit' value='submit'/><br>
+            <input type='submit' value='submit'/><br>
         </form>
 
         <h4>Chosen Meals:</h4>
@@ -65,13 +60,15 @@
             MySqlMealDao mealDao = (MySqlMealDao) sc.getAttribute(NameConstants.MEAL_DAO);
             List<Order> orders = orderService.getAll(user.getUserID(), room.getRoomID());
             BigDecimal totalCost = new BigDecimal(0);
-            for (Order order : orders){
+            for (Order order : orders) {
                 Meal meal = mealDao.getMealById(order.getMealID()).get();
                 totalCost = totalCost.add(meal.getMealPrice().multiply(new BigDecimal(order.getQuantity())));
-                %>
-                <li><%=meal.getMealName() + ", amount = " + order.getQuantity() + "."%></li>
-            <%}%>
-            <h4>Total Cost: <%=totalCost%></h4>
+        %>
+        <li><%=meal.getMealName() + ", amount = " + order.getQuantity() + "."%>
+        </li>
+        <%}%>
+        <h4>Total Cost: <%=totalCost%>
+        </h4>
 
     </div>
 

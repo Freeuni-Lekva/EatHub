@@ -6,17 +6,18 @@ public class Room {
     public static final String RESTAURANT_ID = "restaurant_id";
     public static final String ACTIVE = "active";
 
+    public static final String ATTR = "ROOM";
     private Long roomID;
     private Long restaurantID;
     private Boolean active;
 
-    public Room(Long restaurantID, Long roomID) {
+    public Room(Long roomID, Long restaurantID) {
         this.restaurantID = restaurantID;
         this.roomID = roomID;
         active = true;
     }
 
-    public Room(Long restaurantID, Long roomID, Boolean active) {
+    public Room(Long roomID, Long restaurantID, Boolean active) {
         this.restaurantID = restaurantID;
         this.roomID = roomID;
         this.active = active;

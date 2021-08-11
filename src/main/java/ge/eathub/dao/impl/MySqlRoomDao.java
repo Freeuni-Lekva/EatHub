@@ -34,7 +34,7 @@ public class MySqlRoomDao implements RoomDao {
                 ResultSet rs = stm.getGeneratedKeys();
                 rs.next();
                 Long roomID = rs.getLong(1);
-                return Optional.of(new Room(restaurantID, roomID));
+                return Optional.of(new Room(roomID, restaurantID));
             }
         } catch (SQLException e) {
             e.printStackTrace();

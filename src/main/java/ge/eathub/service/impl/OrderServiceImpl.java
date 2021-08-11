@@ -12,12 +12,10 @@ import java.util.Optional;
 
 public class OrderServiceImpl implements OrderService {
     private final RoomDao roomDao;
-    private final UserDao userDao;
     private final OrderDao orderDao;
 
-    public OrderServiceImpl(RoomDao roomDao, UserDao userDao, OrderDao orderDao) {
+    public OrderServiceImpl(RoomDao roomDao, OrderDao orderDao) {
         this.roomDao = roomDao;
-        this.userDao = userDao;
         this.orderDao = orderDao;
     }
 
@@ -42,7 +40,6 @@ public class OrderServiceImpl implements OrderService {
     public boolean removeOrder(Order order) {
         if (roomDao.userInRoom(order.getRoomID(), order.getUserID()) &&
                 roomDao.mealInRoom(order.getMealID(), order.getRoomID()) && order.getQuantity() >= 0) {
-            System.out.println("RemoveOrdershi shevida");
             return orderDao.removeOrder(order);
         }
         return false;

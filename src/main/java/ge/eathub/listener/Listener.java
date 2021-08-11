@@ -35,7 +35,7 @@ public class Listener implements ServletContextListener, HttpSessionListener, Ht
 
         RoomDao roomDao = new MySqlRoomDao(ds);
         sc.setAttribute(NameConstants.ORDER_SERVICE,
-                new OrderServiceImpl(roomDao, userDao, new MySqlOrderDao(ds)));
+                new OrderServiceImpl(roomDao, new MySqlOrderDao(ds)));
 
         sc.setAttribute(NameConstants.ROOM_SERVICE,
                 new RoomServiceImpl(roomDao, userDao));

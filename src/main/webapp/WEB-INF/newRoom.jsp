@@ -9,9 +9,10 @@
     <title>New Room</title>
 </head>
 <body>
+<span class="error" id="join-error"></span>
 <script>window.onload = () => {
     <% UserDto user = ((UserDto) request.getSession().getAttribute(UserDto.ATTR));
-      Room room = ((Room) request.getSession().getAttribute("NEW_ROOM"));%>
+      Room room = ((Room) request.getSession().getAttribute(Room.ATTR));%>
     joinRoom('<%= user.getUsername()%>', <%=room.getRoomID()%>);
 }</script>
 

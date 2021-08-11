@@ -91,7 +91,7 @@ public class ChatEndpoint {
     @OnError
     public void OnError(Session session, Throwable t) {
         System.out.println("on error");
-        t.printStackTrace();
+//        t.printStackTrace();
     }
 
     private void welcomeUser(String username) {

@@ -28,10 +28,15 @@ function joinRoom(currentUser, roomID) {
                         dom.getElementsByTagName("html")[0].innerHTML;
                     joinChat(token, currentUser, roomID);
                     break;
+                case 401:
+                    document.getElementById("join-error").innerHTML =
+                        "Oops... UNAUTHORIZED .";
+                    break;
                 case 403:
                     document.getElementById("join-error").innerHTML =
                         "Oops... These credentials are invalid.";
                     break;
+
                 default:
                     document.getElementById("join-error").innerHTML =
                         "Oops... Looks like something is broken.";
@@ -100,11 +105,12 @@ function sendMessage() {
         sendText(text)
     }
     const input = document.querySelector('input');
-    if (input.files) {
-        let file = input.files[0];
-        input.value = '';
-        sendImage(file);
+    if (input.files == null) {
+        return;
     }
+    let file = input.files[0];
+    input.value = '';
+    sendImage(file);
 }
 
 function sendText(text) {
