@@ -123,11 +123,11 @@ ALTER TABLE messages
     ADD CONSTRAINT FK_users_TO_messages
         FOREIGN KEY (user_id)
             REFERENCES users (user_id);
-#
-# ALTER TABLE messages
-#     ADD CONSTRAINT FK_rooms_TO_messages
-#         FOREIGN KEY (room_id)
-#             REFERENCES rooms (room_id);
+
+ALTER TABLE messages
+    ADD CONSTRAINT FK_rooms_TO_messages
+        FOREIGN KEY (room_id)
+            REFERENCES rooms (room_id);
 
 INSERT INTO users(username, password,
                   email, balance, role, confirmed)
@@ -140,11 +140,13 @@ VALUES ('admin', '$2a$10$.gSvGvCf5I85vxP4dklNSuqkwnFGNZxE4S04Dy6aZX76btLZic6Wm',
        ('botko', '$2a$10$.gSvGvCf5I85vxP4dklNSuqkwnFGNZxE4S04Dy6aZX76btLZic6Wm',
         'gbotk18@freeuni.edu.ge', 1000, 'CUSTOMER', TRUE),
        ('nika', '$2a$10$.gSvGvCf5I85vxP4dklNSuqkwnFGNZxE4S04Dy6aZX76btLZic6Wm',
-        'nshug18@gmail.com', 1000, 'CUSTOMER', TRUE),
+        'nshug18@freeuni.edu.ge', 1000, 'CUSTOMER', TRUE),
        ('test', '$2a$10$.gSvGvCf5I85vxP4dklNSuqkwnFGNZxE4S04Dy6aZX76btLZic6Wm',
         'vanoganjelashvili@gmail.com', 1000, 'ADMIN', FALSE),
        ('leo', '$2a$10$.gSvGvCf5I85vxP4dklNSuqkwnFGNZxE4S04Dy6aZX76btLZic6Wm',
-        'lirem18@gmail.com', 1000, 'CUSTOMER', FALSE);
+        'lirem18@freeuni.edu.ge', 1000, 'CUSTOMER', TRUE),
+       ('tornike', '$2a$10$.gSvGvCf5I85vxP4dklNSuqkwnFGNZxE4S04Dy6aZX76btLZic6Wm',
+        'ttotl18@freeuni.edu.ge', 1000, 'CUSTOMER', TRUE);
 ;
 
 INSERT INTO restaurants(restaurant_name, location, max_limit, Balance)

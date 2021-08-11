@@ -17,32 +17,52 @@
 <html lang="en">
 <head>
     <link type="text/css" rel="stylesheet" href="<c:url value="/styles/room.css"/>">
-    <title>room</title>
+    <link type="text/css" rel="stylesheet" href="../styles/common.css">
+    <link type="text/css" rel="stylesheet" href="../styles/chat.css">
+    <script type="application/javascript" src="../scripts/chat.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <title>Room</title>
 </head>
+<%
+    ServletContext sc = request.getServletContext();
+    MySqlRestaurantDao dao = (MySqlRestaurantDao) sc.getAttribute(NameConstants.RESTAURANT_DAO);
+    Room room = ((Room) request.getSession().getAttribute(Room.ATTR));
+    long restaurantID = room.getRestaurantID();
+    List<Meal> meals = dao.getAllMeals(restaurantID);
+    OrderServiceImpl orderService = (OrderServiceImpl) sc.getAttribute(NameConstants.ORDER_SERVICE);
+    UserDto user = (UserDto) request.getSession().getAttribute(UserDto.ATTR);%>
+
 <body>
 <div id="title">Join Room</div>
 <div id="room">
     <div id="room-chat">
-        <jsp:include page="chat.jsp"/>
-    </div>
 
+        <div style="display: block" id="contacts"></div>
+        <div style="display: block" id="chat">
+            <div id="messages" autofocus></div>
+            <form id="chat-controls" onsubmit="return false;">
+                <input type="text" id="message" placeholder="Enter a message"/>
+                <input type="file" name="img" accept="image/*" id="file-img" placeholder=" choose image"/>
+                <button class="button" onclick="sendMessage()">Send</button>
+            </form>
+        </div>
+    </div>
+    <div id="invitations">
+        <form id="invitation" onsubmit="return false;">
+            <input type="text" id="invited-user" placeholder="Invite User"/>
+            <button class="button" onclick="sendInvitation('<%=user.getUsername()%>')">Invite</button>
+            <span class="error" id="invitation-error"> </span>
+        </form>
+    </div>
     <div id="room-restaurant-meals">
         <form action="<c:url value="/newRoom"/>" method="post">
             <%
-                ServletContext sc = request.getServletContext();
-                MySqlRestaurantDao dao = (MySqlRestaurantDao) sc.getAttribute(NameConstants.RESTAURANT_DAO);
-                Room room = ((Room) request.getSession().getAttribute(Room.ATTR));
-                long restaurantID = room.getRestaurantID();
-                List<Meal> meals = dao.getAllMeals(restaurantID);
-                UserDto user = (UserDto) request.getSession().getAttribute(UserDto.ATTR);
-                OrderServiceImpl orderService = (OrderServiceImpl) sc.getAttribute(NameConstants.ORDER_SERVICE);
-                for (Meal meal : meals) {%>
-            <%
-                Optional<Order> order = orderService.getOrderByID(user.getUserID(), room.getRoomID(), meal.getMealID());
-                int amount = 0;
-                if (order.isPresent()) {
-                    amount = order.get().getQuantity();
-                }
+                for (Meal meal : meals) {
+                    Optional<Order> order = orderService.getOrderByID(user.getUserID(), room.getRoomID(), meal.getMealID());
+                    int amount = 0;
+                    if (order.isPresent()) {
+                        amount = order.get().getQuantity();
+                    }
             %>
             <li>
                 <%="Meal Name: '" + meal.getMealName() + "' Price: " + meal.getMealPrice()%>
@@ -53,25 +73,27 @@
             </li>
             <%}%>
             <input type='submit' value='submit'/><br>
-        </form>
-
-        <h4>Chosen Meals:</h4>
-        <%
-            MySqlMealDao mealDao = (MySqlMealDao) sc.getAttribute(NameConstants.MEAL_DAO);
-            List<Order> orders = orderService.getAll(user.getUserID(), room.getRoomID());
-            BigDecimal totalCost = new BigDecimal(0);
-            for (Order order : orders) {
-                Meal meal = mealDao.getMealById(order.getMealID()).get();
-                totalCost = totalCost.add(meal.getMealPrice().multiply(new BigDecimal(order.getQuantity())));
-        %>
-        <li><%=meal.getMealName() + ", amount = " + order.getQuantity() + "."%>
-        </li>
-        <%}%>
-        <h4>Total Cost: <%=totalCost%>
-        </h4>
+        </form
 
     </div>
+</div>
+<div id="chosen-meals">
+    <h4>Chosen Meals:</h4>
+    <%
+        MySqlMealDao mealDao = (MySqlMealDao) sc.getAttribute(NameConstants.MEAL_DAO);
+        List<Order> orders = orderService.getAll(user.getUserID(), room.getRoomID());
+        BigDecimal totalCost = new BigDecimal(0);
+        for (Order order : orders) {
+            Meal meal = mealDao.getMealById(order.getMealID()).get();
+            totalCost = totalCost.add(meal.getMealPrice().multiply(new BigDecimal(order.getQuantity())));
+    %>
+    <li><%=meal.getMealName() + ", amount = " + order.getQuantity() + "."%>
+    </li>
+    <%}%>
+    <h4>Total Cost: <%=totalCost%>
+    </h4>
 
 </div>
+
 </body>
 </html>

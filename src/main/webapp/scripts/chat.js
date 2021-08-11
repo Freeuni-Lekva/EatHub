@@ -63,8 +63,8 @@ function openSocket(accessToken, roomID, currentUser) {
         // window.open("http://" + host + "/chat.jsp")
         document.getElementById("title").innerHTML = "Room - " + roomID;
         // document.getElementById("join-room").style.display = "none";
-        document.getElementById("contacts").style.display = "block";
-        document.getElementById("chat").style.display = "block";
+        // document.getElementById("contacts").style.display = "block";
+        // document.getElementById("chat").style.display = "block";
         document.getElementById("message").focus();
     };
 
@@ -87,6 +87,9 @@ function openSocket(accessToken, roomID, currentUser) {
                 case "goodbye":
                     displayDisconnectedUserMessage(webSocketMessage.username);
                     break;
+                case "invitation":
+                    displayInvitationMessage(webSocketMessage.content);
+                    break;
                 case "active-users":
                     cleanAvailableUsers();
                     for (let i = 0; i < webSocketMessage.usernames.length; i++) {
@@ -104,7 +107,7 @@ function sendMessage() {
         document.getElementById("message").value = "";
         sendText(text)
     }
-    const input = document.querySelector('input');
+    const input = document.getElementById('file-img');
     if (input.files == null) {
         return;
     }
@@ -183,6 +186,17 @@ function displayConnectedUserMessage(username, currentUser) {
     messages.appendChild(message);
 }
 
+function displayInvitationMessage(text) {
+    const message = document.createElement("div");
+    message.setAttribute("class", "message invitation");
+    const content = document.createElement("span");
+    content.setAttribute("class", "content");
+    content.appendChild(document.createTextNode(text));
+    message.appendChild(content);
+    const messages = document.getElementById("messages");
+    messages.appendChild(message);
+}
+
 function displayDisconnectedUserMessage(username) {
     const message = document.createElement("div");
     message.setAttribute("class", "message event");
@@ -219,4 +233,56 @@ function cleanAvailableUsers() {
     while (contacts.hasChildNodes()) {
         contacts.removeChild(contacts.lastChild);
     }
+}
+
+function invitationSent(byUser, invitedUser) {
+    let socketMessage = {
+        content: byUser + " invited " + invitedUser,
+        type: "invitation"
+    }
+    chatSocket.send(JSON.stringify(socketMessage));
+}
+
+function sendInvitation(byUser) {
+    const request = new XMLHttpRequest();
+    const invitedUser = document.getElementById("invited-user").value.trim();
+    request.open("POST", "http://" + host + "/invite?username=" + invitedUser);
+    request.onreadystatechange = function () {
+        if (request.readyState === XMLHttpRequest.DONE) {
+            switch (request.status) {
+                case 200:
+                    console.log("user invited");
+                    invitationSent(byUser, invitedUser);
+                    break;
+                case 401:
+                    document.getElementById("invitation-error").innerHTML =
+                        "unauthorized";
+                    break;
+                case 403:
+                    document.getElementById("invitation-error").innerHTML =
+                        "forbidden";
+                    break;
+                case 404:
+                    document.getElementById("invitation-error").innerHTML =
+                        "user - " + invitedUser + " not found";
+                    break;
+                default:
+                    document.getElementById("invitation-error").innerHTML =
+                        "some error";
+            }
+        }
+    };
+    request.send();
+
+
+    // $("#invited-user").value = "blabla"
+    // $.ajax({
+    //     method: "POST",
+    //     url: "http://" + host + "/invite",
+    //     data: { name: "John", location: "Boston" }
+    // })
+    //     .done(function( msg ) {
+    //         // $("#")
+    //         alert( "Data Saved: " + msg );
+    //     });
 }
