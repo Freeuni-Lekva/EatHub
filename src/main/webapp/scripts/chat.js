@@ -27,6 +27,8 @@ function joinRoom(currentUser, roomID) {
                     document.getElementsByTagName("html")[0].innerHTML =
                         dom.getElementsByTagName("html")[0].innerHTML;
                     joinChat(token, currentUser, roomID);
+                    checkUpdates();
+                    getChosenMeals();
                     break;
                 case 401:
                     document.getElementById("join-error").innerHTML =
@@ -285,4 +287,140 @@ function sendInvitation(byUser) {
     //         // $("#")
     //         alert( "Data Saved: " + msg );
     //     });
+}
+
+function chooseMeals() {
+    let table = document.getElementById("menu-list");
+    let numRows = table.rows.length;
+    let i, tr;
+    let cost = 0;
+    const chosenMeals = [];
+    for (i = 1; i < numRows; i++) {
+        tr = table.rows[i].cells;
+        let price = parseFloat(tr[1].innerHTML);
+        let mealID = tr[2].firstElementChild.name;
+        let amount = parseInt(tr[2].firstElementChild.value);
+        chosenMeals.push({mealId: mealID, amount: amount});
+        if (amount > 0) {
+            cost = cost + (price * amount);
+        }
+    }
+    console.log(chosenMeals)
+    document.getElementById("chosen-cost").innerHTML = cost.toString();
+    const request = new XMLHttpRequest();
+    request.open("POST", "http://" + host + "/ChooseMeal");
+    request.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+    request.onreadystatechange = function () {
+        if (request.readyState === XMLHttpRequest.DONE) {
+            switch (request.status) {
+                case 200:
+                    console.log("chose meals OK");
+                    document.getElementById("choose-error").innerHTML = "";
+                    break;
+                case 401:
+                    document.getElementById("choose-error").innerHTML =
+                        "unauthorized";
+                    break;
+                case 403:
+                    document.getElementById("choose-error").innerHTML =
+                        "forbidden";
+                    break;
+                case 404:
+                    document.getElementById("choose-error").innerHTML =
+                        "not found";
+                    break;
+                default:
+                    document.getElementById("choose-error").innerHTML =
+                        "some error";
+            }
+        }
+    };
+    request.send(JSON.stringify(chosenMeals));
+}
+
+function cleanChosenMeals() {
+    const table = document.getElementById("chosen-meals-table");
+    console.log(table);
+    while (table.childElementCount !== 1) {
+        table.removeChild(table.lastChild);
+    }
+}
+
+
+function generateTable(orderList) {
+
+    const table = document.getElementById("chosen-meals-table");
+    console.log(orderList);
+    let numRows = orderList.length;
+    let maxTime = "00:00:00";
+    let price = 0;
+    for( let i = 0; i < numRows; i++) {
+        let order = orderList[i];
+        console.log(order);
+        let row = document.createElement("tr");
+        let td = document.createElement('td');
+        td.appendChild(document.createTextNode(order.username));
+        row.appendChild(td);
+        td = document.createElement('td');
+        td.appendChild(document.createTextNode(order.mealName));
+        row.appendChild(td);
+        td = document.createElement('td');
+        td.appendChild(document.createTextNode(order.amount));
+        row.appendChild(td);
+        td = document.createElement('td');
+        td.appendChild(document.createTextNode(order.cookingTime));
+        row.appendChild(td);
+        td = document.createElement('td');
+        td.appendChild(document.createTextNode(order.totalPrice));
+        row.appendChild(td);
+        table.appendChild(row);
+        if (order.cookingTime > maxTime) {
+            maxTime = order.cookingTime;
+        }
+        price = price + order.totalPrice;
+    }
+    document.getElementById("chosen-meals-cost").innerHTML = price;
+    document.getElementById("estimated-time").innerHTML = maxTime;
+}
+function checkUpdates() {
+    console.log("check");
+
+    const xhr = new XMLHttpRequest();
+    xhr.open('GET', "http://" + host + '/ChooseMeal');
+    xhr.onload = function () {
+        switch (xhr.status) {
+            case 200:
+                console.log("received");
+                console.log(xhr.response);
+                cleanChosenMeals();
+                generateTable(JSON.parse(xhr.response))
+                break;
+            case 401:
+                document.getElementById("choose-meals-error").innerHTML =
+                    "unauthorized";
+                break;
+            case 403:
+                document.getElementById("choose-meals-error").innerHTML =
+                    "forbidden";
+                break;
+            case 404:
+                document.getElementById("choose-meals-error").innerHTML =
+                    " not found";
+                break;
+            default:
+                document.getElementById("choose-meals-error").innerHTML =
+                    "some error";
+        }
+    };
+    xhr.send();
+}
+
+function getChosenMeals() {
+    console.log("meeeeals");
+
+
+    setInterval(function () {
+        checkUpdates();
+    }, 4000);
+
 }

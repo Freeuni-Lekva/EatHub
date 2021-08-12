@@ -57,35 +57,6 @@ public class NewRoomServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        ServletContext sc = getServletContext();
-        OrderServiceImpl orderService = (OrderServiceImpl) sc.getAttribute(NameConstants.ORDER_SERVICE);
-        Room room = ((Room) request.getSession().getAttribute(Room.ATTR));
-        UserDto user = (UserDto) request.getSession().getAttribute(UserDto.ATTR);
-        MySqlRestaurantDao dao = (MySqlRestaurantDao) sc.getAttribute(NameConstants.RESTAURANT_DAO);
-        long restaurantID = room.getRestaurantID();
-        List<Meal> meals = dao.getAllMeals(restaurantID);
-        List<Order> orders = orderService.getAll(user.getUserID(), room.getRoomID());
-        logger.info(" Post " + user.getUsername()
-                + " room " + room.getRoomID());
-        for (Meal meal : meals) {
-            int quantity = Integer.parseInt(request.getParameter(meal.getMealID().toString()));
-            logger.info(" meal ID " + meal.getMealID() + ": quantity" + quantity);
-            Optional<Order> order = orderService.getOrderByID(user.getUserID(), room.getRoomID(), meal.getMealID());
-            if (order.isPresent()) {
-                if (quantity == 0) {
-                    orderService.removeOrder(order.get());
-                } else {
-                    order.get().setQuantity(quantity);
-                    orderService.updateOrder(order.get());
-                }
-            } else {
-                if (quantity > 0) {
-                    orderService.addOrder(user.getUserID(), meal.getMealID(), room.getRoomID(), quantity);
-                }
-            }
-        }
-        logger.info("OK " + user.getUsername() + " roomID " + room.getRoomID());
-        request.setAttribute(NameConstants.ORDER_SERVICE, orderService);
-        request.getRequestDispatcher(ServletCommons.NEW_ROOM_PAGE).forward(request, response);
+
     }
 }
