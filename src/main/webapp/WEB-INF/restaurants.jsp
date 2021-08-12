@@ -23,53 +23,31 @@
 
 <form action="<c:url value="/restaurants?filter"/>" method="post">
 
-    <label> Filter:
+    <label> Restaurants:
         <select name="filter_option" id="filter_option">
-            <option value="with_restaurants">with restaurants</option>
-            <option value="only_meals">only meals</option>
-        </select>
-    </label><br>
+            <option value="0">Search in all</option>
+            <%
+                ServletContext sc = request.getServletContext();
+                MySqlRestaurantDao dao = (MySqlRestaurantDao) sc.getAttribute(NameConstants.RESTAURANT_DAO);
+                List<Restaurant> restaurants = dao.getAllRestaurant();
+                for (Restaurant restaurant : restaurants) {%>
+            <option value="<%=restaurant.getRestaurantID()%>"><%=restaurant.getRestaurantName()%>
+            </option>
+            <%
+                }
+
+            %>
+        </select><br>
+    </label>
+
 
     <label> Meal name:
         <input type='text' placeholder='meal_name:' name='filter_meal_name' id="meal_name" required/>
     </label>
     <br>
 
-    <label id="restID">
-    </label>
-
     <input type='submit' value='submit'/>
 </form>
-
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-
-<script type="text/javascript">
-    function listQ() {
-        var e = document.getElementById("filter_option");
-        if ("only_meals" === e.options[e.selectedIndex].value) {
-            document.getElementById("restID").innerHTML = "Restaurant ID: <input type='number' min='0' placeholder='0:' name='filter_restaurant_id' required/> <br>";
-        } else if ("with_restaurants" === e.options[e.selectedIndex].value) {
-            document.getElementById("restID").innerHTML = "";
-        }
-    }
-
-    document.getElementById("filter_option").addEventListener("click", listQ);
-
-    // $(document).ready(function () {
-    //     $('#meal_name').on("change", function () {
-    //         $.ajax({
-    //             type:"POST",
-    //             url:"restaurants?filter",
-    //             data:{ meal_name: $("#meal_name").text()},
-    //             success:function(data){
-    //                 $("#meal_name").html(data);
-    //             }
-    //         });
-    //     })
-    // });
-
-
-</script>
 
 
     <% String error = (String) request.getAttribute(RestaurantsServlet.ERROR_ATTR);
@@ -80,11 +58,16 @@
 
 
     <% Map<Restaurant, List<Meal>> map = (Map<Restaurant, List<Meal>>) request.getAttribute(RestaurantsServlet.SUCCESS_RESTAURANT_ATTR);
+    String title = (String) request.getAttribute(RestaurantsServlet.RESTAURANT_NAME_ATTR);
+
     if (map != null) {
-        for (Restaurant restaurant : map.keySet()) {%>
-<label><%="-----Restaurant name: " + restaurant.getRestaurantName()%>
+            %><h4><%=title%>
+</h4>
+    <%for (Restaurant restaurant : map.keySet()) {%>
+<label><%="-----Restaurant name: '" + restaurant.getRestaurantName() + "'"%>
 </label><br>
     <%
+
     for (Meal meal : map.get(restaurant)) {%>
 <label><%="* Meal name: '" + meal.getMealName() + "', Meal price: " + meal.getMealPrice() %>
 </label><br>
@@ -104,11 +87,9 @@
 <div>
     <h3>Available Restaurants</h3>
     <%
-        ServletContext sc = request.getServletContext();
-        MySqlRestaurantDao dao = (MySqlRestaurantDao) sc.getAttribute(NameConstants.RESTAURANT_DAO);
-        List<Restaurant> restaurants = dao.getAllRestaurant();
         for (Restaurant restaurant : restaurants) {%>
-    <li><a href="/newRoom?id=<%=restaurant.getRestaurantID()%> "><%= restaurant.getRestaurantName()%>
+    <li>
+        <a href="/newRoom?id=<%=restaurant.getRestaurantID()%> "><%= restaurant.getRestaurantName() + ", " + restaurant.getLocation()%>
     </li>
     <%
         }

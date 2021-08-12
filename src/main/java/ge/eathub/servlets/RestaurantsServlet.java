@@ -22,6 +22,7 @@ public class RestaurantsServlet extends HttpServlet {
     public static final String ERROR_ATTR = "FILTER_ERROR";
     public static final String SUCCESS_RESTAURANT_ATTR = "FILTER RESTAURANT EXECUTED";
     public static final String SUCCESS_MEALS_ATTR = "FILTER MEAL EXECUTED";
+    public static final String RESTAURANT_NAME_ATTR = "RESTAURANT_NAME_ATTR";
 
 
     @Override
@@ -43,23 +44,25 @@ public class RestaurantsServlet extends HttpServlet {
     private void doFilter(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String name = request.getParameter("filter_meal_name").trim();
         String option = request.getParameter("filter_option");
+
         RestaurantDao restaurantDao = (RestaurantDao) getServletContext().getAttribute(NameConstants.RESTAURANT_DAO);
-        if (option.equals("with_restaurants")) {
+        long value = Long.parseLong(option);
+        if (value == 0) {
             HashMap<Restaurant, List<Meal>> map = (HashMap<Restaurant, List<Meal>>) restaurantDao.getRestaurantsByMeal(name);
             if (map.isEmpty()) {
-                request.setAttribute(ERROR_ATTR, "No meal found on that name:" + name);
+                request.setAttribute(ERROR_ATTR, "No meal found in any restaurant on name:" + name);
             } else {
+                request.setAttribute(RESTAURANT_NAME_ATTR, "Meals founded in all restaurants");
                 request.setAttribute(SUCCESS_RESTAURANT_ATTR, map);
             }
-        } else if (option.equals("only_meals")) {
-            long id = Long.parseLong(request.getParameter("filter_restaurant_id"));
-            List<Meal> meals = restaurantDao.getMealsBySubName(name, id);
+        } else if (value > 0) {
+            List<Meal> meals = restaurantDao.getMealsBySubName(name, value);
             if (meals.isEmpty())
-                request.setAttribute(ERROR_ATTR, "No meal found on that name: '" + name + "' in a restaurant with ID: " + id);
+                request.setAttribute(ERROR_ATTR, "No meal found on name: '" + name + "' in a restaurant with name: " + restaurantDao.getRestaurantById(value).get().getRestaurantName());
             else {
+                request.setAttribute(RESTAURANT_NAME_ATTR, "Restaurant: " + restaurantDao.getRestaurantById(value).get().getRestaurantName());
                 request.setAttribute(SUCCESS_MEALS_ATTR, meals);
             }
-
         }
         request.getRequestDispatcher(RESTAURANTS_PAGE).forward(request, response);
     }
