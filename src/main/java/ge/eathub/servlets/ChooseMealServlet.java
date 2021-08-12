@@ -27,12 +27,10 @@ public class ChooseMealServlet extends HttpServlet {
     private final static ObjectMapper mapper = ObjectMapperFactory.get();
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        System.out.println("GEEET");
         UserDto user = (UserDto) request.getSession().getAttribute(UserDto.ATTR);
         if (ServletCommons.checkUser(request, response, user)){
             return;
         }
-        System.out.println("g2");
         ServletContext sc = getServletContext();
         OrderServiceImpl orderService = (OrderServiceImpl) sc.getAttribute(NameConstants.ORDER_SERVICE);
         Room room = ((Room) request.getSession().getAttribute(Room.ATTR));
@@ -55,7 +53,6 @@ public class ChooseMealServlet extends HttpServlet {
         List<Order> orders = mapper
                 .createParser(request.getReader())
                 .readValueAs(new TypeReference<List<Order>>() {});
-        System.out.println(orders);
         ServletContext sc = getServletContext();
         OrderServiceImpl orderService = (OrderServiceImpl) sc.getAttribute(NameConstants.ORDER_SERVICE);
         Room room = ((Room) request.getSession().getAttribute(Room.ATTR));

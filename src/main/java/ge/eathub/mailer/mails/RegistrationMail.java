@@ -1,7 +1,8 @@
 package ge.eathub.mailer.mails;
 
+import static ge.eathub.mailer.Mailer.ADDRESS;
+
 public class RegistrationMail extends Mail {
-    private static final String ADDRESS = "localhost:8888";
     private static final String URL = "http://" + ADDRESS + "/confirm?confirm-token=";
     private static final String SUBJECT = "EatHub - Confirm registration";
     private static final String MESSAGE = """

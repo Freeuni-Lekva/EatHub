@@ -1,5 +1,7 @@
 const host = document.location.host;
 let chatSocket;
+let savedMeals = [];
+let flag = true;
 
 function joinRoom(currentUser, roomID) {
     const request = new XMLHttpRequest();
@@ -276,17 +278,6 @@ function sendInvitation(byUser) {
     };
     request.send();
 
-
-    // $("#invited-user").value = "blabla"
-    // $.ajax({
-    //     method: "POST",
-    //     url: "http://" + host + "/invite",
-    //     data: { name: "John", location: "Boston" }
-    // })
-    //     .done(function( msg ) {
-    //         // $("#")
-    //         alert( "Data Saved: " + msg );
-    //     });
 }
 
 function chooseMeals() {
@@ -340,7 +331,6 @@ function chooseMeals() {
 
 function cleanChosenMeals() {
     const table = document.getElementById("chosen-meals-table");
-    console.log(table);
     while (table.childElementCount !== 1) {
         table.removeChild(table.lastChild);
     }
@@ -354,43 +344,35 @@ function generateTable(orderList) {
     let numRows = orderList.length;
     let maxTime = "00:00:00";
     let price = 0;
-    for( let i = 0; i < numRows; i++) {
+    let row;
+    let td;
+    for (let i = 0; i < numRows; i++) {
         let order = orderList[i];
         console.log(order);
-        let row = document.createElement("tr");
-        let td = document.createElement('td');
-        td.appendChild(document.createTextNode(order.username));
-        row.appendChild(td);
-        td = document.createElement('td');
-        td.appendChild(document.createTextNode(order.mealName));
-        row.appendChild(td);
-        td = document.createElement('td');
-        td.appendChild(document.createTextNode(order.amount));
-        row.appendChild(td);
-        td = document.createElement('td');
-        td.appendChild(document.createTextNode(order.cookingTime));
-        row.appendChild(td);
-        td = document.createElement('td');
-        td.appendChild(document.createTextNode(order.totalPrice));
-        row.appendChild(td);
+        row = document.createElement("tr");
+        addToTableRow(row,document.createTextNode(order.username))
+
+        addToTableRow(row,document.createTextNode(order.mealName))
+        addToTableRow(row,document.createTextNode(order.amount))
+        addToTableRow(row,document.createTextNode(order.cookingTime))
+        addToTableRow(row,document.createTextNode(order.totalPrice))
+
         table.appendChild(row);
         if (order.cookingTime > maxTime) {
             maxTime = order.cookingTime;
         }
         price = price + order.totalPrice;
     }
-    document.getElementById("chosen-meals-cost").innerHTML = price;
+    document.getElementById("chosen-meals-cost").innerHTML = price.toString();
     document.getElementById("estimated-time").innerHTML = maxTime;
 }
-function checkUpdates() {
-    console.log("check");
 
+function checkUpdates() {
     const xhr = new XMLHttpRequest();
     xhr.open('GET', "http://" + host + '/ChooseMeal');
     xhr.onload = function () {
         switch (xhr.status) {
             case 200:
-                console.log("received");
                 console.log(xhr.response);
                 cleanChosenMeals();
                 generateTable(JSON.parse(xhr.response))
@@ -416,11 +398,43 @@ function checkUpdates() {
 }
 
 function getChosenMeals() {
-    console.log("meeeeals");
-
-
     setInterval(function () {
         checkUpdates();
     }, 4000);
+}
 
+function searchMeal() {
+    let table = document.getElementById("menu-list").getElementsByTagName('tbody')[0];
+    if (flag) {
+        while (table.hasChildNodes()) {
+            if (!flag) {
+                savedMeals.unshift(table.lastChild);
+            }
+            table.removeChild(table.lastChild);
+            flag = !flag;
+        }
+        flag = false;
+    }
+    let value = document.getElementById("search-text").value;
+
+    while (table.hasChildNodes()) {
+
+        table.removeChild(table.lastChild);
+    }
+
+    let numRows = savedMeals.length;
+    let i, tr;
+    for (i = 0; i < numRows; i++) {
+        tr = savedMeals[i].cells;
+        if (tr[0].innerHTML.includes(value)) {
+            table.appendChild(savedMeals[i]);
+        }
+    }
+}
+
+function addToTableRow(tr, child) {
+    let td;
+    td = document.createElement("td");
+    td.appendChild(child)
+    tr.appendChild(td);
 }

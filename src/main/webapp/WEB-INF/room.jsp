@@ -7,7 +7,6 @@
 <%@ page import="java.util.Optional" %>
 <%@ page import="ge.eathub.models.Order" %>
 <%@ page import="ge.eathub.service.impl.OrderServiceImpl" %>
-<%@ page import="ge.eathub.dao.impl.MySqlMealDao" %>
 <%@ page import="java.math.BigDecimal" %>
 <%@ page import="ge.eathub.models.Restaurant" %>
 <%@ page import="java.math.BigInteger" %>
@@ -21,21 +20,6 @@
     <link type="text/css" rel="stylesheet" href="<c:url value="/styles/room.css"/>">
     <link type="text/css" rel="stylesheet" href="../styles/common.css">
     <link type="text/css" rel="stylesheet" href="../styles/chat.css">
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js">
-
-        // function chooseMeals() {
-        //     console.log("choose meal");
-        //     $.ajax({
-        //         type: "POST",
-        //         url: "ChooseMealServlet",
-        //         data: "",
-        //         success: function (data) {
-        //             console.log(data);
-        //         }
-        //     });
-        // }
-
-    </script>
     <script type="application/javascript" src="../scripts/chat.js"></script>
 
     <title>Room</title>
@@ -50,7 +34,7 @@
     OrderServiceImpl orderService = (OrderServiceImpl) sc.getAttribute(NameConstants.ORDER_SERVICE);
     UserDto user = (UserDto) request.getSession().getAttribute(UserDto.ATTR);%>
 
-<body >
+<body>
 <div id="title">Room</div>
 <div id="room">
     <div id="room-chat">
@@ -73,11 +57,19 @@
         </form>
     </div>
     <div id="room-restaurant-meals">
-        <h2> Restaurant menu </h2>
-        <h3><%=restaurantOptional.get().getRestaurantName()%>
-        </h3>
+        <h2><%=restaurantOptional.get().getRestaurantName()%>
+        </h2>
+        <h1> Restaurant menu </h1>
+        <div id="meal-search">
+            <form onsubmit="return false;">
+                <input id="search-text" type="text" onchange="searchMeal()" placeholder="meal"/>
+                <button class="button" onclick="searchMeal()">Search</button>
+                <span class="error" id="searched-meal-error"> </span>
+            </form>
+        </div>
         <form id="restaurant-menu" onsubmit="return false;">
             <table id="menu-list">
+                <thead>
                 <tr>
                     <th>Meal
                     </th>
@@ -85,6 +77,8 @@
                     </th>
                     <th style="float: left"> your chosen number</th>
                 </tr>
+                </thead>
+                <tbody>
                 <%
                     BigDecimal total = new BigDecimal(BigInteger.ZERO);
                     for (Meal meal : meals) {
@@ -92,9 +86,10 @@
                         int amount = 0;
                         if (order.isPresent()) {
                             amount = order.get().getQuantity();
-                            total = total.add( meal.getMealPrice().multiply(BigDecimal.valueOf(amount)));
+                            total = total.add(meal.getMealPrice().multiply(BigDecimal.valueOf(amount)));
                         }
                 %>
+
                 <tr>
                     <td><%=meal.getMealName()%>
                     </td>
@@ -108,7 +103,7 @@
                     </td>
                 </tr>
                 <%}%>
-
+                </tbody>
             </table>
             <button class="button" onclick="chooseMeals()">choose</button>
             <div style="flex-direction: row">
@@ -143,24 +138,8 @@
         </div>
 
         <span class="error" id="chosen-meals-error"> </span>
-        <%--        <%--%>
-        <%--            MySqlMealDao mealDao = (MySqlMealDao) sc.getAttribute(NameConstants.MEAL_DAO);--%>
-        <%--            List<Order> orders = orderService.getAll(user.getUserID(), room.getRoomID());--%>
-        <%--            BigDecimal totalCost = new BigDecimal(0);--%>
-        <%--            for (Order order : orders) {--%>
-        <%--                Meal meal = mealDao.getMealById(order.getMealID()).get();--%>
-        <%--                totalCost = totalCost.add(meal.getMealPrice().multiply(new BigDecimal(order.getQuantity())));--%>
-        <%--        %>--%>
-        <%--        <li><%=meal.getMealName() + ", amount = " + order.getQuantity() + "."%>--%>
-        <%--        </li>--%>
-        <%--        <%}%>--%>
-        <%--        <h4>Total Cost: <%=totalCost%>--%>
-        <%--        </h4>--%>
 
     </div>
 </div>
-<%--<script>--%>
-<%--     window.onload = getChosenMeals;--%>
-<%--</script>--%>
 </body>
 </html>

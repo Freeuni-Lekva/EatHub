@@ -1,22 +1,16 @@
 package ge.eathub.servlets;
 
-import ge.eathub.dao.impl.MySqlRestaurantDao;
 import ge.eathub.dto.UserDto;
 import ge.eathub.listener.NameConstants;
-import ge.eathub.models.Meal;
-import ge.eathub.models.Order;
 import ge.eathub.models.Room;
 import ge.eathub.service.RoomService;
-import ge.eathub.service.impl.OrderServiceImpl;
 
-import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.List;
 import java.util.Optional;
 import java.util.logging.Logger;
 
@@ -49,7 +43,7 @@ public class NewRoomServlet extends HttpServlet {
             Room newRoom = room.get();
             logger.info("created room " + user.getUsername() + " room " + newRoom.getRoomID());
             request.getSession().setAttribute(Room.ATTR, newRoom);
-            request.getRequestDispatcher(ServletCommons.NEW_ROOM_PAGE).forward(request, response);
+            response.sendRedirect("/Room");
         } else {
             // TODO: ERROR NOTIFICATION
         }

@@ -17,7 +17,7 @@ public class DBConnection {
     private static final String INIT_DATABASE_FILE = "src/main/resources/mysqltables.sql";
     private static MysqlConnectionPoolDataSource ds = null;
 
-    public static DataSource getMySqlDataSource() {
+    public synchronized static DataSource getMySqlDataSource() {
         // todo make threadsafe
         if (ds == null) {
             ds = new MysqlConnectionPoolDataSource();
