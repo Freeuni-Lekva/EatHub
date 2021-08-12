@@ -123,11 +123,11 @@ ALTER TABLE messages
     ADD CONSTRAINT FK_users_TO_messages
         FOREIGN KEY (user_id)
             REFERENCES users (user_id);
-#
-# ALTER TABLE messages
-#     ADD CONSTRAINT FK_rooms_TO_messages
-#         FOREIGN KEY (room_id)
-#             REFERENCES rooms (room_id);
+
+ALTER TABLE messages
+    ADD CONSTRAINT FK_rooms_TO_messages
+        FOREIGN KEY (room_id)
+            REFERENCES rooms (room_id);
 
 INSERT INTO users(username, password,
                   email, balance, role, confirmed)
@@ -140,11 +140,13 @@ VALUES ('admin', '$2a$10$.gSvGvCf5I85vxP4dklNSuqkwnFGNZxE4S04Dy6aZX76btLZic6Wm',
        ('botko', '$2a$10$.gSvGvCf5I85vxP4dklNSuqkwnFGNZxE4S04Dy6aZX76btLZic6Wm',
         'gbotk18@freeuni.edu.ge', 1000, 'CUSTOMER', TRUE),
        ('nika', '$2a$10$.gSvGvCf5I85vxP4dklNSuqkwnFGNZxE4S04Dy6aZX76btLZic6Wm',
-        'nshug18@gmail.com', 1000, 'CUSTOMER', TRUE),
+        'nshug18@freeuni.edu.ge', 1000, 'CUSTOMER', TRUE),
        ('test', '$2a$10$.gSvGvCf5I85vxP4dklNSuqkwnFGNZxE4S04Dy6aZX76btLZic6Wm',
         'vanoganjelashvili@gmail.com', 1000, 'ADMIN', FALSE),
        ('leo', '$2a$10$.gSvGvCf5I85vxP4dklNSuqkwnFGNZxE4S04Dy6aZX76btLZic6Wm',
-        'lirem18@gmail.com', 1000, 'CUSTOMER', FALSE);
+        'lirem18@freeuni.edu.ge', 1000, 'CUSTOMER', TRUE),
+       ('tornike', '$2a$10$.gSvGvCf5I85vxP4dklNSuqkwnFGNZxE4S04Dy6aZX76btLZic6Wm',
+        'ttotl18@freeuni.edu.ge', 1000, 'CUSTOMER', TRUE);
 ;
 
 INSERT INTO restaurants(restaurant_name, location, max_limit, Balance)
@@ -156,23 +158,23 @@ VALUES ('თბილისურა', 'Tbilisi', 1000, 1000),
 
 
 INSERT INTO meals(meal_name, meal_price, cooking_time, restaurant_id)
-VALUES ('მწვადი', 12.0, 10, 1),
-       ('ქაბაბი', 16.0, 12, 1),
-       ('ხაჭაპური', 8.0, 17, 1),
-       ('მწვადი', 12.0, 10, 2),
-       ('ტორტი', 16.0, 12, 2),
-       ('ხაჭაპური', 9.0, 17, 2),
-       ('აჩმა', 12.0, 10, 3),
-       ('ხინკალი', 7.0, 12, 3),
-       ('გორული კოტლეტი', 1, 4, 3),
-       ('კიტრის მწნილი', 5.0, 5, 3),
-       ('იმერული ხაჭაპური', 8.0, 17, 4),
-       ('აჭარული ხაჭაპური', 9.0, 10, 4),
-       ('მწვადი', 12.0, 10, 4),
-       ('ტორტი', 16.0, 12, 4),
-       ('Omlete', 15.0, 5, 5),
-       ('Chicken Massaman', 17.0, 20, 5),
-       ('khinkali', 8.0, 10, 5);
+VALUES ('მწვადი', 12.0, '00:30:00', 1),
+       ('ქაბაბი', 16.0, '00:20:00', 1),
+       ('ხაჭაპური', 8.0, '00:17:00', 1),
+       ('მწვადი', 12.0, '00:30:00', 2),
+       ('ტორტი', 16.0, '01:00:00', 2),
+       ('ხაჭაპური', 9.0, '00:22:00', 2),
+       ('აჩმა', 12.0, '00:25:00', 3),
+       ('ხინკალი', 7.0, '00:30:00', 3),
+       ('გორული კოტლეტი', 1, '00:16:00', 3),
+       ('კიტრის მწნილი', 5.0, '00:03:00', 3),
+       ('იმერული ხაჭაპური', 8.0, '00:17:00', 4),
+       ('აჭარული ხაჭაპური', 9.0, '00:22:00', 4),
+       ('მწვადი', 12.0, '00:30:00', 4),
+       ('ტორტი', 16.0, '01:05:00', 4),
+       ('Omlete', 15.0, '00:05:00', 5),
+       ('Chicken Massaman', 17.0, '00:25:00', 5),
+       ('khinkali', 8.0, '00:20:00', 5);
 INSERT
 INTO rooms(restaurant_id, active)
 VALUES (3, true);

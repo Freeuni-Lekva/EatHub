@@ -1,5 +1,6 @@
 package ge.eathub.dao;
 
+import ge.eathub.dto.OrderDto;
 import ge.eathub.models.Meal;
 import ge.eathub.models.Order;
 
@@ -25,4 +26,5 @@ public interface OrderDao {
 
     List<Order> getAll(Long userID, Long roomID);
 
+    List<OrderDto> getChosenMealsByRoomID(Long roomID);
 }
