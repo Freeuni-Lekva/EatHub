@@ -3,6 +3,7 @@ package ge.eathub.dto;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import javax.json.bind.annotation.JsonbDateFormat;
 import java.math.BigDecimal;
 import java.sql.Time;
 
@@ -15,6 +16,7 @@ public class OrderDto {
     private Long roomID;
     @JsonProperty("amount")
     private Integer quantity;
+    @JsonbDateFormat("HH:MM")
     private Time cookingTime;
     private BigDecimal totalPrice;
 
