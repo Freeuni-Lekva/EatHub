@@ -2,7 +2,7 @@ package ge.eathub.service.impl;
 
 import ge.eathub.dao.OrderDao;
 import ge.eathub.dao.RoomDao;
-import ge.eathub.dao.UserDao;
+import ge.eathub.dto.OrderDto;
 import ge.eathub.models.Order;
 import ge.eathub.service.OrderService;
 
@@ -12,12 +12,10 @@ import java.util.Optional;
 
 public class OrderServiceImpl implements OrderService {
     private final RoomDao roomDao;
-    private final UserDao userDao;
     private final OrderDao orderDao;
 
-    public OrderServiceImpl(RoomDao roomDao, UserDao userDao, OrderDao orderDao) {
+    public OrderServiceImpl(RoomDao roomDao, OrderDao orderDao) {
         this.roomDao = roomDao;
-        this.userDao = userDao;
         this.orderDao = orderDao;
     }
 
@@ -60,6 +58,16 @@ public class OrderServiceImpl implements OrderService {
         if (roomDao.userInRoom(roomID, userID)) {
             return orderDao.getAll(userID, roomID);
         }
+        return new ArrayList<>();
+    }
+
+    @Override
+    public List<OrderDto> getChosenMeals(Long userID, Long roomID) {
+        if (roomDao.userInRoom(roomID, userID)) {
+            return orderDao.getChosenMealsByRoomID(roomID);
+        }
+        // user is not invited into the room
+        // todo throw exception
         return new ArrayList<>();
     }
 }

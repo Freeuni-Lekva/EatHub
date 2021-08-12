@@ -1,5 +1,8 @@
 package ge.eathub.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class Order {
     public static final String TABLE = "orders";
     public static final String ORDER_ID = "order_id";
@@ -7,12 +10,27 @@ public class Order {
     public static final String MEAL_ID = "meal_id";
     public static final String ROOM_ID = "room_id";
     public static final String QUANTITY = "quantity";
-
+    @JsonIgnore
     private Long orderID;
+    @JsonIgnore
     private Long userID;
+    @JsonProperty("mealId")
     private Long mealID;
+    @JsonIgnore
     private Long roomID;
+    @JsonProperty("amount")
     private Integer quantity;
+
+    public Order() {
+    }
+
+    public Order(Long orderID, Long userID, Long mealID, Long roomID, Integer quantity) {
+        this.orderID = orderID;
+        this.userID = userID;
+        this.mealID = mealID;
+        this.roomID = roomID;
+        this.quantity = quantity;
+    }
 
     public Order(Long userID, Long mealID, Long roomID, Integer quantity) {
         this.userID = userID;
@@ -66,5 +84,16 @@ public class Order {
 
     public void setQuantity(Integer quantity) {
         this.quantity = quantity;
+    }
+
+    @Override
+    public String toString() {
+        return "Order{" +
+                "orderID=" + orderID +
+                ", userID=" + userID +
+                ", mealID=" + mealID +
+                ", roomID=" + roomID +
+                ", quantity=" + quantity +
+                '}';
     }
 }

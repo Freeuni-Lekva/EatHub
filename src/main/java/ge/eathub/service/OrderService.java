@@ -1,5 +1,6 @@
 package ge.eathub.service;
 
+import ge.eathub.dto.OrderDto;
 import ge.eathub.models.Order;
 
 import java.util.List;
@@ -15,4 +16,6 @@ public interface OrderService {
     Optional<Order> getOrderByID(Long userID, Long roomID, Long mealID);
 
     List<Order> getAll(Long userID, Long roomID);
+
+    List<OrderDto> getChosenMeals(Long userID, Long roomID);
 }

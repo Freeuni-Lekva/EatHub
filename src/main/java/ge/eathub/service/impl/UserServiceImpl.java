@@ -35,7 +35,7 @@ public class UserServiceImpl implements UserService {
     public UserDto registerUser(UserRegisterDto userDto) throws UserCreationException, InvalidEmailException {
         logger.info("create user " + userDto.getUsername());
 
-        if (!DEBUG && !EmailValidator.validate(userDto.getEmail())) {
+        if (!EmailValidator.validate(userDto.getEmail())) {
             throw new InvalidEmailException(userDto.getEmail());
         }
         if (userDao.checkInfo(userDto.getUsername(), userDto.getEmail())) {

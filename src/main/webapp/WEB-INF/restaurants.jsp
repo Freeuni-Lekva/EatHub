@@ -41,34 +41,34 @@
     <input type='submit' value='submit'/>
 </form>
 
-<% String error = (String) request.getAttribute(RestaurantsServlet.ERROR_ATTR);
+    <% String error = (String) request.getAttribute(RestaurantsServlet.ERROR_ATTR);
     if (error != null) {%>
 <label><%=error%>
 </label>
-<% }%>
+    <% }%>
 
 
-<% Map<Restaurant, List<Meal>> map = (Map<Restaurant, List<Meal>>) request.getAttribute(RestaurantsServlet.SUCCESS_RESTAURANT_ATTR);
+    <% Map<Restaurant, List<Meal>> map = (Map<Restaurant, List<Meal>>) request.getAttribute(RestaurantsServlet.SUCCESS_RESTAURANT_ATTR);
     if (map != null) {
         for (Restaurant restaurant : map.keySet()) {%>
 <label><%="-----Restaurant name: " + restaurant.getRestaurantName()%>
 </label><br>
-<%
+    <%
     for (Meal meal : map.get(restaurant)) {%>
 <label><%="* Meal name: '" + meal.getMealName() + "', Meal price: " + meal.getMealPrice() %>
 </label><br>
-<%}%>
-<%}%>
-<% } %>
+    <%}%>
+    <%}%>
+    <% } %>
 
 
-<% List<Meal> meals = (List<Meal>) request.getAttribute(RestaurantsServlet.SUCCESS_MEALS_ATTR);
+    <% List<Meal> meals = (List<Meal>) request.getAttribute(RestaurantsServlet.SUCCESS_MEALS_ATTR);
     if (meals != null) {
         for (Meal meal : meals) {%>
 <label><%="* Meal name: '" + meal.getMealName() + "', Meal price: " + meal.getMealPrice() %>
 </label><br>
-<%}%>
-<% } %>
+    <%}%>
+    <% } %>
 
 <div>
     <h3>Available Restaurants</h3>
@@ -77,7 +77,7 @@
         MySqlRestaurantDao dao = (MySqlRestaurantDao) sc.getAttribute(NameConstants.RESTAURANT_DAO);
         List<Restaurant> restaurants = dao.getAllRestaurant();
         for (Restaurant restaurant : restaurants) {%>
-    <li><a href="../show-restaurant.jsp?id=<%=restaurant.getRestaurantID()%> "><%= restaurant.getRestaurantName()%>
+    <li><a href="/newRoom?id=<%=restaurant.getRestaurantID()%> "><%= restaurant.getRestaurantName()%>
     </li>
     <%
         }
@@ -86,5 +86,5 @@
 </div>
 
 
-</body>
+<body></body>
 </html>

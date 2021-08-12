@@ -31,7 +31,12 @@ public class MySqlMealDaoTest {
         ds = DBConnection.getMySqlDataSource();
         sqlDao = new MySqlMealDao(ds);
         sqlRestaurant = new MySqlRestaurantDao(ds);
-        cleanDB();
+        InitDB.executeSqlFile(ds);
+    }
+
+    @AfterEach
+    void tearDown() {
+        InitDB.executeSqlFile(ds);
     }
 
     //    @BeforeEach
@@ -51,11 +56,6 @@ public class MySqlMealDaoTest {
     }
 
 
-    @AfterEach
-    void tearDown() {
-        cleanDB();
-    }
-
     @Test
     void getAllMeals() {
         Restaurant restaurant = new Restaurant("Wadi Naxe", "Vake", 1000L, new BigDecimal("3.0"), new BigDecimal("1000.0"));
@@ -65,7 +65,7 @@ public class MySqlMealDaoTest {
         BigDecimal rating = new BigDecimal(2.9);
         BigDecimal balance = new BigDecimal(2000);
         Time tm = new Time(2);
-        Meal meal = new Meal(1L,"Xinkali",new BigDecimal("0.5"), tm, 1L);
+        Meal meal = new Meal(1L, "Xinkali", new BigDecimal("0.5"), tm, 1L);
         Meal sqlMeal = sqlDao.createMeal(meal);
         memoDao.createMeal(sqlMeal);
         assertEquals(meal, sqlMeal);
@@ -87,7 +87,7 @@ public class MySqlMealDaoTest {
         sqlRestaurant.createRestaurant(restaurant);
         String name = "Khinkali";
         BigDecimal price = new BigDecimal("2.2");
-        Meal meal = new Meal( name,price,new Time(3L),1L);
+        Meal meal = new Meal(name, price, new Time(3L), 1L);
         MealDao memoDao = new InMemoryMealDao();
         Meal sqlMeal = sqlDao.createMeal(meal);
         assertEquals(meal.getMealName(), sqlMeal.getMealName());
@@ -101,7 +101,7 @@ public class MySqlMealDaoTest {
         Restaurant restaurant = new Restaurant("Wadi Naxe", "Vake", 1000L, new BigDecimal("3.0"), new BigDecimal("1000.0"));
         sqlRestaurant.createRestaurant(restaurant);
         String name = "Mtsvadi";
-        Meal meal = new Meal(name,new BigDecimal("2.2"),new Time(3L),1L);
+        Meal meal = new Meal(name, new BigDecimal("2.2"), new Time(3L), 1L);
         MealDao memoDao = new InMemoryMealDao();
         Meal memoMeal = memoDao.createMeal(meal);
         Meal sqlMeal = sqlDao.createMeal(meal);
@@ -110,11 +110,11 @@ public class MySqlMealDaoTest {
     }
 
     @Test
-    void updateMeal(){
+    void updateMeal() {
         Restaurant restaurant = new Restaurant("Wadi Naxe", "Vake", 1000L, new BigDecimal("3.0"), new BigDecimal("1000.0"));
         sqlRestaurant.createRestaurant(restaurant);
         String name = "Mtsvadi";
-        Meal meal = new Meal(name,new BigDecimal("2.2"),new Time(3L),1L);
+        Meal meal = new Meal(name, new BigDecimal("2.2"), new Time(3L), 1L);
         MealDao memoDao = new InMemoryMealDao();
         Meal memoMeal = memoDao.createMeal(meal);
         Meal sqlMeal = sqlDao.createMeal(meal);

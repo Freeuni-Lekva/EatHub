@@ -34,7 +34,7 @@ public class MySqlRoomDao implements RoomDao {
                 ResultSet rs = stm.getGeneratedKeys();
                 rs.next();
                 Long roomID = rs.getLong(1);
-                return Optional.of(new Room(restaurantID, roomID));
+                return Optional.of(new Room(roomID, restaurantID));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -200,6 +200,7 @@ public class MySqlRoomDao implements RoomDao {
                             UserRoom.USER_ID));
             stm.setLong(1, roomID);
             stm.setLong(2, userID);
+            stm.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
@@ -208,7 +209,7 @@ public class MySqlRoomDao implements RoomDao {
     }
 
     @Override
-    public boolean userInRoom(Long userID, Long roomID) {
+    public boolean userInRoom(Long roomID, Long userID) {
         Connection conn = null;
         try {
             conn = dataSource.getConnection();

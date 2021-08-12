@@ -27,7 +27,12 @@ class MySqlUserDaoTest {
     static void setUp() {
         ds = DBConnection.getMySqlDataSource();
         sqlDao = new MySqlUserDao(ds);
-        cleanDB();
+        InitDB.executeSqlFile(ds);
+    }
+
+    @AfterEach
+    void tearDown() {
+        InitDB.executeSqlFile(ds);
     }
 
     //    @BeforeEach
@@ -43,11 +48,6 @@ class MySqlUserDaoTest {
         }
     }
 
-
-    @AfterEach
-    void tearDown() {
-        cleanDB();
-    }
 
     @Test
     void getAllUsers() {

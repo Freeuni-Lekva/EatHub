@@ -15,9 +15,9 @@
     width: 120px;
     padding: 20px;
     background-color: aliceblue;
-    min-height: calc(100vh - 85px);
-    max-height: calc(100vh - 85px);
-    display: none;
+    min-height: calc(100vh - 100px);
+    max-height: calc(100vh - 100px);
+    display: block;
 }
 
 #contacts .contact .status {
@@ -39,7 +39,7 @@
 #chat {
     float: right;
     width: calc(100% - 160px);
-    display: none;
+    display: block;
 }
 
 #messages {
@@ -63,6 +63,15 @@
 
 #messages .message.event .content {
     background-color: #FF7E29;
+    color: #fff;
+    margin-left: auto;
+    margin-right: auto;
+    font-size: 10px;
+    padding: 7px;
+}
+
+#messages .message.invitation .content {
+    background-color: #396803;
     color: #fff;
     margin-left: auto;
     margin-right: auto;

@@ -27,11 +27,18 @@ function joinRoom(currentUser, roomID) {
                     document.getElementsByTagName("html")[0].innerHTML =
                         dom.getElementsByTagName("html")[0].innerHTML;
                     joinChat(token, currentUser, roomID);
+                    checkUpdates();
+                    getChosenMeals();
+                    break;
+                case 401:
+                    document.getElementById("join-error").innerHTML =
+                        "Oops... UNAUTHORIZED .";
                     break;
                 case 403:
                     document.getElementById("join-error").innerHTML =
                         "Oops... These credentials are invalid.";
                     break;
+
                 default:
                     document.getElementById("join-error").innerHTML =
                         "Oops... Looks like something is broken.";
@@ -58,8 +65,8 @@ function openSocket(accessToken, roomID, currentUser) {
         // window.open("http://" + host + "/chat.jsp")
         document.getElementById("title").innerHTML = "Room - " + roomID;
         // document.getElementById("join-room").style.display = "none";
-        document.getElementById("contacts").style.display = "block";
-        document.getElementById("chat").style.display = "block";
+        // document.getElementById("contacts").style.display = "block";
+        // document.getElementById("chat").style.display = "block";
         document.getElementById("message").focus();
     };
 
@@ -82,6 +89,9 @@ function openSocket(accessToken, roomID, currentUser) {
                 case "goodbye":
                     displayDisconnectedUserMessage(webSocketMessage.username);
                     break;
+                case "invitation":
+                    displayInvitationMessage(webSocketMessage.content);
+                    break;
                 case "active-users":
                     cleanAvailableUsers();
                     for (let i = 0; i < webSocketMessage.usernames.length; i++) {
@@ -99,12 +109,13 @@ function sendMessage() {
         document.getElementById("message").value = "";
         sendText(text)
     }
-    const input = document.querySelector('input');
-    if (input.files) {
-        let file = input.files[0];
-        input.value = '';
-        sendImage(file);
+    const input = document.getElementById('file-img');
+    if (input.files == null) {
+        return;
     }
+    let file = input.files[0];
+    input.value = '';
+    sendImage(file);
 }
 
 function sendText(text) {
@@ -177,6 +188,17 @@ function displayConnectedUserMessage(username, currentUser) {
     messages.appendChild(message);
 }
 
+function displayInvitationMessage(text) {
+    const message = document.createElement("div");
+    message.setAttribute("class", "message invitation");
+    const content = document.createElement("span");
+    content.setAttribute("class", "content");
+    content.appendChild(document.createTextNode(text));
+    message.appendChild(content);
+    const messages = document.getElementById("messages");
+    messages.appendChild(message);
+}
+
 function displayDisconnectedUserMessage(username) {
     const message = document.createElement("div");
     message.setAttribute("class", "message event");
@@ -213,4 +235,192 @@ function cleanAvailableUsers() {
     while (contacts.hasChildNodes()) {
         contacts.removeChild(contacts.lastChild);
     }
+}
+
+function invitationSent(byUser, invitedUser) {
+    let socketMessage = {
+        content: byUser + " invited " + invitedUser,
+        type: "invitation"
+    }
+    chatSocket.send(JSON.stringify(socketMessage));
+}
+
+function sendInvitation(byUser) {
+    const request = new XMLHttpRequest();
+    const invitedUser = document.getElementById("invited-user").value.trim();
+    request.open("POST", "http://" + host + "/invite?username=" + invitedUser);
+    request.onreadystatechange = function () {
+        if (request.readyState === XMLHttpRequest.DONE) {
+            switch (request.status) {
+                case 200:
+                    console.log("user invited");
+                    invitationSent(byUser, invitedUser);
+                    break;
+                case 401:
+                    document.getElementById("invitation-error").innerHTML =
+                        "unauthorized";
+                    break;
+                case 403:
+                    document.getElementById("invitation-error").innerHTML =
+                        "forbidden";
+                    break;
+                case 404:
+                    document.getElementById("invitation-error").innerHTML =
+                        "user - " + invitedUser + " not found";
+                    break;
+                default:
+                    document.getElementById("invitation-error").innerHTML =
+                        "some error";
+            }
+        }
+    };
+    request.send();
+
+
+    // $("#invited-user").value = "blabla"
+    // $.ajax({
+    //     method: "POST",
+    //     url: "http://" + host + "/invite",
+    //     data: { name: "John", location: "Boston" }
+    // })
+    //     .done(function( msg ) {
+    //         // $("#")
+    //         alert( "Data Saved: " + msg );
+    //     });
+}
+
+function chooseMeals() {
+    let table = document.getElementById("menu-list");
+    let numRows = table.rows.length;
+    let i, tr;
+    let cost = 0;
+    const chosenMeals = [];
+    for (i = 1; i < numRows; i++) {
+        tr = table.rows[i].cells;
+        let price = parseFloat(tr[1].innerHTML);
+        let mealID = tr[2].firstElementChild.name;
+        let amount = parseInt(tr[2].firstElementChild.value);
+        chosenMeals.push({mealId: mealID, amount: amount});
+        if (amount > 0) {
+            cost = cost + (price * amount);
+        }
+    }
+    console.log(chosenMeals)
+    document.getElementById("chosen-cost").innerHTML = cost.toString();
+    const request = new XMLHttpRequest();
+    request.open("POST", "http://" + host + "/ChooseMeal");
+    request.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+    request.onreadystatechange = function () {
+        if (request.readyState === XMLHttpRequest.DONE) {
+            switch (request.status) {
+                case 200:
+                    console.log("chose meals OK");
+                    document.getElementById("choose-error").innerHTML = "";
+                    break;
+                case 401:
+                    document.getElementById("choose-error").innerHTML =
+                        "unauthorized";
+                    break;
+                case 403:
+                    document.getElementById("choose-error").innerHTML =
+                        "forbidden";
+                    break;
+                case 404:
+                    document.getElementById("choose-error").innerHTML =
+                        "not found";
+                    break;
+                default:
+                    document.getElementById("choose-error").innerHTML =
+                        "some error";
+            }
+        }
+    };
+    request.send(JSON.stringify(chosenMeals));
+}
+
+function cleanChosenMeals() {
+    const table = document.getElementById("chosen-meals-table");
+    console.log(table);
+    while (table.childElementCount !== 1) {
+        table.removeChild(table.lastChild);
+    }
+}
+
+
+function generateTable(orderList) {
+
+    const table = document.getElementById("chosen-meals-table");
+    console.log(orderList);
+    let numRows = orderList.length;
+    let maxTime = "00:00:00";
+    let price = 0;
+    for( let i = 0; i < numRows; i++) {
+        let order = orderList[i];
+        console.log(order);
+        let row = document.createElement("tr");
+        let td = document.createElement('td');
+        td.appendChild(document.createTextNode(order.username));
+        row.appendChild(td);
+        td = document.createElement('td');
+        td.appendChild(document.createTextNode(order.mealName));
+        row.appendChild(td);
+        td = document.createElement('td');
+        td.appendChild(document.createTextNode(order.amount));
+        row.appendChild(td);
+        td = document.createElement('td');
+        td.appendChild(document.createTextNode(order.cookingTime));
+        row.appendChild(td);
+        td = document.createElement('td');
+        td.appendChild(document.createTextNode(order.totalPrice));
+        row.appendChild(td);
+        table.appendChild(row);
+        if (order.cookingTime > maxTime) {
+            maxTime = order.cookingTime;
+        }
+        price = price + order.totalPrice;
+    }
+    document.getElementById("chosen-meals-cost").innerHTML = price;
+    document.getElementById("estimated-time").innerHTML = maxTime;
+}
+function checkUpdates() {
+    console.log("check");
+
+    const xhr = new XMLHttpRequest();
+    xhr.open('GET', "http://" + host + '/ChooseMeal');
+    xhr.onload = function () {
+        switch (xhr.status) {
+            case 200:
+                console.log("received");
+                console.log(xhr.response);
+                cleanChosenMeals();
+                generateTable(JSON.parse(xhr.response))
+                break;
+            case 401:
+                document.getElementById("choose-meals-error").innerHTML =
+                    "unauthorized";
+                break;
+            case 403:
+                document.getElementById("choose-meals-error").innerHTML =
+                    "forbidden";
+                break;
+            case 404:
+                document.getElementById("choose-meals-error").innerHTML =
+                    " not found";
+                break;
+            default:
+                document.getElementById("choose-meals-error").innerHTML =
+                    "some error";
+        }
+    };
+    xhr.send();
+}
+
+function getChosenMeals() {
+    console.log("meeeeals");
+
+
+    setInterval(function () {
+        checkUpdates();
+    }, 4000);
+
 }

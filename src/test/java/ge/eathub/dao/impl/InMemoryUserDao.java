@@ -26,16 +26,16 @@ public class InMemoryUserDao implements UserDao {
     @Override
     public Optional<User> getUserById(Long userID) {
         return users.stream().filter(user ->
-                user.getUserID()
-                        .equals(userID))
+                        user.getUserID()
+                                .equals(userID))
                 .findAny();
     }
 
     @Override
     public Optional<User> getUserByUsername(String username) {
         return users.stream().filter(user ->
-                user.getUsername()
-                        .equals(username))
+                        user.getUsername()
+                                .equals(username))
                 .findAny();
     }
 
@@ -52,11 +52,22 @@ public class InMemoryUserDao implements UserDao {
 
     @Override
     public boolean confirmUserRegistration(String username) {
+
+        Optional<User> any = users.stream().filter(user ->
+                user.getUsername()
+                        .equals(username)).findAny();
+        if (any.isPresent()) {
+            any.get().setConfirmed(true);
+            return true;
+        }
         return false;
     }
 
     @Override
     public boolean checkInfo(String username, String email) {
-        return false;
+        Optional<User> any = users.stream().filter(user ->
+                (user.getUsername().equals(username) || user.getEmail().equals(email))
+        ).findAny();
+        return any.isEmpty();
     }
 }
