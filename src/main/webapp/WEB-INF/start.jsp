@@ -29,5 +29,8 @@
     <div>
         <a href="<c:url value="/join-room"/>"> Join Room </a>
     </div>
+    <form action="<c:url value="/logout"/>" method="get">
+        <button type = "submit">LogOut </button>
+    </form>
 </body>
 </html>

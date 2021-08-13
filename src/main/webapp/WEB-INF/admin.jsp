@@ -106,7 +106,9 @@
 
         <input type='submit' value='submit'/>
     </form>
-
+    <form action="<c:url value="/logout"/>" method="get">
+        <button type = "submit">LogOut </button>
+    </form>
 
 </div>
 
