@@ -42,7 +42,7 @@
 
 
     <label> Meal name:
-        <input type='text' placeholder='meal_name:' name='filter_meal_name' id="meal_name" required/>
+        <input type='text' placeholder='meal_name:' name='filter_meal_name' id="meal_name"/>
     </label>
     <br>
 
@@ -59,11 +59,12 @@
 
     <% Map<Restaurant, List<Meal>> map = (Map<Restaurant, List<Meal>>) request.getAttribute(RestaurantsServlet.SUCCESS_RESTAURANT_ATTR);
     String title = (String) request.getAttribute(RestaurantsServlet.RESTAURANT_NAME_ATTR);
-
-    if (map != null) {
-            %><h4><%=title%>
+    if (title != null){%>
+<h4><%=title%>
 </h4>
-    <%for (Restaurant restaurant : map.keySet()) {%>
+    <%}
+    if (map != null) {
+    for (Restaurant restaurant : map.keySet()) {%>
 <label><%="-----Restaurant name: '" + restaurant.getRestaurantName() + "'"%>
 </label><br>
     <%

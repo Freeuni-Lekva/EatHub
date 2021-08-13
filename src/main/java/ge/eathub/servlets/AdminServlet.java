@@ -3,10 +3,7 @@ package ge.eathub.servlets;
 import ge.eathub.dao.MealDao;
 import ge.eathub.dao.RestaurantDao;
 import ge.eathub.dto.UserDto;
-import ge.eathub.exceptions.MealCreationException;
-import ge.eathub.exceptions.MealUpdateException;
-import ge.eathub.exceptions.RestaurantCreationException;
-import ge.eathub.exceptions.RestaurantUpdateException;
+import ge.eathub.exceptions.*;
 import ge.eathub.listener.NameConstants;
 import ge.eathub.models.Meal;
 import ge.eathub.models.Restaurant;
@@ -63,68 +60,76 @@ public class AdminServlet extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         request.setCharacterEncoding("UTF-8");
-        if (request.getQueryString().equals("meal")) {
-            doMeal(request, response);
+        String query = request.getQueryString();
+        if (query.equals("update_meal")) {
+            updateMeal(request, response);
+        } else if (query.equals("add_meal")) {
+            addMeal(request, response);
         } else if (request.getQueryString().equals("restaurant")) {
             doRestaurant(request, response);
         }
         request.getRequestDispatcher(ADMIN_PAGE).forward(request, response);
     }
 
+    private void addMeal(HttpServletRequest request, HttpServletResponse response) {
+        String mealName = request.getParameter("add_meal_name");
+        double mealPrice = Double.parseDouble(request.getParameter("add_meal_price"));
+        long time = Long.parseLong(request.getParameter("add_cooking_time"));
+        RestaurantDao restaurantDao = (RestaurantDao) getServletContext().getAttribute(NameConstants.RESTAURANT_DAO);
+        MealDao mealDao = (MealDao) getServletContext().getAttribute(NameConstants.MEAL_DAO);
+        AdminService adminService = new AdminServiceImpl(restaurantDao, mealDao);
+        long restaurantID = Long.parseLong(request.getParameter("meal_admin_option"));
+        try {
+            if (adminService.addMeal(new Meal(mealName, new BigDecimal(mealPrice), new Time(time), restaurantID))){
+                request.setAttribute(SUCCESS_ATTR, "Meal: '" + mealName + "' added successfully in restaurant: " + restaurantDao.getRestaurantById(restaurantID).get().getRestaurantName());
+            }
+        } catch (MealCreationException | MealAlreadyExistsException ex) {
+            request.setAttribute(ERROR_ATTR, ex.getMessage());
+        }
+    }
+
+    private void updateMeal(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        long ID = Long.parseLong(request.getParameter("meal_option"));
+        String name = request.getParameter("meal_name");
+        double mealPrice = Double.parseDouble(request.getParameter("meal_price"));
+        long time = Long.parseLong(request.getParameter("cooking_time"));
+        RestaurantDao restaurantDao = (RestaurantDao) getServletContext().getAttribute(NameConstants.RESTAURANT_DAO);
+        MealDao mealDao = (MealDao) getServletContext().getAttribute(NameConstants.MEAL_DAO);
+        AdminService adminService = new AdminServiceImpl(restaurantDao, mealDao);
+        String mealNameBeforeUpdate = mealDao.getMealById(ID).get().getMealName();
+        try {
+            if (adminService.updateMeal(new Meal(ID, name, new BigDecimal(mealPrice), new Time(time)))) {
+                request.setAttribute(SUCCESS_ATTR, "Meal: '" + mealNameBeforeUpdate + "' updated to '" + name + "' in restaurant name: " + restaurantDao.getRestaurantById(mealDao.getMealById(ID).get().getRestaurantID()).get().getRestaurantName());
+            }
+        } catch (MealUpdateException | MealAlreadyExistsException ex) {
+            request.setAttribute(ERROR_ATTR, ex.getMessage());
+        }
+    }
+
 
     private void doRestaurant(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String restaurantID = request.getParameter("restaurant_id");
+        long option = Long.parseLong(request.getParameter("admin_option"));
         String restaurant_name = request.getParameter("restaurant_name");
         String location = request.getParameter("location");
         long limit = Long.parseLong(request.getParameter("limit"));
         BigDecimal balance = BigDecimal.valueOf(Double.parseDouble(request.getParameter("balance")));
         BigDecimal rating = BigDecimal.valueOf(Double.parseDouble(request.getParameter("rating")));
-        String option = request.getParameter("option");
         RestaurantDao restaurantDao = (RestaurantDao) getServletContext().getAttribute(NameConstants.RESTAURANT_DAO);
         MealDao mealDao = (MealDao) getServletContext().getAttribute(NameConstants.MEAL_DAO);
         AdminService adminService = new AdminServiceImpl(restaurantDao, mealDao);
-        if (option.equals("update")) {
-            long restID = Long.parseLong(restaurantID);
+        if (option > 0) {
             try {
-                adminService.updateRestaurant(restID, new Restaurant(restaurant_name, location, limit, rating, balance));
-                request.setAttribute(SUCCESS_ATTR, "Restaurant: " + restaurant_name + " updated successfully");
+                String restaurantNameBefore = restaurantDao.getRestaurantById(option).get().getRestaurantName();
+                adminService.updateRestaurant(option, new Restaurant(restaurant_name, location, limit, rating, balance));
+                request.setAttribute(SUCCESS_ATTR, "Restaurant: '" + restaurantNameBefore + "' updated to '" + restaurant_name + "' successfully");
             } catch (RestaurantUpdateException ex) {
                 request.setAttribute(ERROR_ATTR, ex.getMessage());
             }
-        } else if (option.equals("add")) {
+        } else if (option == 0) {
             try {
                 adminService.addRestaurant(new Restaurant(restaurant_name, location, limit, rating, balance));
                 request.setAttribute(SUCCESS_ATTR, "Restaurant: " + restaurant_name + " created successfully");
             } catch (RestaurantCreationException ex) {
-                request.setAttribute(ERROR_ATTR, ex.getMessage());
-            }
-        }
-    }
-
-    private void doMeal(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String option = request.getParameter("meal_option");
-        String name = request.getParameter("meal_name");
-        double mealPrice = Double.parseDouble(request.getParameter("meal_price"));
-        long time = Long.parseLong(request.getParameter("cooking_time"));
-        Long restaurantID = Long.parseLong(request.getParameter("meal_restaurant_id"));
-        String mealID = request.getParameter("meal_id");
-        RestaurantDao restaurantDao = (RestaurantDao) getServletContext().getAttribute(NameConstants.RESTAURANT_DAO);
-        MealDao mealDao = (MealDao) getServletContext().getAttribute(NameConstants.MEAL_DAO);
-        AdminService adminService = new AdminServiceImpl(restaurantDao, mealDao);
-        if (option.equals("update")) {
-            long meal_ID = Long.parseLong(mealID);
-            try {
-                if (adminService.updateMeal(restaurantID, new Meal(meal_ID, name, new BigDecimal(mealPrice), new Time(time), restaurantID))) {
-                    request.setAttribute(SUCCESS_ATTR, "Meal: " + name + " updated successfully");
-                }
-            } catch (MealUpdateException ex) {
-                request.setAttribute(ERROR_ATTR, ex.getMessage());
-            }
-        } else if (option.equals("add")) {
-            try {
-                adminService.addMeal(new Meal(name, new BigDecimal(mealPrice), new Time(time), restaurantID));
-                request.setAttribute(SUCCESS_ATTR, "Meal: " + name + " added successfully");
-            } catch (MealCreationException ex) {
                 request.setAttribute(ERROR_ATTR, ex.getMessage());
             }
         }
