@@ -2,10 +2,12 @@ package ge.eathub.dao.impl;
 
 import ge.eathub.dao.OrderDao;
 import ge.eathub.database.DBConnection;
+import ge.eathub.dto.OrderDto;
 import ge.eathub.models.Meal;
 import ge.eathub.models.Order;
 
 import javax.sql.DataSource;
+import java.math.BigDecimal;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -229,7 +231,7 @@ public class MySqlOrderDao implements OrderDao {
         try {
             conn = dataSource.getConnection();
             PreparedStatement stm = conn.prepareStatement(
-                    "SELECT * FROM %s where %s = ? and %s = ? ;".formatted(Order.TABLE, Order.USER_ID, Order.ROOM_ID));
+                    "SELECT * FROM %s WHERE %s = ? AND %s = ? ;".formatted(Order.TABLE, Order.USER_ID, Order.ROOM_ID));
             stm.setLong(1, userID);
             stm.setLong(2, roomID);
             ResultSet rs = stm.executeQuery();
@@ -242,6 +244,39 @@ public class MySqlOrderDao implements OrderDao {
                                 rs.getInt(5)
                         )
                 );
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            DBConnection.closeConnection(conn);
+        }
+        return orders;
+    }
+
+    @Override
+    public List<OrderDto> getChosenMealsByRoomID(Long roomID) {
+        Connection conn = null;
+        List<OrderDto> orders = new ArrayList<>();
+        try {
+            conn = dataSource.getConnection();
+            PreparedStatement stm = conn.prepareStatement(
+                    ("SELECT o.order_id, u.username, m.meal_name, o.quantity, m.cooking_time, m.meal_price FROM orders o " +
+                            "JOIN meals m ON o.meal_id = m.meal_id " +
+                            "JOIN users u ON o.user_id = u.user_id " +
+                            "WHERE o.room_id = ? ;"));
+            stm.setLong(1, roomID);
+            ResultSet rs = stm.executeQuery();
+            while (rs.next()) {
+                int quantity = rs.getInt(4);
+                orders.add(new OrderDto(
+                        rs.getLong(1),
+                        rs.getString(2),
+                        rs.getString(3),
+                        roomID,
+                        quantity,
+                        rs.getTime(5),
+                        rs.getBigDecimal(6).multiply(BigDecimal.valueOf(quantity))
+                ));
             }
         } catch (SQLException e) {
             e.printStackTrace();
