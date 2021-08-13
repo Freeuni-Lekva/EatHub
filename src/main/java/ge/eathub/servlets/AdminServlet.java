@@ -161,7 +161,7 @@ public class AdminServlet extends HttpServlet {
     }
 
 
-    private void addRestaurant(HttpServletRequest request, long option, RestaurantDao restaurantDao, AdminService adminService,
+    private void updateRestaurant(HttpServletRequest request, long option, RestaurantDao restaurantDao, AdminService adminService,
                                String restaurant_name, String location, Long limit, BigDecimal rating, BigDecimal balance) throws ServletException {
         try {
             Part filePart = request.getPart("restaurant-image");
@@ -188,7 +188,7 @@ public class AdminServlet extends HttpServlet {
         }
     }
 
-    private void updateRestaurant(HttpServletRequest request, RestaurantDao restaurantDao, AdminService adminService, String restaurant_name, String location,
+    private void addRestaurant(HttpServletRequest request, RestaurantDao restaurantDao, AdminService adminService, String restaurant_name, String location,
                                   long limit, BigDecimal rating, BigDecimal balance) throws ServletException {
         try {
             Part filePart = request.getPart("restaurant-image");
@@ -216,10 +216,10 @@ public class AdminServlet extends HttpServlet {
         RestaurantDao restaurantDao = (RestaurantDao) getServletContext().getAttribute(NameConstants.RESTAURANT_DAO);
         MealDao mealDao = (MealDao) getServletContext().getAttribute(NameConstants.MEAL_DAO);
         AdminService adminService = new AdminServiceImpl(restaurantDao, mealDao);
-        if (option > 0) {
-            addRestaurant(request, option, restaurantDao, adminService, restaurant_name, location, limit, rating, balance);
-        } else if (option == 0) {
-            updateRestaurant(request, restaurantDao, adminService, restaurant_name, location, limit, rating, balance);
+        if (option == 0) {
+            addRestaurant(request, restaurantDao, adminService, restaurant_name, location, limit, rating, balance);
+        } else if (option > 0) {
+            updateRestaurant(request, option, restaurantDao, adminService, restaurant_name, location, limit, rating, balance);
         }
     }
 
