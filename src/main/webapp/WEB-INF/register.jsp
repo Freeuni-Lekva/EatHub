@@ -15,9 +15,9 @@
             #form_style {
                 position: absolute;
                 left: 40%;
-                top: 25%;
-                width: 30%;
-                height: 50%;
+                top: 30%;
+                width: 20%;
+                height: 40%;
                 padding: 1vw;
                 border: 2px dashed lightgreen;
                 border-radius: 10px;
@@ -32,6 +32,7 @@
 
             #error_text {
                 text-align: center;
+                color: #f02323;
                 margin-top: 2.5%;
                 font-size: 1.2vw;
                 height: 5%;
@@ -42,7 +43,7 @@
                 text-align: left;
                 margin-top: 2%;
                 margin-bottom: 1%;
-                font-size: 1.2vw;
+                font-size: 1vw;
                 height: 10%;
             }
 

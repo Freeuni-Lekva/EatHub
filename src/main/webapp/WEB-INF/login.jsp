@@ -16,23 +16,25 @@
         .log_in_form {
             position: absolute;
             left: 40%;
-            top: 30%;
-            width: 30%;
-            height: 40%;
+            top: 33%;
+            width: 20%;
+            height: 34%;
             padding: 1vw;
+            margin-bottom: 2%;
             border: 2px dashed darkgoldenrod;
             border-radius: 10px;
         }
 
         #login_text {
             text-align: center;
-            font-size: 1.9vw;
+            font-size: 1.6vw;
             height: 10%;
             vertical-align: middle;
         }
 
         #error_text {
             text-align: center;
+            color: #f02323;
             margin-top: 2.5%;
             font-size: 1.3vw;
             height: 5%;
@@ -46,17 +48,18 @@
         }
 
         .text {
+
             text-align: left;
-            margin-top: 2%;
+            margin-top: 3%;
             margin-bottom: 1%;
-            font-size: 1.2vw;
+            font-size: 1vw;
             height: 10%;
         }
 
         input {
             width: 100%;
             height: 5%;
-            padding: 2% 4%;
+            padding: 1.5% 3%;
             margin: 1.5% 0;
             box-sizing: border-box;
         }
@@ -77,13 +80,13 @@
             <% }%>
             <form action="<c:url value="/login"/>" method="post">
                 <div class = "text">
-                    username:
+                    Username:
                 </div>
                 <div>
                     <input type='text' placeholder='Enter Username:' name='username' autocomplete='username' required/>
                 </div>
                 <div class = "text">
-                    password:
+                    Password:
                 </div>
                 <div>
                     <input type='password' placeholder='Enter Password:' name='password' autocomplete='current-password' required/>
