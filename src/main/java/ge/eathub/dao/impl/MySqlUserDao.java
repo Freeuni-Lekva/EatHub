@@ -14,10 +14,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static ge.eathub.dao.impl.MySqlConstants.MYSQL_DUPLICATE_ERROR_CODE;
+
 public class MySqlUserDao implements UserDao {
 
     private final DataSource dataSource;
-    public static final int MYSQL_DUPLICATE_ERROR_CODE = 1062;
 
     public MySqlUserDao(DataSource dataSource) {
         this.dataSource = dataSource;

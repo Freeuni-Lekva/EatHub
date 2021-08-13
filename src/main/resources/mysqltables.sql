@@ -30,7 +30,8 @@ CREATE TABLE meals
     meal_price    DECIMAL      NOT NULL,
     cooking_time  TIME         NOT NULL,
     restaurant_id BIGINT       NOT NULL,
-    PRIMARY KEY (meal_id)
+    PRIMARY KEY (meal_id),
+    CONSTRAINT DUPLICATE_NAME UNIQUE (meal_name, restaurant_id)
 );
 
 

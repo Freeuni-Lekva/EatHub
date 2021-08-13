@@ -21,6 +21,13 @@ public class Meal {
     public Meal() {
     }
 
+    public Meal(Long mealID, String mealName, BigDecimal mealPrice, Time cookingTime) {
+        this.mealID = mealID;
+        this.mealName = mealName;
+        this.mealPrice = mealPrice;
+        this.cookingTime = cookingTime;
+    }
+
     public Meal(String mealName, BigDecimal mealPrice, Time cookingTime, Long restaurantID) {
         this.mealName = mealName;
         this.mealPrice = mealPrice;
