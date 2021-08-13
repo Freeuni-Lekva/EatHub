@@ -3,37 +3,96 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html>
 <html lang="en">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta charset="utf-8" >
-<head>
-    <title>register user</title>
-</head>
-<body>
-<div>
-    <% String regError = (String) request.getAttribute(RegistrationServlet.ERROR_ATTR);
-        if (regError != null) {%>
-    <label><%=regError%>
-    </label>
-    <% }%>
-    <p> enter name and password</p>
-    <form action="<c:url value="/register"/>" method="post">
-        <label> user name:
-            <input type='text' placeholder='Username:' name='username' autocomplete='username' required/>
-        </label>
-        <br>
-        <label>
-            password:
-            <input type='password' placeholder='Password:' name='password' autocomplete='new-password' required/>
-        </label>
-        <br>
-        <label>
-            email:
-            <input type='text' placeholder='email:' name='email' autocomplete='email' required/>
-        </label>
-        <br>
-        <input type='submit' value='register'/>
-    </form>
-</div>
-<a href="<c:url value="/login"/>"> log in </a>
-</body>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="utf-8" >
+    <head>
+        <title>Register User</title>
+        <style>
+            body {
+                background-color: darksalmon;
+            }
+
+            #form_style {
+                position: absolute;
+                left: 40%;
+                top: 25%;
+                width: 30%;
+                height: 50%;
+                padding: 1vw;
+                border: 2px dashed lightgreen;
+                border-radius: 10px;
+            }
+
+            #reg_text {
+                text-align: center;
+                font-size: 2vw;
+                height: 10%;
+                vertical-align: middle;
+            }
+
+            #error_text {
+                text-align: center;
+                margin-top: 2.5%;
+                font-size: 1.2vw;
+                height: 5%;
+                vertical-align: middle;
+            }
+
+            .text_style {
+                text-align: left;
+                margin-top: 2%;
+                margin-bottom: 1%;
+                font-size: 1.2vw;
+                height: 10%;
+            }
+
+            input {
+                width: 100%;
+                height: 5%;
+                padding: 1.5% 3%;
+                margin: 1.5% 0;
+                box-sizing: border-box;
+            }
+
+            input:hover {
+                background-color: lightgreen;
+            }
+
+            #log_in_text {
+                text-align: center;
+                font-size: 1vw;
+            }
+
+        </style>
+    </head>
+    <body>
+        <div id = "form_style">
+            <div id = "reg_text"> Registration </div>
+            <% String regError = (String) request.getAttribute(RegistrationServlet.ERROR_ATTR);
+                if (regError != null) {%>
+            <div id = "error_text"><%=regError%></div>
+            <% }%>
+            <form action="<c:url value="/register"/>" method="post">
+                <div class = "text_style">
+                    Username:
+                </div>
+                <input type='text' placeholder='Username:' name='username' autocomplete='username' required/>
+
+                <div class = "text_style">
+                    Password:
+                </div>
+                <input type='password' placeholder='Password:' name='password' autocomplete='new-password' required/>
+
+                <div class = "text_style">
+                    Email:
+                </div>
+                <input type='text' placeholder='email:' name='email' autocomplete='email' required/>
+                <br>
+                <input type='submit' value='register'/>
+            </form>
+            <div id = "log_in_text">
+                already have an account? <a href="<c:url value="/login"/>"> log in </a>
+            </div>
+        </div>
+    </body>
 </html>

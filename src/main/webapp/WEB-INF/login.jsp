@@ -91,7 +91,7 @@
                 <input type='submit' value='Login'/>
             </form>
             <div id = "register_text">
-                already have an account? <a href="<c:url value="/register"/>"> Register </a>
+                Not a member? <a href="<c:url value="/register"/>"> Register </a>
             </div>
         </div>
     </body>
