@@ -39,6 +39,18 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
+    public boolean updateMeal(Meal meal) {
+        if (!MealValidator.validate(meal)) {
+            throw new MealUpdateException("The given data is incorrect (negative values are impossible)");
+        }
+        if (mealDao.getMealById(meal.getMealID()).isEmpty()) {
+            throw new MealUpdateException("Meal with that id is not in database");
+        }
+        mealDao.updateMeal(meal);
+        return true;
+    }
+
+    @Override
     public boolean updateMeal(long restaurantID, Meal meal) {
         if (!MealValidator.validate(meal)) {
             throw new MealUpdateException("The given data is incorrect (negative values are impossible)");

@@ -58,4 +58,9 @@ public class InMemoryMealDao implements MealDao {
         });
         return !optMeal.isEmpty();
     }
+
+    @Override
+    public boolean updateMeal(Meal meal) {
+        return false;
+    }
 }

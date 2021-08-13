@@ -83,12 +83,13 @@ public class MySqlRoomDao implements RoomDao {
                             Room.ROOM_ID));
             stm.setLong(1, roomID);
             ResultSet rs = stm.executeQuery();
-            rs.next();
-            return Optional.of(new Room(
-                    rs.getLong(1),
-                    rs.getLong(2),
-                    rs.getBoolean(3)
-            ));
+            if (rs.next()) {
+                return Optional.of(new Room(
+                        rs.getLong(1),
+                        rs.getLong(2),
+                        rs.getBoolean(3)
+                ));
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
@@ -105,6 +106,7 @@ public class MySqlRoomDao implements RoomDao {
             PreparedStatement stm = conn.prepareStatement(
                     "UPDATE rooms SET active = FALSE WHERE room_id = ?");
             stm.setLong(1, room.getRoomID());
+            stm.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {

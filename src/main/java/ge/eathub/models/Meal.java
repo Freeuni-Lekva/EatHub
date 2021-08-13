@@ -11,29 +11,43 @@ public class Meal {
     public static final String COLUMN_PRICE = "meal_price";
     public static final String COLUMN_COOKING_TIME = "cooking_time";
     public static final String COLUMN_RESTAURANT_ID = "restaurant_id";
+    public static final String COLUMN_URL = "url";
 
     private Long mealID; // auto increment
     private String mealName;
     private BigDecimal mealPrice;
     private Time cookingTime;
     private Long restaurantID;
+    private String url;
+
+
 
     public Meal() {
     }
 
-    public Meal(String mealName, BigDecimal mealPrice, Time cookingTime, Long restaurantID) {
+    public Meal(Long mealID, String mealName, BigDecimal mealPrice, Time cookingTime, String url) {
+        this.mealID = mealID;
+        this.mealName = mealName;
+        this.mealPrice = mealPrice;
+        this.cookingTime = cookingTime;
+        this.url = url;
+    }
+
+    public Meal(String mealName, BigDecimal mealPrice, Time cookingTime, Long restaurantID, String url) {
         this.mealName = mealName;
         this.mealPrice = mealPrice;
         this.cookingTime = cookingTime;
         this.restaurantID = restaurantID;
+        this.url = url;
     }
 
-    public Meal(Long mealID, String mealName, BigDecimal mealPrice, Time cookingTime, Long restaurantID) {
+    public Meal(Long mealID, String mealName, BigDecimal mealPrice, Time cookingTime, Long restaurantID, String url) {
         this.mealID = mealID;
         this.mealName = mealName;
         this.mealPrice = mealPrice;
         this.cookingTime = cookingTime;
         this.restaurantID = restaurantID;
+        this.url = url;
     }
 
     public Meal(Meal meal) {
@@ -42,6 +56,7 @@ public class Meal {
         this.mealPrice = meal.getMealPrice();
         this.cookingTime = meal.getCookingTime();
         this.restaurantID = meal.getRestaurantID();
+        this.url = meal.getMealUrl();
     }
 
     public Long getMealID() {
@@ -87,6 +102,15 @@ public class Meal {
     public Meal setMealPrice(BigDecimal mealPrice) {
         this.mealPrice = mealPrice;
         return this;
+    }
+
+    public Meal setMealUrl(String url){
+        this.url = url;
+        return this;
+    }
+
+    public String getMealUrl(){
+        return url;
     }
 
     @Override

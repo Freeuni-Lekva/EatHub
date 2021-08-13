@@ -47,7 +47,6 @@ public class JoinRoomServlet extends HttpServlet {
             Long roomID = Long.valueOf(request.getParameter("room-id"));
             RoomService roomService = (RoomService) getServletContext().getAttribute(NameConstants.ROOM_SERVICE);
             if (roomService.checkUser(roomID, user.getUserID())) {
-                System.out.println("checked user " + roomID + " u: " + user.getUserID());
                 response.setStatus(HttpServletResponse.SC_OK);
                 Authenticator auth = AuthenticatorFactory.get();
                 String token = auth.getAccessToken(user.getUsername());
@@ -62,7 +61,6 @@ public class JoinRoomServlet extends HttpServlet {
                 request.getSession().setAttribute(Room.ATTR, room.get());
                 request.getRequestDispatcher(ROOM_PAGE).forward(request, response);
             } else {
-                System.out.println("else roomID " + roomID + " - user " + user.getUsername());
                 response.setStatus(HttpServletResponse.SC_FORBIDDEN);
             } // TODO: extra // 's
         } catch (Exception e) {

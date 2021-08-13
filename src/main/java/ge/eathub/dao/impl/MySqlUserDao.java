@@ -14,10 +14,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static ge.eathub.dao.impl.MySqlConstants.MYSQL_DUPLICATE_ERROR_CODE;
+
 public class MySqlUserDao implements UserDao {
 
     private final DataSource dataSource;
-    public static final int MYSQL_DUPLICATE_ERROR_CODE = 1062;
 
     public MySqlUserDao(DataSource dataSource) {
         this.dataSource = dataSource;
@@ -62,16 +63,17 @@ public class MySqlUserDao implements UserDao {
                             User.TABLE, User.COLUMN_ID));
             stm.setLong(1, userID);
             ResultSet rs = stm.executeQuery();
-            rs.next();
-            return Optional.of(new User(
-                    rs.getLong(1),
-                    rs.getString(2),
-                    rs.getString(3),
-                    rs.getString(4),
-                    rs.getBigDecimal(5),
-                    Role.valueOf(rs.getString(6)),
-                    rs.getBoolean(7)
-            ));
+            if (rs.next()) {
+                return Optional.of(new User(
+                        rs.getLong(1),
+                        rs.getString(2),
+                        rs.getString(3),
+                        rs.getString(4),
+                        rs.getBigDecimal(5),
+                        Role.valueOf(rs.getString(6)),
+                        rs.getBoolean(7)
+                ));
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
@@ -89,16 +91,17 @@ public class MySqlUserDao implements UserDao {
                     "SELECT * FROM %s where %s = ?;".formatted(User.TABLE, User.COLUMN_USERNAME));
             stm.setString(1, username);
             ResultSet rs = stm.executeQuery();
-            rs.next();
-            return Optional.of(new User(
-                    rs.getLong(1),
-                    rs.getString(2),
-                    rs.getString(3),
-                    rs.getString(4),
-                    rs.getBigDecimal(5),
-                    Role.valueOf(rs.getString(6)),
-                    rs.getBoolean(7)
-            ));
+            if(rs.next()) {
+                return Optional.of(new User(
+                        rs.getLong(1),
+                        rs.getString(2),
+                        rs.getString(3),
+                        rs.getString(4),
+                        rs.getBigDecimal(5),
+                        Role.valueOf(rs.getString(6)),
+                        rs.getBoolean(7)
+                ));
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {

@@ -14,4 +14,6 @@ public interface MealDao {
 
     boolean updateMeal(Meal meal, Long restaurantID);
 
+    boolean updateMeal(Meal meal);
+
 }
