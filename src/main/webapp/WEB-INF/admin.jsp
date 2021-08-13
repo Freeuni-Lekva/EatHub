@@ -35,7 +35,7 @@
     <% }%>
 
     <h4>Update or add new restaurant</h4>
-    <form action="<c:url value="/admin?restaurant"/>" method="post">
+    <form action="<c:url value="/admin?restaurant"/>" enctype="multipart/form-data" method="post">
 
         <div> Restaurants:
             <select name="admin_option" id="admin_option">
@@ -72,6 +72,9 @@
         <div>Balance:
             <input type='number' min="0" step="0.1" placeholder='0:' name='balance' required/>
         </div>
+
+        <input type="file" name="restaurant-image" accept="image/*" id="restaurant-image" placeholder=" choose image" required/><br>
+
 
         <input type='submit' value='submit'/>
     </form>
@@ -143,7 +146,7 @@
             </select>
         </div>
 
-        <input type="file" name="file-image-add" accept="image/*" id="file-image-add" enctype="multipart/form-data" placeholder=" choose image" required/><br>
+        <input type="file" name="file-image-add" accept="image/*" id="file-image-add"  placeholder=" choose image" required/><br>
 
 
         <input type='submit' value='submit'/>

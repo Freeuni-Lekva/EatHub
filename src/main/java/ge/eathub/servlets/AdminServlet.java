@@ -26,6 +26,7 @@ import java.math.BigDecimal;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.sql.Time;
+import java.util.Optional;
 import java.util.logging.Logger;
 
 import static ge.eathub.servlets.ServletCommons.ADMIN_PAGE;
@@ -39,17 +40,14 @@ public class AdminServlet extends HttpServlet {
     public static final String SUCCESS_ATTR = "ADD/UPDATE_EXECUTED";
 
 
-
-    @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+    private boolean checkAdmin(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         ServletCommons.setEncoding(request, response);
-        Session session = (Session) request.getSession(false);
+        Session session = (Session) request.getSession();
         if (session != null) {
             UserDto user = (UserDto) request.getSession().getAttribute(UserDto.ATTR);
             if (user != null) {
                 if (user.getRole().equals(Role.ADMIN)) {
-                    request.getRequestDispatcher(ADMIN_PAGE).forward(request, response);
+                    return true;
                 } else {
                     response.setStatus(HttpServletResponse.SC_FORBIDDEN);
                 }
@@ -59,6 +57,16 @@ public class AdminServlet extends HttpServlet {
         } else {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         }
+        return false;
+    }
+
+
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        if (checkAdmin(request, response)) {
+            request.getRequestDispatcher(ADMIN_PAGE).forward(request, response);
+        }
     }
 
 
@@ -67,15 +75,17 @@ public class AdminServlet extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         request.setCharacterEncoding("UTF-8");
-        String query = request.getQueryString();
-        if (query.equals("update_meal")) {
-            updateMeal(request, response);
-        } else if (query.equals("add_meal")) {
-            addMeal(request, response);
-        } else if (request.getQueryString().equals("restaurant")) {
-            doRestaurant(request, response);
-        }
-        request.getRequestDispatcher(ADMIN_PAGE).forward(request, response);
+      //  if (checkAdmin(request, response)) {
+            String query = request.getQueryString();
+            if (query.equals("update_meal")) {
+                updateMeal(request, response);
+            } else if (query.equals("add_meal")) {
+                addMeal(request, response);
+            } else if (request.getQueryString().equals("restaurant")) {
+                doRestaurant(request, response);
+            }
+            request.getRequestDispatcher(ADMIN_PAGE).forward(request, response);
+       // }
     }
 
     private void addMeal(HttpServletRequest request, HttpServletResponse response) {
@@ -92,7 +102,7 @@ public class AdminServlet extends HttpServlet {
             long ID = mealDao.getAllMeals().size() + 1;
             String newFileName = "" + ID + ".jpg";
             File file = new File(uploads, newFileName);
-            if (adminService.addMeal(new Meal(mealName, new BigDecimal(mealPrice), new Time(time), restaurantID, newFileName))){
+            if (adminService.addMeal(new Meal(mealName, new BigDecimal(mealPrice), new Time(time), restaurantID, newFileName))) {
                 try (InputStream input = filePart.getInputStream()) {
                     Files.copy(input, file.toPath(), StandardCopyOption.REPLACE_EXISTING);
                 }
@@ -133,6 +143,48 @@ public class AdminServlet extends HttpServlet {
     }
 
 
+    private void addRestaurant(HttpServletRequest request, long option, RestaurantDao restaurantDao, AdminService adminService,
+                               String restaurant_name, String location, Long limit, BigDecimal rating, BigDecimal balance) throws ServletException {
+        try {
+            Part filePart = request.getPart("restaurant-image");
+            File uploads = new File("src/main/webapp/images/Restaurants");
+            String newFileName = option + ".jpg";
+            File file = new File(uploads, newFileName);
+            String restaurantNameBefore = "";
+            Optional<Restaurant> restaurant = restaurantDao.getRestaurantById(option);
+            if (restaurant.isPresent()) {
+                restaurantNameBefore = restaurant.get().getRestaurantName();
+            }
+            adminService.updateRestaurant(option, new Restaurant(restaurant_name, location, limit, rating, balance, newFileName));
+            try (InputStream input = filePart.getInputStream()) {
+                Files.copy(input, file.toPath(), StandardCopyOption.REPLACE_EXISTING);
+            }
+            request.setAttribute(SUCCESS_ATTR, "Restaurant: '" + restaurantNameBefore + "' updated to '" + restaurant_name + "' successfully");
+        } catch (RestaurantUpdateException ex) {
+            request.setAttribute(ERROR_ATTR, ex.getMessage());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void updateRestaurant(HttpServletRequest request, RestaurantDao restaurantDao, AdminService adminService, String restaurant_name, String location,
+                                  long limit, BigDecimal rating, BigDecimal balance) throws ServletException {
+        try {
+            Part filePart = request.getPart("restaurant-image");
+            File uploads = new File("src/main/webapp/images/Restaurants");
+            long id = restaurantDao.getAllRestaurant().size() + 1;
+            String newFileName = id + ".jpg";
+            File file = new File(uploads, newFileName);
+            adminService.addRestaurant(new Restaurant(restaurant_name, location, limit, rating, balance, newFileName));
+            try (InputStream input = filePart.getInputStream()) {
+                Files.copy(input, file.toPath(), StandardCopyOption.REPLACE_EXISTING);
+            }
+            request.setAttribute(SUCCESS_ATTR, "Restaurant: " + restaurant_name + " created successfully");
+        } catch (RestaurantCreationException | IOException | ServletException ex) {
+            request.setAttribute(ERROR_ATTR, ex.getMessage());
+        }
+    }
+
     private void doRestaurant(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         long option = Long.parseLong(request.getParameter("admin_option"));
         String restaurant_name = request.getParameter("restaurant_name");
@@ -144,20 +196,9 @@ public class AdminServlet extends HttpServlet {
         MealDao mealDao = (MealDao) getServletContext().getAttribute(NameConstants.MEAL_DAO);
         AdminService adminService = new AdminServiceImpl(restaurantDao, mealDao);
         if (option > 0) {
-            try {
-                String restaurantNameBefore = restaurantDao.getRestaurantById(option).get().getRestaurantName();
-                adminService.updateRestaurant(option, new Restaurant(restaurant_name, location, limit, rating, balance));
-                request.setAttribute(SUCCESS_ATTR, "Restaurant: '" + restaurantNameBefore + "' updated to '" + restaurant_name + "' successfully");
-            } catch (RestaurantUpdateException ex) {
-                request.setAttribute(ERROR_ATTR, ex.getMessage());
-            }
+            addRestaurant(request, option, restaurantDao, adminService, restaurant_name, location, limit, rating, balance);
         } else if (option == 0) {
-            try {
-                adminService.addRestaurant(new Restaurant(restaurant_name, location, limit, rating, balance));
-                request.setAttribute(SUCCESS_ATTR, "Restaurant: " + restaurant_name + " created successfully");
-            } catch (RestaurantCreationException ex) {
-                request.setAttribute(ERROR_ATTR, ex.getMessage());
-            }
+            updateRestaurant(request, restaurantDao, adminService, restaurant_name, location, limit, rating, balance);
         }
     }
 

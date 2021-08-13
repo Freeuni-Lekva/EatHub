@@ -34,7 +34,8 @@ public class MySqlRestaurantDao implements RestaurantDao {
                                 rs.getString(3),
                                 rs.getLong(4),
                                 rs.getBigDecimal(5),
-                                rs.getBigDecimal(6)
+                                rs.getBigDecimal(6),
+                                rs.getString(7)
                         )
                 );
             }
@@ -62,7 +63,8 @@ public class MySqlRestaurantDao implements RestaurantDao {
                         rs.getString(3),
                         rs.getLong(4),
                         rs.getBigDecimal(5),
-                        rs.getBigDecimal(6)
+                        rs.getBigDecimal(6),
+                        rs.getString(7)
                 ));
             }
         } catch (SQLException e) {
@@ -164,7 +166,8 @@ public class MySqlRestaurantDao implements RestaurantDao {
                         rs.getString(9),
                         rs.getLong(10),
                         rs.getBigDecimal(11),
-                        rs.getBigDecimal(12)
+                        rs.getBigDecimal(12),
+                        rs.getString(13)
                 );
                 if (!ret.containsKey(restaurant)) {
                     ret.put(restaurant, new ArrayList<>());
@@ -185,16 +188,17 @@ public class MySqlRestaurantDao implements RestaurantDao {
         try {
             conn = dataSource.getConnection();
             PreparedStatement stm = conn.prepareStatement(
-                    "UPDATE %s SET %s = ?,  %s = ? , %s = ?, %s = ?, %s = ? where %s = ?;".formatted(
+                    "UPDATE %s SET %s = ?, %s = ? , %s = ?, %s = ?, %s = ?, %s = ? where %s = ?;".formatted(
                             Restaurant.TABLE,
                             Restaurant.COLUMN_NAME, Restaurant.COLUMN_LOCATION,
-                            Restaurant.COLUMN_LIMIT, Restaurant.COLUMN_RATING, Restaurant.COLUMN_BALANCE, Restaurant.COLUMN_ID), Statement.RETURN_GENERATED_KEYS);
+                            Restaurant.COLUMN_LIMIT, Restaurant.COLUMN_RATING, Restaurant.COLUMN_BALANCE, Restaurant.COLUMN_URL, Restaurant.COLUMN_ID), Statement.RETURN_GENERATED_KEYS);
             stm.setString(1, restaurant.getRestaurantName());
             stm.setString(2, restaurant.getLocation());
             stm.setLong(3, restaurant.getLimit());
             stm.setBigDecimal(4, restaurant.getRating());
             stm.setBigDecimal(5, restaurant.getBalance());
-            stm.setLong(6, restaurantID);
+            stm.setString(6, restaurant.getRestaurantUrl());
+            stm.setLong(7, restaurantID);
             if (stm.executeUpdate() == 1) {
                 return true;
             }
@@ -212,15 +216,16 @@ public class MySqlRestaurantDao implements RestaurantDao {
         try {
             conn = dataSource.getConnection();
             PreparedStatement stm = conn.prepareStatement(
-                    "INSERT INTO %s (%s, %s, %s, %s, %s) VALUES (?,?,?,?,?);  ;".formatted(
+                    "INSERT INTO %s (%s, %s, %s, %s, %s, %s) VALUES (?,?,?,?,?,?) ;".formatted(
                             Restaurant.TABLE,
                             Restaurant.COLUMN_NAME, Restaurant.COLUMN_LOCATION,
-                            Restaurant.COLUMN_LIMIT, Restaurant.COLUMN_RATING, Restaurant.COLUMN_BALANCE), Statement.RETURN_GENERATED_KEYS);
+                            Restaurant.COLUMN_LIMIT, Restaurant.COLUMN_RATING,Restaurant.COLUMN_BALANCE, Restaurant.COLUMN_URL), Statement.RETURN_GENERATED_KEYS);
             stm.setString(1, restaurant.getRestaurantName());
             stm.setString(2, restaurant.getLocation());
             stm.setLong(3, restaurant.getLimit());
             stm.setBigDecimal(4, restaurant.getRating());
             stm.setBigDecimal(5, restaurant.getBalance());
+            stm.setString(6, restaurant.getRestaurantUrl());
             if (stm.executeUpdate() == 1) {
                 ResultSet rs = stm.getGeneratedKeys();
                 rs.next();

@@ -11,6 +11,7 @@ public class Restaurant {
     public static final String COLUMN_LIMIT = "max_limit";
     public static final String COLUMN_RATING = "Rating";
     public static final String COLUMN_BALANCE = "Balance";
+    public static final String COLUMN_URL = "url";
 
     private Long restaurantID; // autoincrement
     private String restaurantName;
@@ -18,25 +19,28 @@ public class Restaurant {
     private Long limit;
     private BigDecimal rating;
     private BigDecimal balance;
+    private String url;
 
     public Restaurant() {
     }
 
-    public Restaurant(Long restaurantID, String restaurantName, String location, Long limit, BigDecimal rating, BigDecimal balance) {
+    public Restaurant(Long restaurantID, String restaurantName, String location, Long limit, BigDecimal rating, BigDecimal balance, String url) {
         this.restaurantID = restaurantID;
         this.restaurantName = restaurantName;
         this.location = location;
         this.limit = limit;
         this.rating = rating;
         this.balance = balance;
+        this.url = url;
     }
 
-    public Restaurant(String restaurantName, String location, Long limit, BigDecimal rating, BigDecimal balance) {
+    public Restaurant(String restaurantName, String location, Long limit, BigDecimal rating, BigDecimal balance, String url) {
         this.restaurantName = restaurantName;
         this.location = location;
         this.limit = limit;
         this.rating = rating;
         this.balance = balance;
+        this.url = url;
     }
 
     public Restaurant(Restaurant restaurant) {
@@ -46,6 +50,7 @@ public class Restaurant {
         this.limit = restaurant.getLimit();
         this.rating = restaurant.getRating();
         this.balance = restaurant.getBalance();
+        this.url = restaurant.getRestaurantUrl();
     }
 
     public Long getRestaurantID() {
@@ -55,6 +60,15 @@ public class Restaurant {
     public Restaurant setRestaurantID(Long restaurantID) {
         this.restaurantID = restaurantID;
         return this;
+    }
+
+    public Restaurant setRestaurantUrl(String url){
+        this.url = url;
+        return this;
+    }
+
+    public String getRestaurantUrl(){
+        return url;
     }
 
     public String getRestaurantName() {

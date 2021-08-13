@@ -44,7 +44,7 @@ CREATE TABLE restaurants
     max_limit       NUMERIC      NOT NULL,
     Rating          DECIMAL      NOT NULL DEFAULT 0,
     Balance         DECIMAL      NOT NULL,
-#     url             VARCHAR(100) NOT NULL,
+    url             VARCHAR(100) NOT NULL,
     PRIMARY KEY (restaurant_id)
 );
 
@@ -152,12 +152,12 @@ VALUES ('admin', '$2a$10$.gSvGvCf5I85vxP4dklNSuqkwnFGNZxE4S04Dy6aZX76btLZic6Wm',
         'ttotl18@freeuni.edu.ge', 1000, 'CUSTOMER', TRUE);
 ;
 
-INSERT INTO restaurants(restaurant_name, location, max_limit, Balance)
-VALUES ('თბილისურა', 'Tbilisi', 1000, 1000),
-       ('ალაზანი', 'Telavi', 2000, 2000),
-       ('სტალინსკი', 'Gori', 2000, 2600),
-       ('ქუთეისური', 'Kutaisi', 1000, 1000),
-       ('Tiflis Veranda Restaurant', 'Tbilisi', 1000, 1000);
+INSERT INTO restaurants(restaurant_name, location, max_limit, Balance, url)
+VALUES ('თბილისურა', 'Tbilisi', 1000, 1000, '/images/Restaurants/1.jpg'),
+       ('ალაზანი', 'Telavi', 2000, 2000, '/images/Restaurants/2.jpg'),
+       ('სტალინსკი', 'Gori', 2000, 2600, '/images/Restaurants/3.jpg'),
+       ('ქუთეისური', 'Kutaisi', 1000, 1000, '/images/Restaurants/4.jpg'),
+       ('Tiflis Veranda Restaurant', 'Tbilisi', 1000, 1000, '/images/Restaurants/5.jpg');
 
 
 INSERT INTO meals(meal_name, meal_price, cooking_time, restaurant_id, url)
