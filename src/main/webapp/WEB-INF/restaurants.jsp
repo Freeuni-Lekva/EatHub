@@ -70,6 +70,7 @@
     <%
 
     for (Meal meal : map.get(restaurant)) {%>
+<input type="image" src=<%="images/Meals/" + meal.getMealUrl()%>><br>
 <label><%="* Meal name: '" + meal.getMealName() + "', Meal price: " + meal.getMealPrice() %>
 </label><br>
     <%}%>
@@ -80,6 +81,7 @@
     <% List<Meal> meals = (List<Meal>) request.getAttribute(RestaurantsServlet.SUCCESS_MEALS_ATTR);
     if (meals != null) {
         for (Meal meal : meals) {%>
+<input type="image" src=<%="images/Meals/" + meal.getMealUrl()%>><br>
 <label><%="* Meal name: '" + meal.getMealName() + "', Meal price: " + meal.getMealPrice() %>
 </label><br>
     <%}%>
@@ -90,6 +92,7 @@
     <%
         for (Restaurant restaurant : restaurants) {%>
     <li>
+        <input type="image" src=<%="images/Restaurants/" + restaurant.getRestaurantUrl()%>><br>
         <a href="/newRoom?id=<%=restaurant.getRestaurantID()%> "><%= restaurant.getRestaurantName() + ", " + restaurant.getLocation()%>
     </li>
     <%

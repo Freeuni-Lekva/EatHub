@@ -10,6 +10,7 @@ import ge.eathub.models.Restaurant;
 import ge.eathub.models.Role;
 import ge.eathub.service.AdminService;
 import ge.eathub.service.impl.AdminServiceImpl;
+import org.checkerframework.checker.nullness.Opt;
 
 import javax.jms.Session;
 import javax.servlet.ServletException;
@@ -38,11 +39,13 @@ public class AdminServlet extends HttpServlet {
     private final static Logger logger = Logger.getLogger(LoginServlet.class.getName());
     public static final String ERROR_ATTR = "ADD/UPDATE_ERROR";
     public static final String SUCCESS_ATTR = "ADD/UPDATE_EXECUTED";
+    public static final String RESTAURANT_PHOTOS = "src/main/webapp/images/Restaurants";
+    public static final String MEAL_PHOTOS = "src/main/webapp/images/Meals";
 
 
     private boolean checkAdmin(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         ServletCommons.setEncoding(request, response);
-        Session session = (Session) request.getSession();
+        Session session = (Session) request.getSession(false);
         if (session != null) {
             UserDto user = (UserDto) request.getSession().getAttribute(UserDto.ATTR);
             if (user != null) {
@@ -98,9 +101,9 @@ public class AdminServlet extends HttpServlet {
         long restaurantID = Long.parseLong(request.getParameter("meal_admin_option"));
         try {
             Part filePart = request.getPart("file-image-add");
-            File uploads = new File("src/main/webapp/images/Meals");
+            File uploads = new File(MEAL_PHOTOS);
             long ID = mealDao.getAllMeals().size() + 1;
-            String newFileName = "" + ID + ".jpg";
+            String newFileName =  "" +  ID + ".jpg";
             File file = new File(uploads, newFileName);
             if (adminService.addMeal(new Meal(mealName, new BigDecimal(mealPrice), new Time(time), restaurantID, newFileName))) {
                 try (InputStream input = filePart.getInputStream()) {
@@ -125,17 +128,32 @@ public class AdminServlet extends HttpServlet {
         RestaurantDao restaurantDao = (RestaurantDao) getServletContext().getAttribute(NameConstants.RESTAURANT_DAO);
         MealDao mealDao = (MealDao) getServletContext().getAttribute(NameConstants.MEAL_DAO);
         AdminService adminService = new AdminServiceImpl(restaurantDao, mealDao);
-        String mealNameBeforeUpdate = mealDao.getMealById(ID).get().getMealName();
+        String mealNameBeforeUpdate = "";
+        String restaurantName = "";
+        Optional<Meal> meal = mealDao.getMealById(ID);
+        if (meal.isPresent()){
+            mealNameBeforeUpdate = meal.get().getMealName();
+        }else{
+            request.setAttribute(ERROR_ATTR, "Unable to update meal");
+            return;
+        }
+        Optional<Restaurant> restaurant = restaurantDao.getRestaurantById(meal.get().getRestaurantID());
+        if (restaurant.isPresent()){
+            restaurantName = restaurant.get().getRestaurantName();
+        }else{
+            request.setAttribute(ERROR_ATTR, "Unable to update meal");
+            return;
+        }
         try {
             Part filePart = request.getPart("file-image-update");
-            File uploads = new File("src/main/webapp/images/Meals");
+            File uploads = new File(MEAL_PHOTOS);
             String newFileName = "" + ID + ".jpg";
             File file = new File(uploads, newFileName);
             if (adminService.updateMeal(new Meal(ID, name, new BigDecimal(mealPrice), new Time(time), newFileName))) {
                 try (InputStream input = filePart.getInputStream()) {
                     Files.copy(input, file.toPath(), StandardCopyOption.REPLACE_EXISTING);
                 }
-                request.setAttribute(SUCCESS_ATTR, "Meal: '" + mealNameBeforeUpdate + "' updated to '" + name + "' in restaurant name: " + restaurantDao.getRestaurantById(mealDao.getMealById(ID).get().getRestaurantID()).get().getRestaurantName());
+                request.setAttribute(SUCCESS_ATTR, "Meal: '" + mealNameBeforeUpdate + "' updated to '" + name + "' in restaurant name: " + restaurantName);
             }
         } catch (MealUpdateException | MealAlreadyExistsException ex) {
             request.setAttribute(ERROR_ATTR, ex.getMessage());
@@ -147,13 +165,16 @@ public class AdminServlet extends HttpServlet {
                                String restaurant_name, String location, Long limit, BigDecimal rating, BigDecimal balance) throws ServletException {
         try {
             Part filePart = request.getPart("restaurant-image");
-            File uploads = new File("src/main/webapp/images/Restaurants");
-            String newFileName = option + ".jpg";
+            File uploads = new File(RESTAURANT_PHOTOS);
+            String newFileName ="" + option + ".jpg";
             File file = new File(uploads, newFileName);
             String restaurantNameBefore = "";
             Optional<Restaurant> restaurant = restaurantDao.getRestaurantById(option);
             if (restaurant.isPresent()) {
                 restaurantNameBefore = restaurant.get().getRestaurantName();
+            }else {
+                request.setAttribute(ERROR_ATTR, "Unable to add restaurant");
+                return;
             }
             adminService.updateRestaurant(option, new Restaurant(restaurant_name, location, limit, rating, balance, newFileName));
             try (InputStream input = filePart.getInputStream()) {
@@ -171,9 +192,9 @@ public class AdminServlet extends HttpServlet {
                                   long limit, BigDecimal rating, BigDecimal balance) throws ServletException {
         try {
             Part filePart = request.getPart("restaurant-image");
-            File uploads = new File("src/main/webapp/images/Restaurants");
+            File uploads = new File( RESTAURANT_PHOTOS);
             long id = restaurantDao.getAllRestaurant().size() + 1;
-            String newFileName = id + ".jpg";
+            String newFileName = "" + id + ".jpg";
             File file = new File(uploads, newFileName);
             adminService.addRestaurant(new Restaurant(restaurant_name, location, limit, rating, balance, newFileName));
             try (InputStream input = filePart.getInputStream()) {

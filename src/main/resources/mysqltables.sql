@@ -153,31 +153,31 @@ VALUES ('admin', '$2a$10$.gSvGvCf5I85vxP4dklNSuqkwnFGNZxE4S04Dy6aZX76btLZic6Wm',
 ;
 
 INSERT INTO restaurants(restaurant_name, location, max_limit, Balance, url)
-VALUES ('თბილისურა', 'Tbilisi', 1000, 1000, '/images/Restaurants/1.jpg'),
-       ('ალაზანი', 'Telavi', 2000, 2000, '/images/Restaurants/2.jpg'),
-       ('სტალინსკი', 'Gori', 2000, 2600, '/images/Restaurants/3.jpg'),
-       ('ქუთეისური', 'Kutaisi', 1000, 1000, '/images/Restaurants/4.jpg'),
-       ('Tiflis Veranda Restaurant', 'Tbilisi', 1000, 1000, '/images/Restaurants/5.jpg');
+VALUES ('თბილისურა', 'Tbilisi', 1000, 1000, '1.jpg'),
+       ('ალაზანი', 'Telavi', 2000, 2000, '2.jpg'),
+       ('სტალინსკი', 'Gori', 2000, 2600, '3.jpg'),
+       ('ქუთეისური', 'Kutaisi', 1000, 1000, '4.jpg'),
+       ('Tiflis Veranda Restaurant', 'Tbilisi', 1000, 1000, '5.jpg');
 
 
 INSERT INTO meals(meal_name, meal_price, cooking_time, restaurant_id, url)
-VALUES ('მწვადი', 12.0, '00:30:00', 1, '/images/Meals/1.jpg'),
-       ('ქაბაბი', 16.0, '00:20:00', 1, '/images/Meals/2.jpg'),
-       ('ხაჭაპური', 8.0, '00:17:00', 1, '/images/Meals/3.jpg'),
-       ('მწვადი', 12.0, '00:30:00', 2, '/images/Meals/4.jpg'),
-       ('ტორტი', 16.0, '01:00:00', 2, '/images/Meals/5.jpg'),
-       ('ხაჭაპური', 9.0, '00:22:00', 2, '/images/Meals/6.jpg'),
-       ('აჩმა', 12.0, '00:25:00', 3, '/images/Meals/7.jpg'),
-       ('ხინკალი', 7.0, '00:30:00', 3, '/images/Meals/8.jpg'),
-       ('გორული კოტლეტი', 1, '00:16:00', 3, '/images/Meals/9.jpg'),
-       ('კიტრის მწნილი', 5.0, '00:03:00', 3, '/images/Meals/10.jpg'),
-       ('იმერული ხაჭაპური', 8.0, '00:17:00', 4, '/images/Meals/11.jpg'),
-       ('აჭარული ხაჭაპური', 9.0, '00:22:00', 4, '/images/Meals/12.jpg'),
-       ('მწვადი', 12.0, '00:30:00', 4, '/images/Meals/13.jpg'),
-       ('ტორტი', 16.0, '01:05:00', 4, '/images/Meals/14.jpg'),
-       ('Omlete', 15.0, '00:05:00', 5, '/images/Meals/15.jpg'),
-       ('Chicken Massaman', 17.0, '00:25:00', 5, '/images/Meals/16.jpg'),
-       ('khinkali', 8.0, '00:20:00', 5, '/images/Meals/17.jpg');
+VALUES ('მწვადი', 12.0, '00:30:00', 1, '1.jpg'),
+       ('ქაბაბი', 16.0, '00:20:00', 1, '2.jpg'),
+       ('ხაჭაპური', 8.0, '00:17:00', 1, '3.jpg'),
+       ('მწვადი', 12.0, '00:30:00', 2, '4.jpg'),
+       ('ტორტი', 16.0, '01:00:00', 2, '5.jpg'),
+       ('ხაჭაპური', 9.0, '00:22:00', 2, '6.jpg'),
+       ('აჩმა', 12.0, '00:25:00', 3, '7.jpg'),
+       ('ხინკალი', 7.0, '00:30:00', 3, '8.jpg'),
+       ('გორული კოტლეტი', 1, '00:16:00', 3, '9.jpg'),
+       ('კიტრის მწნილი', 5.0, '00:03:00', 3, '10.jpg'),
+       ('იმერული ხაჭაპური', 8.0, '00:17:00', 4, '11.jpg'),
+       ('აჭარული ხაჭაპური', 9.0, '00:22:00', 4, '12.jpg'),
+       ('მწვადი', 12.0, '00:30:00', 4, '13.jpg'),
+       ('ტორტი', 16.0, '01:05:00', 4, '14.jpg'),
+       ('Omlete', 15.0, '00:05:00', 5, '15.jpg'),
+       ('Chicken Massaman', 17.0, '00:25:00', 5, '16.jpg'),
+       ('khinkali', 8.0, '00:20:00', 5, '17.jpg');
 INSERT
 INTO rooms(restaurant_id, active)
 VALUES (3, true);
