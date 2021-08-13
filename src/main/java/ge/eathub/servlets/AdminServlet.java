@@ -13,24 +13,31 @@ import ge.eathub.service.impl.AdminServiceImpl;
 
 import javax.jms.Session;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.Part;
+import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.math.BigDecimal;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.sql.Time;
 import java.util.logging.Logger;
 
 import static ge.eathub.servlets.ServletCommons.ADMIN_PAGE;
 
-
+@MultipartConfig
 @WebServlet(name = "AdminServlet", value = "/admin")
 public class AdminServlet extends HttpServlet {
 
     private final static Logger logger = Logger.getLogger(LoginServlet.class.getName());
     public static final String ERROR_ATTR = "ADD/UPDATE_ERROR";
     public static final String SUCCESS_ATTR = "ADD/UPDATE_EXECUTED";
+
 
 
     @Override
@@ -80,11 +87,23 @@ public class AdminServlet extends HttpServlet {
         AdminService adminService = new AdminServiceImpl(restaurantDao, mealDao);
         long restaurantID = Long.parseLong(request.getParameter("meal_admin_option"));
         try {
-            if (adminService.addMeal(new Meal(mealName, new BigDecimal(mealPrice), new Time(time), restaurantID))){
+            Part filePart = request.getPart("file-image-add");
+            File uploads = new File("src/main/webapp/images/Meals");
+            long ID = mealDao.getAllMeals().size() + 1;
+            String newFileName = "" + ID + ".jpg";
+            File file = new File(uploads, newFileName);
+            if (adminService.addMeal(new Meal(mealName, new BigDecimal(mealPrice), new Time(time), restaurantID, newFileName))){
+                try (InputStream input = filePart.getInputStream()) {
+                    Files.copy(input, file.toPath(), StandardCopyOption.REPLACE_EXISTING);
+                }
                 request.setAttribute(SUCCESS_ATTR, "Meal: '" + mealName + "' added successfully in restaurant: " + restaurantDao.getRestaurantById(restaurantID).get().getRestaurantName());
             }
         } catch (MealCreationException | MealAlreadyExistsException ex) {
             request.setAttribute(ERROR_ATTR, ex.getMessage());
+        } catch (ServletException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
@@ -98,7 +117,14 @@ public class AdminServlet extends HttpServlet {
         AdminService adminService = new AdminServiceImpl(restaurantDao, mealDao);
         String mealNameBeforeUpdate = mealDao.getMealById(ID).get().getMealName();
         try {
-            if (adminService.updateMeal(new Meal(ID, name, new BigDecimal(mealPrice), new Time(time)))) {
+            Part filePart = request.getPart("file-image-update");
+            File uploads = new File("src/main/webapp/images/Meals");
+            String newFileName = "" + ID + ".jpg";
+            File file = new File(uploads, newFileName);
+            if (adminService.updateMeal(new Meal(ID, name, new BigDecimal(mealPrice), new Time(time), newFileName))) {
+                try (InputStream input = filePart.getInputStream()) {
+                    Files.copy(input, file.toPath(), StandardCopyOption.REPLACE_EXISTING);
+                }
                 request.setAttribute(SUCCESS_ATTR, "Meal: '" + mealNameBeforeUpdate + "' updated to '" + name + "' in restaurant name: " + restaurantDao.getRestaurantById(mealDao.getMealById(ID).get().getRestaurantID()).get().getRestaurantName());
             }
         } catch (MealUpdateException | MealAlreadyExistsException ex) {

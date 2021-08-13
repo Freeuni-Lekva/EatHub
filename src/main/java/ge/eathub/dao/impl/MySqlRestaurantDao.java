@@ -89,7 +89,8 @@ public class MySqlRestaurantDao implements RestaurantDao {
                                 rs.getString(2),
                                 rs.getBigDecimal(3),
                                 rs.getTime(4),
-                                rs.getLong(5)
+                                rs.getLong(5),
+                                rs.getString(6)
                         )
                 );
             }
@@ -118,7 +119,8 @@ public class MySqlRestaurantDao implements RestaurantDao {
                                 rs.getString(2),
                                 rs.getBigDecimal(3),
                                 rs.getTime(4),
-                                rs.getLong(5)
+                                rs.getLong(5),
+                                rs.getString(6)
                         )
                 );
             }
@@ -153,15 +155,16 @@ public class MySqlRestaurantDao implements RestaurantDao {
                         rs.getString(2),
                         rs.getBigDecimal(3),
                         rs.getTime(4),
-                        rs.getLong(5)
+                        rs.getLong(5),
+                        rs.getString(6)
                 );
                 Restaurant restaurant = new Restaurant(
-                        rs.getLong(6),
-                        rs.getString(7),
+                        rs.getLong(7),
                         rs.getString(8),
-                        rs.getLong(9),
-                        rs.getBigDecimal(10),
-                        rs.getBigDecimal(11)
+                        rs.getString(9),
+                        rs.getLong(10),
+                        rs.getBigDecimal(11),
+                        rs.getBigDecimal(12)
                 );
                 if (!ret.containsKey(restaurant)) {
                     ret.put(restaurant, new ArrayList<>());

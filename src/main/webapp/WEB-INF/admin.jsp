@@ -23,21 +23,21 @@
 
     <% String error = (String) request.getAttribute(AdminServlet.ERROR_ATTR);
         if (error != null) {%>
-    <label><%=error%>
-    </label>
+    <div><%=error%>
+    </div>
     <% }%>
 
 
     <% String success = (String) request.getAttribute(AdminServlet.SUCCESS_ATTR);
         if (success != null) {%>
-    <label><%=success%>
-    </label>
+    <div><%=success%>
+    </div>
     <% }%>
 
     <h4>Update or add new restaurant</h4>
     <form action="<c:url value="/admin?restaurant"/>" method="post">
 
-        <label> Restaurants:
+        <div> Restaurants:
             <select name="admin_option" id="admin_option">
                 <option value="0">Add new</option>
                 <%
@@ -51,42 +51,36 @@
                     }
 
                 %>
-            </select><br>
-        </label>
+            </select>
+        </div>
 
-        <label> Restaurant name:
+        <div> Restaurant name:
             <input type='text' placeholder='restaurant_name:' name='restaurant_name' required/>
-        </label>
-        <br>
+        </div>
 
-        <label> Location:
+        <div> Location:
             <input type='text' placeholder='location:' name='location' required/>
-        </label>
-        <br>
-        <label>Limit:
+        </div>
+        <div>Limit:
             <input type='number' min="0" placeholder='0:' name='limit' required/>
-        </label>
-        <br>
+        </div>
 
-        <label>Rating:
+        <div>Rating:
             <input type='number' min="0" step="0.01" placeholder='0:' name='rating' required/>
-        </label>
-        <br>
+        </div>
 
-
-        <label>Balance:
+        <div>Balance:
             <input type='number' min="0" step="0.1" placeholder='0:' name='balance' required/>
-        </label>
-        <br>
+        </div>
 
         <input type='submit' value='submit'/>
     </form>
 
 
     <h4>Update a Meal</h4>
-    <form action="<c:url value="/admin?update_meal"/>" method="post">
+    <form action="<c:url value="/admin?update_meal"/>" enctype="multipart/form-data" method="post">
 
-        <label> Operation:
+        <div> Operation:
             <select name="meal_option" id="meal_option">
                 <%
                     MealDao mealDao = (MealDao) sc.getAttribute(NameConstants.MEAL_DAO);
@@ -99,47 +93,44 @@
 
                 %>
             </select>
-        </label><br>
+        </div>
 
 
-        <label> Meal name:
+        <div> Meal name:
             <input type='text' placeholder='meal_name:' name='meal_name' required/>
-        </label>
-        <br>
+        </div>
 
-        <label>Meal price:
+        <div>Meal price:
             <input type='number' min="0" step="0.5" placeholder='0:' name='meal_price' required/>
-        </label>
-        <br>
+        </div>
 
-        <label>Cooking time:
+        <div>Cooking time:
             <input type='number' min="0" placeholder='0:' name='cooking_time' required/>
-        </label>
-        <br>
+        </div>
+
+        <input type="file" name="file-image-update" accept="image/*" id="file-image-update" placeholder=" choose image" required/><br>
+
 
         <input type='submit' value='submit'/>
     </form>
 
 
     <h4>Add a new Meal</h4>
-    <form action="<c:url value="/admin?add_meal"/>" method="post">
+    <form action="<c:url value="/admin?add_meal"/>" enctype="multipart/form-data" method="post">
 
-        <label> Meal name:
+        <div> Meal name:
             <input type='text' placeholder='add_meal_name:' name='add_meal_name' required/>
-        </label>
-        <br>
+        </div>
 
-        <label>Meal price:
+        <div>Meal price:
             <input type='number' min="0" step="0.5" placeholder='0:' name='add_meal_price' required/>
-        </label>
-        <br>
+        </div>
 
-        <label>Cooking time:
+        <div>Cooking time:
             <input type='number' min="0" placeholder='0:' name='add_cooking_time' required/>
-        </label>
-        <br>
+        </div>
 
-        <label> Restaurants:
+        <div> Restaurants:
             <select name="meal_admin_option" id="meal_admin_option">
                 <%
                     for (Restaurant restaurant : restaurants) {%>
@@ -149,8 +140,11 @@
                     }
 
                 %>
-            </select><br>
-        </label>
+            </select>
+        </div>
+
+        <input type="file" name="file-image-add" accept="image/*" id="file-image-add" enctype="multipart/form-data" placeholder=" choose image" required/><br>
+
 
         <input type='submit' value='submit'/>
     </form>

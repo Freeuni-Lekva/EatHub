@@ -30,6 +30,7 @@ CREATE TABLE meals
     meal_price    DECIMAL      NOT NULL,
     cooking_time  TIME         NOT NULL,
     restaurant_id BIGINT       NOT NULL,
+    url           VARCHAR(100) NOT NULL,
     PRIMARY KEY (meal_id),
     CONSTRAINT DUPLICATE_NAME UNIQUE (meal_name, restaurant_id)
 );
@@ -43,6 +44,7 @@ CREATE TABLE restaurants
     max_limit       NUMERIC      NOT NULL,
     Rating          DECIMAL      NOT NULL DEFAULT 0,
     Balance         DECIMAL      NOT NULL,
+#     url             VARCHAR(100) NOT NULL,
     PRIMARY KEY (restaurant_id)
 );
 
@@ -158,24 +160,24 @@ VALUES ('თბილისურა', 'Tbilisi', 1000, 1000),
        ('Tiflis Veranda Restaurant', 'Tbilisi', 1000, 1000);
 
 
-INSERT INTO meals(meal_name, meal_price, cooking_time, restaurant_id)
-VALUES ('მწვადი', 12.0, '00:30:00', 1),
-       ('ქაბაბი', 16.0, '00:20:00', 1),
-       ('ხაჭაპური', 8.0, '00:17:00', 1),
-       ('მწვადი', 12.0, '00:30:00', 2),
-       ('ტორტი', 16.0, '01:00:00', 2),
-       ('ხაჭაპური', 9.0, '00:22:00', 2),
-       ('აჩმა', 12.0, '00:25:00', 3),
-       ('ხინკალი', 7.0, '00:30:00', 3),
-       ('გორული კოტლეტი', 1, '00:16:00', 3),
-       ('კიტრის მწნილი', 5.0, '00:03:00', 3),
-       ('იმერული ხაჭაპური', 8.0, '00:17:00', 4),
-       ('აჭარული ხაჭაპური', 9.0, '00:22:00', 4),
-       ('მწვადი', 12.0, '00:30:00', 4),
-       ('ტორტი', 16.0, '01:05:00', 4),
-       ('Omlete', 15.0, '00:05:00', 5),
-       ('Chicken Massaman', 17.0, '00:25:00', 5),
-       ('khinkali', 8.0, '00:20:00', 5);
+INSERT INTO meals(meal_name, meal_price, cooking_time, restaurant_id, url)
+VALUES ('მწვადი', 12.0, '00:30:00', 1, '/images/Meals/1.jpg'),
+       ('ქაბაბი', 16.0, '00:20:00', 1, '/images/Meals/2.jpg'),
+       ('ხაჭაპური', 8.0, '00:17:00', 1, '/images/Meals/3.jpg'),
+       ('მწვადი', 12.0, '00:30:00', 2, '/images/Meals/4.jpg'),
+       ('ტორტი', 16.0, '01:00:00', 2, '/images/Meals/5.jpg'),
+       ('ხაჭაპური', 9.0, '00:22:00', 2, '/images/Meals/6.jpg'),
+       ('აჩმა', 12.0, '00:25:00', 3, '/images/Meals/7.jpg'),
+       ('ხინკალი', 7.0, '00:30:00', 3, '/images/Meals/8.jpg'),
+       ('გორული კოტლეტი', 1, '00:16:00', 3, '/images/Meals/9.jpg'),
+       ('კიტრის მწნილი', 5.0, '00:03:00', 3, '/images/Meals/10.jpg'),
+       ('იმერული ხაჭაპური', 8.0, '00:17:00', 4, '/images/Meals/11.jpg'),
+       ('აჭარული ხაჭაპური', 9.0, '00:22:00', 4, '/images/Meals/12.jpg'),
+       ('მწვადი', 12.0, '00:30:00', 4, '/images/Meals/13.jpg'),
+       ('ტორტი', 16.0, '01:05:00', 4, '/images/Meals/14.jpg'),
+       ('Omlete', 15.0, '00:05:00', 5, '/images/Meals/15.jpg'),
+       ('Chicken Massaman', 17.0, '00:25:00', 5, '/images/Meals/16.jpg'),
+       ('khinkali', 8.0, '00:20:00', 5, '/images/Meals/17.jpg');
 INSERT
 INTO rooms(restaurant_id, active)
 VALUES (3, true);

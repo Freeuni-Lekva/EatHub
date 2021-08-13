@@ -102,7 +102,8 @@ public class MySqlOrderDao implements OrderDao {
                                 rs.getString(2),
                                 rs.getBigDecimal(3),
                                 rs.getTime(4),
-                                rs.getLong(5)
+                                rs.getLong(5),
+                                rs.getString(6)
                         )
                 );
             }
@@ -135,7 +136,8 @@ public class MySqlOrderDao implements OrderDao {
                                 rs.getString(2),
                                 rs.getBigDecimal(3),
                                 rs.getTime(4),
-                                rs.getLong(5)
+                                rs.getLong(5),
+                                rs.getString(6)
                         )
                 );
             }

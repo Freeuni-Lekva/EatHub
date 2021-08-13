@@ -91,9 +91,9 @@ public class MySqlRestaurantDaoTest {
         Restaurant restaurant = new Restaurant("Wadi Naxe", "Vake", 1000L, new BigDecimal("3.0"), new BigDecimal("1000.0"));
         Restaurant rest1 = memo.createRestaurant(restaurant);
         Restaurant rest2 = sqlDao.createRestaurant(restaurant);
-        Meal meal1 = new Meal(1L,"Xinkali",new BigDecimal("0.5"), new Time(2), 1L);
-        Meal meal2 = new Meal(2L,"Mtsvadi",new BigDecimal("1.5"), new Time(2), 1L);
-        Meal meal3 = new Meal(3L,"Adjafsandali",new BigDecimal("0.5"), new Time(2), 1L);
+        Meal meal1 = new Meal(1L,"Xinkali",new BigDecimal("0.5"), new Time(2), 1L, "");
+        Meal meal2 = new Meal(2L,"Mtsvadi",new BigDecimal("1.5"), new Time(2), 1L, "");
+        Meal meal3 = new Meal(3L,"Adjafsandali",new BigDecimal("0.5"), new Time(2), 1L, "");
         mealDao.createMeal(meal1);
         mealDao.createMeal(meal2);
         List<Meal> meals = sqlDao.getAllMeals(1L);
@@ -114,9 +114,9 @@ public class MySqlRestaurantDaoTest {
         Restaurant restMemo2 = memo.createRestaurant(restaurant2);
         Restaurant rest1 = sqlDao.createRestaurant(restaurant);
         Restaurant rest2 = sqlDao.createRestaurant(restaurant2);
-        Meal meal1 = new Meal(1L,"Xinkali",new BigDecimal("0.5"), new Time(2), 1L);
-        Meal meal2 = new Meal(2L,"Mtsvadi",new BigDecimal("1.5"), new Time(2), 1L);
-        Meal meal3 = new Meal(3L,"Adjafsandali",new BigDecimal("0.5"), new Time(2), 1L);
+        Meal meal1 = new Meal(1L,"Xinkali",new BigDecimal("0.5"), new Time(2), 1L, "");
+        Meal meal2 = new Meal(2L,"Mtsvadi",new BigDecimal("1.5"), new Time(2), 1L, "");
+        Meal meal3 = new Meal(3L,"Adjafsandali",new BigDecimal("0.5"), new Time(2), 1L,"");
         mealDao.createMeal(meal1);
         mealDao.createMeal(meal2);
         List<Meal> meals = sqlDao.getAllMeals(1L);
