@@ -15,5 +15,7 @@ public enum MessageType {
     @JsonProperty("active-users")
     ACTIVE_USERS,
     @JsonProperty("invitation")
-    INVITATION
+    INVITATION,
+    @JsonProperty("time-change")
+    TIME_CHANGE
 }

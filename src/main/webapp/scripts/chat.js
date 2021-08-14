@@ -2,13 +2,12 @@ const host = document.location.host;
 let chatSocket;
 let savedMeals = [];
 let flag = true;
+let maxTime = "00:00:00";
 
 function joinRoom(currentUser, roomID) {
     const request = new XMLHttpRequest();
     console.log(currentUser, roomID)
-    //todo change with ajax
     request.open("POST", "http://" + host + "/join-room?room-id=" + roomID);
-    // request.setRequestHeader("Content-Type", "application/json");
     request.onreadystatechange = function () {
         if (request.readyState === XMLHttpRequest.DONE) {
             switch (request.status) {
@@ -31,6 +30,7 @@ function joinRoom(currentUser, roomID) {
                     joinChat(token, currentUser, roomID);
                     checkUpdates();
                     getChosenMeals();
+                    display_time();
                     break;
                 case 401:
                     document.getElementById("join-error").innerHTML =
@@ -93,6 +93,9 @@ function openSocket(accessToken, roomID, currentUser) {
                     break;
                 case "invitation":
                     displayInvitationMessage(webSocketMessage.content);
+                    break;
+                case "time-change":
+                    displayTimeChangeMessage(webSocketMessage.username, webSocketMessage.content);
                     break;
                 case "active-users":
                     cleanAvailableUsers();
@@ -201,6 +204,18 @@ function displayInvitationMessage(text) {
     messages.appendChild(message);
 }
 
+function displayTimeChangeMessage(username, time) {
+    const message = document.createElement("div");
+    message.setAttribute("class", "message change");
+    const content = document.createElement("span");
+    content.setAttribute("class", "content");
+    content.appendChild(document.createTextNode(username + " changed time to \n" + time));
+    message.appendChild(content);
+    const messages = document.getElementById("messages");
+    messages.appendChild(message);
+    document.getElementById('date-time').value = time;
+}
+
 function displayDisconnectedUserMessage(username) {
     const message = document.createElement("div");
     message.setAttribute("class", "message event");
@@ -288,9 +303,9 @@ function chooseMeals() {
     const chosenMeals = [];
     for (i = 1; i < numRows; i++) {
         tr = table.rows[i].cells;
-        let price = parseFloat(tr[1].innerHTML);
-        let mealID = tr[2].firstElementChild.name;
-        let amount = parseInt(tr[2].firstElementChild.value);
+        let price = parseFloat(tr[2].innerHTML);
+        let mealID = tr[3].firstElementChild.name;
+        let amount = parseInt(tr[3].firstElementChild.value);
         chosenMeals.push({mealId: mealID, amount: amount});
         if (amount > 0) {
             cost = cost + (price * amount);
@@ -342,7 +357,6 @@ function generateTable(orderList) {
     const table = document.getElementById("chosen-meals-table");
     console.log(orderList);
     let numRows = orderList.length;
-    let maxTime = "00:00:00";
     let price = 0;
     let row;
     let td;
@@ -350,12 +364,12 @@ function generateTable(orderList) {
         let order = orderList[i];
         console.log(order);
         row = document.createElement("tr");
-        addToTableRow(row,document.createTextNode(order.username))
+        addToTableRow(row, document.createTextNode(order.username))
 
-        addToTableRow(row,document.createTextNode(order.mealName))
-        addToTableRow(row,document.createTextNode(order.amount))
-        addToTableRow(row,document.createTextNode(order.cookingTime))
-        addToTableRow(row,document.createTextNode(order.totalPrice))
+        addToTableRow(row, document.createTextNode(order.mealName))
+        addToTableRow(row, document.createTextNode(order.amount))
+        addToTableRow(row, document.createTextNode(order.cookingTime))
+        addToTableRow(row, document.createTextNode(order.totalPrice))
 
         table.appendChild(row);
         if (order.cookingTime > maxTime) {
@@ -426,7 +440,7 @@ function searchMeal() {
     let i, tr;
     for (i = 0; i < numRows; i++) {
         tr = savedMeals[i].cells;
-        if (tr[0].innerHTML.includes(value)) {
+        if (tr[1].innerHTML.includes(value)) {
             table.appendChild(savedMeals[i]);
         }
     }
@@ -437,4 +451,52 @@ function addToTableRow(tr, child) {
     td = document.createElement("td");
     td.appendChild(child)
     tr.appendChild(td);
+}
+
+function display_time() {
+    let refresh = 1000;
+    setTimeout('update_time()', refresh);
+}
+
+function update_time() {
+    let hours = parseInt(maxTime.substr(0, 2));
+    let mins = parseInt(maxTime.substr(3, 5));
+
+    let today = new Date(new Date().getTime() + ((hours * 60 + mins) * 60 * 1000));
+
+    let dd = today.getDate();
+    let mm = today.getMonth() + 1; //January is 0 so need to add 1 to make it 1!
+    let yyyy = today.getFullYear();
+    let hh = today.getHours();
+    let MM = today.getMinutes();
+    dd = addZero(dd);
+    mm = addZero(mm);
+    yyyy = addZero(yyyy);
+    hh = addZero(hh);
+    MM = addZero(MM);
+    let currTime = yyyy + '-' + mm + '-' + dd + 'T' + hh + ":" + MM;
+
+    let old_time = document.getElementById('date-time').value;
+    if (old_time < currTime) {
+        document.getElementById('date-time').value = currTime;
+    }
+    document.getElementById('date-time').min = currTime;
+    display_time();
+}
+
+function addZero(time) {
+    if (time < 10) {
+        return '0' + time;
+    }
+    return time
+}
+
+function chooseTime() {
+    let time = document.getElementById('date-time').value;
+    let socketMessage = {
+        content: time,
+        type: "time-change"
+    }
+
+    chatSocket.send(JSON.stringify(socketMessage));
 }

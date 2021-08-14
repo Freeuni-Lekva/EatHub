@@ -1,6 +1,8 @@
 package ge.eathub.servlets;
 
 import ge.eathub.dto.UserDto;
+import ge.eathub.exceptions.UserAlreadyInRoomException;
+import ge.eathub.exceptions.UserNotFoundException;
 import ge.eathub.models.Room;
 import ge.eathub.service.RoomService;
 
@@ -37,11 +39,16 @@ public class InvitationServlet extends HttpServlet {
         String username = request.getParameter("username");
         logger.info("POST " + user.getUsername() + " invited " + username);
         RoomService roomService = (RoomService) getServletContext().getAttribute(ROOM_SERVICE);
-        if (roomService.inviteUser(user.getUsername(), username,room.getRoomID())) {
+        try {
+            roomService.inviteUser(user.getUsername(), username,room.getRoomID());
             logger.info("sent invitation");
             response.setStatus(HttpServletResponse.SC_OK);
             return;
+        }catch (UserAlreadyInRoomException ex){
+            response.setStatus(HttpServletResponse.SC_NOT_ACCEPTABLE); //TODO: do some changes in front according it
+        }catch (UserNotFoundException ex){
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
         }
-        response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+        response.setStatus(HttpServletResponse.SC_NOT_FOUND); // TODO: it may be extra
     }
 }
