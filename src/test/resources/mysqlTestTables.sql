@@ -1,5 +1,6 @@
 USE eathub_db;
 
+DROP TABLE IF EXISTS transactions;
 DROP TABLE IF EXISTS orders;
 DROP TABLE IF EXISTS user_room;
 DROP TABLE IF EXISTS messages;
@@ -30,7 +31,9 @@ CREATE TABLE meals
     meal_price    DECIMAL      NOT NULL,
     cooking_time  TIME         NOT NULL,
     restaurant_id BIGINT       NOT NULL,
-    PRIMARY KEY (meal_id)
+    url           VARCHAR(100) NOT NULL,
+    PRIMARY KEY (meal_id),
+    CONSTRAINT DUPLICATE_NAME UNIQUE (meal_name, restaurant_id)
 );
 
 
@@ -42,6 +45,7 @@ CREATE TABLE restaurants
     max_limit       NUMERIC      NOT NULL,
     Rating          DECIMAL      NOT NULL DEFAULT 0,
     Balance         DECIMAL      NOT NULL,
+    url             VARCHAR(100) NOT NULL,
     PRIMARY KEY (restaurant_id)
 );
 
@@ -85,6 +89,7 @@ CREATE TABLE orders
     PRIMARY KEY (order_id)
 );
 
+
 ALTER TABLE orders
     ADD CONSTRAINT FK_users_TO_orders
         FOREIGN KEY (user_id)
@@ -103,10 +108,38 @@ ALTER TABLE orders
 ALTER TABLE orders
     ADD CONSTRAINT UQ_order_id UNIQUE (order_id);
 
+CREATE TABLE transactions
+(
+    transaction_id BIGINT   NOT NULL AUTO_INCREMENT,
+    user_id        BIGINT   NOT NULL,
+    restaurant_id  BIGINT   NOT NULL,
+    room_id        BIGINT   NOT NULL,
+    amount         DECIMAL  NOT NULL,
+    time           DATETIME NOT NULL DEFAULT current_timestamp,
+    PRIMARY KEY (transaction_id)
+);
+
+ALTER TABLE transactions
+    ADD CONSTRAINT FK_users_TO_transactions
+        FOREIGN KEY (user_id)
+            REFERENCES users (user_id);
+
+ALTER TABLE transactions
+    ADD CONSTRAINT FK_restaurants_TO_transactions
+        FOREIGN KEY (restaurant_id)
+            REFERENCES restaurants (restaurant_id);
+
+ALTER TABLE transactions
+    ADD CONSTRAINT FK_rooms_TO_transactions
+        FOREIGN KEY (room_id)
+            REFERENCES rooms (room_id);
+
+
 CREATE TABLE user_room
 (
     room_id BIGINT NOT NULL,
-    user_id BIGINT NOT NULL
+    user_id BIGINT NOT NULL,
+    CONSTRAINT DUPLICATE_ROOM_USER UNIQUE (room_id, user_id)
 );
 
 ALTER TABLE user_room
@@ -128,3 +161,4 @@ ALTER TABLE messages
     ADD CONSTRAINT FK_rooms_TO_messages
         FOREIGN KEY (room_id)
             REFERENCES rooms (room_id);
+

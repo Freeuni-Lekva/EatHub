@@ -58,14 +58,14 @@ public class MySqlMealDaoTest {
 
     @Test
     void getAllMeals() {
-        Restaurant restaurant = new Restaurant("Wadi Naxe", "Vake", 1000L, new BigDecimal("3.0"), new BigDecimal("1000.0"));
+        Restaurant restaurant = new Restaurant("Wadi Naxe", "Vake", 1000L, new BigDecimal("3.0"), new BigDecimal("1000.0"), "1. jpg");
         sqlRestaurant.createRestaurant(restaurant);
         MealDao memoDao = new InMemoryMealDao();
         assertTrue(sqlDao.getAllMeals().isEmpty());
         BigDecimal rating = new BigDecimal(2.9);
         BigDecimal balance = new BigDecimal(2000);
         Time tm = new Time(2);
-        Meal meal = new Meal(1L, "Xinkali", new BigDecimal("0.5"), tm, 1L, "");
+        Meal meal = new Meal(1L, "Xinkali", new BigDecimal("0.5"), tm, 1L, "1.jpg");
         Meal sqlMeal = sqlDao.createMeal(meal);
         memoDao.createMeal(sqlMeal);
         assertEquals(meal, sqlMeal);
@@ -73,7 +73,7 @@ public class MySqlMealDaoTest {
         List<Meal> l2 = memoDao.getAllMeals();
         assertTrue(l1.get(0).getMealName().equals(l2.get(0).getMealName()));
         assertEquals(l1.size(), l2.size());
-        Meal currMeal = new Meal(2L, "Mwvadi", new BigDecimal("11.0"), tm, 1L, "");
+        Meal currMeal = new Meal(2L, "Mwvadi", new BigDecimal("11.0"), tm, 1L, "2.jpg");
         memoDao.createMeal(currMeal);
         l1 = sqlDao.getAllMeals();
         l2 = memoDao.getAllMeals();
@@ -83,11 +83,11 @@ public class MySqlMealDaoTest {
     //TODO: mealPrice is when we select with id int
     @Test
     void getUserById() {
-        Restaurant restaurant = new Restaurant("Wadi Naxe", "Vake", 1000L, new BigDecimal("3.0"), new BigDecimal("1000.0"));
+        Restaurant restaurant = new Restaurant("Wadi Naxe", "Vake", 1000L, new BigDecimal("3.0"), new BigDecimal("1000.0"), "1.jpg");
         sqlRestaurant.createRestaurant(restaurant);
         String name = "Khinkali";
         BigDecimal price = new BigDecimal("2.2");
-        Meal meal = new Meal(name, price, new Time(3L), 1L, "");
+        Meal meal = new Meal(name, price, new Time(3L), 1L, "2.jpg");
         MealDao memoDao = new InMemoryMealDao();
         Meal sqlMeal = sqlDao.createMeal(meal);
         assertEquals(meal.getMealName(), sqlMeal.getMealName());
@@ -98,10 +98,10 @@ public class MySqlMealDaoTest {
 
     @Test
     void createMeal() {
-        Restaurant restaurant = new Restaurant("Wadi Naxe", "Vake", 1000L, new BigDecimal("3.0"), new BigDecimal("1000.0"));
+        Restaurant restaurant = new Restaurant("Wadi Naxe", "Vake", 1000L, new BigDecimal("3.0"), new BigDecimal("1000.0"), "1.jpg");
         sqlRestaurant.createRestaurant(restaurant);
         String name = "Mtsvadi";
-        Meal meal = new Meal(name, new BigDecimal("2.2"), new Time(3L), 1L, "");
+        Meal meal = new Meal(name, new BigDecimal("2.2"), new Time(3L), 1L, "2.jpg");
         MealDao memoDao = new InMemoryMealDao();
         Meal memoMeal = memoDao.createMeal(meal);
         Meal sqlMeal = sqlDao.createMeal(meal);
@@ -110,10 +110,10 @@ public class MySqlMealDaoTest {
 
     @Test
     void updateMeal() {
-        Restaurant restaurant = new Restaurant("Wadi Naxe", "Vake", 1000L, new BigDecimal("3.0"), new BigDecimal("1000.0"));
+        Restaurant restaurant = new Restaurant("Wadi Naxe", "Vake", 1000L, new BigDecimal("3.0"), new BigDecimal("1000.0"), "1.jpg");
         sqlRestaurant.createRestaurant(restaurant);
         String name = "Mtsvadi";
-        Meal meal = new Meal(name, new BigDecimal("2.2"), new Time(3L), 1L, "");
+        Meal meal = new Meal(name, new BigDecimal("2.2"), new Time(3L), 1L, "1.jpg");
         MealDao memoDao = new InMemoryMealDao();
         Meal memoMeal = memoDao.createMeal(meal);
         Meal sqlMeal = sqlDao.createMeal(meal);
@@ -122,5 +122,8 @@ public class MySqlMealDaoTest {
         memoDao.updateMeal(newMeal, 1L);
         sqlDao.updateMeal(newMeal, 1L);
         assertTrue(sqlDao.getMealById(newMeal.getMealID()).get().getMealName().equals(memoDao.getMealById(newMeal.getMealID()).get().getMealName()));
+        sqlDao.updateMeal(newMeal);
+        assertTrue(sqlDao.getMealById(newMeal.getMealID()).get().getMealName().equals(memoDao.getMealById(newMeal.getMealID()).get().getMealName()));
+
     }
 }

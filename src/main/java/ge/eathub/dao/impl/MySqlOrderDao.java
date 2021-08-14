@@ -40,7 +40,8 @@ public class MySqlOrderDao implements OrderDao {
             if (stm.executeUpdate() == 1) {
                 ResultSet rs = stm.getGeneratedKeys();
                 rs.next();
-                return (new Order(userID, mealID, roomID, quantity));
+                long ID = rs.getLong(1);
+                return (new Order(ID, userID, mealID, roomID, quantity));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -69,7 +70,8 @@ public class MySqlOrderDao implements OrderDao {
             if (stm.executeUpdate() == 1) {
                 ResultSet rs = stm.getGeneratedKeys();
                 rs.next();
-                return (new Order(order.getUserID(), order.getMealID(), order.getRoomID(), order.getQuantity()));
+                long ID = rs.getLong(1);
+                return (new Order(ID, order.getUserID(), order.getMealID(), order.getRoomID(), order.getQuantity()));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -86,7 +88,8 @@ public class MySqlOrderDao implements OrderDao {
         try {
             conn = dataSource.getConnection();
             PreparedStatement stm = conn.prepareStatement(
-                    "SELECT * FROM %s INNER JOIN %s USING (%s) WHERE %s = ? AND %s = ?;".formatted(
+                    "SELECT %s.* FROM %s INNER JOIN %s USING (%s) WHERE %s = ? AND %s = ?;".formatted(
+                            Meal.TABLE,
                             Order.TABLE,
                             Meal.TABLE,
                             Meal.COLUMN_ID,
@@ -122,7 +125,8 @@ public class MySqlOrderDao implements OrderDao {
         try {
             conn = dataSource.getConnection();
             PreparedStatement stm = conn.prepareStatement(
-                    "SELECT * FROM %s INNER JOIN %s USING (%s) WHERE %s = ?;".formatted(
+                    "SELECT DISTINCT %s.* FROM %s INNER JOIN %s USING (%s) WHERE %s = ?;".formatted(
+                            Meal.TABLE,
                             Order.TABLE,
                             Meal.TABLE,
                             Meal.COLUMN_ID,

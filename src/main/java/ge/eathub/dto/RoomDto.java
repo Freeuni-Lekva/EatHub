@@ -44,4 +44,14 @@ public class RoomDto {
     public void setRestaurantLocation(String restaurantLocation) {
         this.restaurantLocation = restaurantLocation;
     }
+
+    @Override
+    public String toString() {
+        return "RoomDto{" +
+                "roomID=" + roomID +
+                ", active=" + active +
+                ", restaurantName='" + restaurantName + '\'' +
+                ", restaurantLocation='" + restaurantLocation + '\'' +
+                '}';
+    }
 }

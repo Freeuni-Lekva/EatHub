@@ -13,8 +13,7 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 //@ExtendWith(MockitoExtension.class)
 class MySqlUserDaoTest {
@@ -102,5 +101,7 @@ class MySqlUserDaoTest {
         User sqlUser = sqlDao.createUser(usr);
         User memoUser = memoDao.createUser(usr);
         assertEquals(memoUser.getUsername(), sqlUser.getUsername());
+        assertTrue(sqlDao.checkInfo("new User", "new Email"));
+        assertTrue(sqlDao.confirmUserRegistration(username));
     }
 }

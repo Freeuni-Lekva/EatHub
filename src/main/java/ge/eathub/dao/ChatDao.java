@@ -11,7 +11,4 @@ public interface ChatDao {
     // return all messages in room
     List<Message> getMessagesByRoomID(Long roomID);
 
-    // return last num  messages in room
-    List<Message> getMessagesByRoomID(Long roomID, Integer num);
-
 }

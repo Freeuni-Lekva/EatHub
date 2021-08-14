@@ -23,6 +23,11 @@ public class Room {
         this.active = active;
     }
 
+    public Room(Long restaurantID, Boolean active){
+        this.restaurantID = restaurantID;
+        this.active = active;
+    }
+
     public Long getRoomID() {
         return roomID;
     }
@@ -45,5 +50,14 @@ public class Room {
 
     public void setActive(Boolean active) {
         this.active = active;
+    }
+
+    @Override
+    public String toString() {
+        return "Room{" +
+                "roomID=" + roomID +
+                ", restaurantID=" + restaurantID +
+                ", active=" + active +
+                '}';
     }
 }
