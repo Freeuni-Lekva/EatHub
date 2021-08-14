@@ -13,94 +13,174 @@
 <html lang="en">
 <head>
     <title>Restaurant</title>
+    <style>
+        body {
+            margin: 0;
+            overflow-x: hidden;
+        }
 
+        #upper_part {
+            position: absolute;
+            height: 10%;
+            width: 100%;
+            background-color: lightgreen;
+            margin: 0;
+        }
+
+        #first_part {
+            border: 2px dashed lightgreen;
+            position: absolute;
+            margin: 1%;
+            top: 10%;
+            width: 48.5%;
+            border-radius: 10px;
+        }
+
+        #second_part {
+            border: 2px dashed lightgreen;
+            position: absolute;
+            margin: 1%;
+            top: 10%;
+            left: 50%;
+            width: 48.5%;
+            border-radius: 10px;
+        }
+
+        #welcome_text {
+            margin: 0;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            -ms-transform: translate(-50%, -50%);
+            transform: translate(-50%, -50%);
+            text-align: center;
+            font-size: 3vw;
+        }
+
+        .title_text {
+            text-align: center;
+            font-size: 1.7vw;
+            margin-bottom: 1.5vw;
+            margin-top: 1.5vw;
+        }
+
+        #restaurant {
+            position: relative;
+            left: 10%;
+            margin-bottom: 3%;
+            width: 80%;
+        }
+
+        #restaurant_image {
+            left: 10%;
+            width: 100%;
+        }
+
+        #restaurant_name {
+            text-align: center;
+            font-size: 1.6vw;
+            margin-bottom: 1.5%;
+        }
+    </style>
 </head>
 <body>
-<h1>Welcome to the Restaurant Page</h1>
+<div id = "upper_part">
+    <div id = "welcome_text">Welcome to the Restaurant Page</div>
+</div>
+<div id = "first_part">
 
-<h4>Filter</h4>
-
-
-<form action="<c:url value="/restaurants?filter"/>" method="post">
-
-    <label> Restaurants:
-        <select name="filter_option" id="filter_option">
-            <option value="0">Search in all</option>
-            <%
-                ServletContext sc = request.getServletContext();
-                MySqlRestaurantDao dao = (MySqlRestaurantDao) sc.getAttribute(NameConstants.RESTAURANT_DAO);
-                List<Restaurant> restaurants = dao.getAllRestaurant();
-                for (Restaurant restaurant : restaurants) {%>
-            <option value="<%=restaurant.getRestaurantID()%>"><%=restaurant.getRestaurantName()%>
-            </option>
-            <%
-                }
-
-            %>
-        </select><br>
-    </label>
+    <div class = "title_text">
+        Filter
+    </div>
+    <hr>
 
 
-    <label> Meal name:
-        <input type='text' placeholder='meal_name:' name='filter_meal_name' id="meal_name"/>
-    </label>
-    <br>
+    <form action="<c:url value="/restaurants?filter"/>" method="post">
 
-    <input type='submit' value='submit'/>
-</form>
+        <label> Restaurants:
+            <select name="filter_option" id="filter_option">
+                <option value="0">Search in all</option>
+                <%
+                    ServletContext sc = request.getServletContext();
+                    MySqlRestaurantDao dao = (MySqlRestaurantDao) sc.getAttribute(NameConstants.RESTAURANT_DAO);
+                    List<Restaurant> restaurants = dao.getAllRestaurant();
+                    for (Restaurant restaurant : restaurants) {%>
+                <option value="<%=restaurant.getRestaurantID()%>"><%=restaurant.getRestaurantName()%>
+                </option>
+                <%
+                    }
+
+                %>
+            </select>
+        </label>
+
+
+        <label> Meal name:
+            <input type='text' placeholder='meal_name:' name='filter_meal_name' id="meal_name"/>
+        </label>
+        <br>
+
+        <input type='submit' value='submit'/>
+    </form>
 
 
     <% String error = (String) request.getAttribute(RestaurantsServlet.ERROR_ATTR);
-    if (error != null) {%>
-<label><%=error%>
-</label>
+        if (error != null) {%>
+    <label><%=error%>
+    </label>
     <% }%>
 
 
     <% Map<Restaurant, List<Meal>> map = (Map<Restaurant, List<Meal>>) request.getAttribute(RestaurantsServlet.SUCCESS_RESTAURANT_ATTR);
-    String title = (String) request.getAttribute(RestaurantsServlet.RESTAURANT_NAME_ATTR);
-    if (title != null){%>
-<h4><%=title%>
-</h4>
+        String title = (String) request.getAttribute(RestaurantsServlet.RESTAURANT_NAME_ATTR);
+        if (title != null){%>
+    <h4><%=title%>
+    </h4>
     <%}
-    if (map != null) {
-    for (Restaurant restaurant : map.keySet()) {%>
-<label><%="-----Restaurant name: '" + restaurant.getRestaurantName() + "'"%>
-</label><br>
+        if (map != null) {
+            for (Restaurant restaurant : map.keySet()) {%>
+    <label><%="-----Restaurant name: '" + restaurant.getRestaurantName() + "'"%>
+    </label><br>
     <%
 
-    for (Meal meal : map.get(restaurant)) {%>
-<input type="image" src=<%="images/Meals/" + meal.getMealUrl()%>><br>
-<label><%="* Meal name: '" + meal.getMealName() + "', Meal price: " + meal.getMealPrice() %>
-</label><br>
+        for (Meal meal : map.get(restaurant)) {%>
+    <input type="image" src=<%="images/Meals/" + meal.getMealUrl()%>><br>
+    <label><%="* Meal name: '" + meal.getMealName() + "', Meal price: " + meal.getMealPrice() + ", Time: " + meal.getCookingTime()%>
+    </label><br>
     <%}%>
     <%}%>
     <% } %>
 
 
     <% List<Meal> meals = (List<Meal>) request.getAttribute(RestaurantsServlet.SUCCESS_MEALS_ATTR);
-    if (meals != null) {
-        for (Meal meal : meals) {%>
-<input type="image" src=<%="images/Meals/" + meal.getMealUrl()%>><br>
-<label><%="* Meal name: '" + meal.getMealName() + "', Meal price: " + meal.getMealPrice() %>
-</label><br>
+        if (meals != null) {
+            for (Meal meal : meals) {%>
+    <input type="image" src=<%="images/Meals/" + meal.getMealUrl()%>><br>
+    <label><%="* Meal name: '" + meal.getMealName() + "', Meal price: " + meal.getMealPrice()  + ", Time: " + meal.getCookingTime() %>
+    </label><br>
     <%}%>
     <% } %>
+</div>
 
-<div>
-    <h3>Available Restaurants</h3>
+<div id = "second_part">
+    <div class = "title_text">
+        Available Restaurants
+    </div>
     <%
         for (Restaurant restaurant : restaurants) {%>
-    <li>
-        <input type="image" src=<%="images/Restaurants/" + restaurant.getRestaurantUrl()%>><br>
-        <a href="/newRoom?id=<%=restaurant.getRestaurantID()%> "><%= restaurant.getRestaurantName() + ", " + restaurant.getLocation()%>
-    </li>
+    <div id = "restaurant">
+        <a href="/newRoom?id=<%=restaurant.getRestaurantID()%> ">
+            <div id = "restaurant_name">
+                <%= restaurant.getRestaurantName() + ", " + restaurant.getLocation()%>
+            </div>
+            <input id = "restaurant_image" type="image" src=<%="images/Restaurants/" + restaurant.getRestaurantUrl()%>><br>
+        </a>
+    </div>
     <%
         }
 
     %>
 </div>
 
-
-<body></body>
+</body>
 </html>
