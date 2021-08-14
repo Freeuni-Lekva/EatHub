@@ -27,7 +27,6 @@
                 text-align: center;
                 font-size: 2vw;
                 height: 10%;
-                vertical-align: middle;
             }
 
             #error_text {

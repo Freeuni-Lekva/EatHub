@@ -15,11 +15,12 @@
             #welcome_text {
                 position: absolute;
                 top: 10%;
-                left: 28%;
-                width: 50%;
+                left: 20%;
+                width: 60%;
                 height: 20%;
                 color: yellow;
                 font-size: 4vw;
+                text-align: center;
             }
 
             #buttons {

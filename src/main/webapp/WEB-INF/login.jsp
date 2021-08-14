@@ -10,7 +10,7 @@
     <style>
 
         body {
-            background-color: dimgrey;
+            background-color: darksalmon;
         }
 
         .log_in_form {
@@ -21,7 +21,7 @@
             height: 34%;
             padding: 1vw;
             margin-bottom: 2%;
-            border: 2px dashed darkgoldenrod;
+            border: 2px dashed lightgreen;
             border-radius: 10px;
         }
 
