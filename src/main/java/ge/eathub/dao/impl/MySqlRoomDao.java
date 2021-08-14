@@ -2,6 +2,9 @@ package ge.eathub.dao.impl;
 
 import ge.eathub.dao.RoomDao;
 import ge.eathub.database.DBConnection;
+import ge.eathub.dto.RoomDto;
+import ge.eathub.exceptions.MealAlreadyExistsException;
+import ge.eathub.exceptions.UserAlreadyInRoomException;
 import ge.eathub.models.*;
 
 import javax.sql.DataSource;
@@ -9,6 +12,8 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
+import static ge.eathub.dao.impl.MySqlConstants.MYSQL_DUPLICATE_ERROR_CODE;
 
 public class MySqlRoomDao implements RoomDao {
 
@@ -203,9 +208,13 @@ public class MySqlRoomDao implements RoomDao {
             stm.setLong(1, roomID);
             stm.setLong(2, userID);
             stm.executeUpdate();
+        }catch (SQLIntegrityConstraintViolationException e) {
+            if (e.getErrorCode() == MYSQL_DUPLICATE_ERROR_CODE) {
+                throw new UserAlreadyInRoomException(userID.toString());
+           }
         } catch (SQLException e) {
             e.printStackTrace();
-        } finally {
+        }finally {
             DBConnection.closeConnection(conn);
         }
     }
@@ -253,5 +262,59 @@ public class MySqlRoomDao implements RoomDao {
             DBConnection.closeConnection(conn);
         }
         return false;
+    }
+
+
+    @Override
+    public List<RoomDto> getAllRoomByUserID(long userID) {
+        Connection conn = null;
+        List<RoomDto> ret = new ArrayList<>();
+        try {
+            conn = dataSource.getConnection();
+            PreparedStatement stm = conn.prepareStatement("select r.room_id, r.active, rest.restaurant_name, rest.location from %s u join %s r on r.room_id = u.room_id join %s rest on r.restaurant_id = rest.restaurant_id where u.user_id = ? ;"
+                            .formatted(UserRoom.TABLE, Room.TABLE, Restaurant.TABLE));
+            stm.setLong(1, userID);
+            ResultSet rs = stm.executeQuery();
+            while (rs.next()) {
+                ret.add(new RoomDto(
+                                rs.getLong(1),
+                                rs.getBoolean(2),
+                                rs.getString(3),
+                                rs.getString(4)
+                        )
+                );
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }finally {
+            DBConnection.closeConnection(conn);
+        }
+        return ret;
+    }
+
+    @Override
+    public List<RoomDto> getAllRoomDto() {
+        Connection conn = null;
+        List<RoomDto> ret = new ArrayList<>();
+        try {
+            conn = dataSource.getConnection();
+            PreparedStatement stm = conn.prepareStatement("select r.room_id, r.active,rest.restaurant_name, rest.location from %s r join %s rest on r.restaurant_id = rest.restaurant_id;"
+                    .formatted(Room.TABLE, Restaurant.TABLE));
+            ResultSet rs = stm.executeQuery();
+            while (rs.next()) {
+                ret.add(new RoomDto(
+                                rs.getLong(1),
+                                rs.getBoolean(2),
+                                rs.getString(3),
+                                rs.getString(4)
+                        )
+                );
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }finally {
+            DBConnection.closeConnection(conn);
+        }
+        return ret;
     }
 }
