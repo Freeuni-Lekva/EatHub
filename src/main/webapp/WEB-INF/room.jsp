@@ -32,13 +32,13 @@
     Optional<Restaurant> restaurantOptional = restDao.getRestaurantById(restaurantID);
     List<Meal> meals = restDao.getAllMeals(restaurantID);
     OrderServiceImpl orderService = (OrderServiceImpl) sc.getAttribute(NameConstants.ORDER_SERVICE);
-    UserDto user = (UserDto) request.getSession().getAttribute(UserDto.ATTR);%>
+    UserDto user = (UserDto) request.getSession().getAttribute(UserDto.ATTR);
+    Restaurant rest = restaurantOptional.get();%>
 
 <body>
 <div id="title">Room</div>
 <div id="room">
     <div id="room-chat">
-
         <div style="display: block" id="contacts"></div>
         <div style="display: block" id="chat">
             <div id="messages" autofocus></div>
@@ -49,16 +49,12 @@
             </form>
         </div>
     </div>
-    <div id="invitations">
-        <form id="invitation" onsubmit="return false;">
-            <input type="text" id="invited-user" placeholder="Invite User"/>
-            <button class="button" onclick="sendInvitation('<%=user.getUsername()%>')">Invite</button>
-            <span class="error" id="invitation-error"> </span>
-        </form>
-    </div>
+
     <div id="room-restaurant-meals">
-        <h2><%=restaurantOptional.get().getRestaurantName()%>
+        <h2><%=rest.getRestaurantName()%>
         </h2>
+        <img width="150" height="100" src="<c:url value='<%="images/Restaurants/"+rest.getRestaurantUrl()%>'/>"
+             alt="Meal IMG"/>
         <h1> Restaurant menu </h1>
         <div id="meal-search">
             <form onsubmit="return false;">
@@ -89,8 +85,9 @@
                             total = total.add(meal.getMealPrice().multiply(BigDecimal.valueOf(amount)));
                         }
                 %>
-
                 <tr>
+                    <td><img width="50" height="50" src="<c:url value='<%="images/Meals/"+meal.getMealUrl()%>'/>"
+                             alt="Meal IMG"/></td>
                     <td><%=meal.getMealName()%>
                     </td>
                     <td><%=meal.getMealPrice()%>
@@ -141,5 +138,23 @@
 
     </div>
 </div>
+<div id="invitations">
+    <form id="invitation" onsubmit="return false;">
+        <input type="text" id="invited-user" placeholder="Invite User"/>
+        <button class="button" onclick="sendInvitation('<%=user.getUsername()%>')">Invite</button>
+        <span class="error" id="invitation-error"> </span>
+    </form>
+</div>
+<div>
+
+    <label id="datetime"> chosen time:
+        <input type="datetime-local" id="date-time"
+               value="2021-08-13T19:30"
+               min="2021-08-13T19:30" max="2022-08-13T19:30">
+    </label>
+    <button class="button" onclick="chooseTime()">Change Time</button>
+
+</div>
+
 </body>
 </html>
