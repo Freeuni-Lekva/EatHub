@@ -33,8 +33,6 @@ public interface RoomDao {
 
     boolean isRoomActive(Long roomID);
 
-    boolean updateChosenTimeInRoom(Long roomID);
-
     List<RoomDto> getAllRoomByUserID(long userID);
 
     List<RoomDto> getAllRoomDto();

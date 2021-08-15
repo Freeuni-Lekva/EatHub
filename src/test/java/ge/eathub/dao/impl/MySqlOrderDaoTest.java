@@ -112,6 +112,9 @@ public class MySqlOrderDaoTest {
         assertEquals(3, dtos.size());
         List<Meal> roomMeals = orderDao.roomMeals(1L);
         assertEquals(2, roomMeals.size());
+
+        List<OrderDto> orderDtos = orderDao.getChosenMealsByIDs(sqlUser1.getUserID(), firstRoom.getRoomID());
+        assertEquals(2, orderDtos.size());
     }
 
 }
