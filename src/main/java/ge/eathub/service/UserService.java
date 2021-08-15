@@ -9,6 +9,7 @@ import ge.eathub.exceptions.UserCreationException;
 import ge.eathub.exceptions.UserNotFoundException;
 
 import javax.validation.constraints.NotNull;
+import java.util.Optional;
 
 public interface UserService {
 
@@ -17,4 +18,6 @@ public interface UserService {
     UserDto loginUser(@NotNull UserLoginDto userDto) throws UserNotFoundException, InvalidUserPasswordException;
 
     boolean confirmUserRegistration(@NotNull String token);
+
+    Optional<UserDto> getUserDtoByUsername(String username);
 }

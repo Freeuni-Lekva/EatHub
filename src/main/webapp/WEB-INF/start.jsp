@@ -4,6 +4,11 @@
 <%@ page import="java.util.List" %>
 <%@ page import="ge.eathub.service.RoomService" %>
 <%@ page import="ge.eathub.listener.NameConstants" %>
+<%@ page import="ge.eathub.dao.UserDao" %>
+<%@ page import="ge.eathub.service.UserService" %>
+<%@ page import="java.util.Optional" %>
+<%@ page import="ge.eathub.models.User" %>
+<%@ page import="java.math.BigDecimal" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html>
 <html lang="en">
@@ -14,7 +19,15 @@
 </head>
 <body>
 <div>
-    <% UserDto user = (UserDto) request.getSession().getAttribute(UserDto.ATTR);%>
+    <%  ServletContext sc = request.getServletContext();
+        UserDto user = (UserDto) request.getSession().getAttribute(UserDto.ATTR);
+        UserService userService = (UserService) sc.getAttribute(NameConstants.USER_SERVICE);
+        Optional<UserDto> optUser = userService.getUserDtoByUsername(user.getUsername());
+        if (optUser.isPresent()){
+            user = optUser.get();
+            request.getSession().setAttribute(UserDto.ATTR, user);
+        }
+    %>
     <h1>Hello <%= user.getUsername() %>
     </h1>
     <h1>UserID <%= user.getUserID() %>
@@ -27,7 +40,6 @@
     </h2>
 
     <%
-        ServletContext sc = request.getServletContext();
         RoomService roomService = (RoomService) sc.getAttribute(NameConstants.ROOM_SERVICE);
         List<RoomDto> list = roomService.getAllRoomByUserID(user.getUserID());
     %><h3>Active rooms</h3>

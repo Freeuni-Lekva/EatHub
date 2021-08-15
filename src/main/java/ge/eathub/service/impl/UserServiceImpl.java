@@ -14,6 +14,7 @@ import ge.eathub.models.User;
 import ge.eathub.security.Authenticator;
 import ge.eathub.service.UserService;
 import ge.eathub.utils.EmailValidator;
+import org.checkerframework.checker.nullness.Opt;
 import org.mindrot.jbcrypt.BCrypt;
 
 import java.util.Optional;
@@ -75,5 +76,14 @@ public class UserServiceImpl implements UserService {
 
         }
         return false;
+    }
+
+    @Override
+    public Optional<UserDto> getUserDtoByUsername(String username) {
+        Optional<User> user = userDao.getUserByUsername(username);
+        if (user.isEmpty()){
+            return Optional.empty();
+        }
+        return Optional.of(user.get().toDto());
     }
 }
