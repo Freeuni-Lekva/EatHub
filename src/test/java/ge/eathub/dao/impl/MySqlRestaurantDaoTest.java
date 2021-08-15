@@ -64,7 +64,7 @@ public class MySqlRestaurantDaoTest {
     @Test
     void getAll(){
         RestaurantDao memo = new InMemoryRestaurantDao();
-        Restaurant restaurant = new Restaurant("Wadi Naxe", "Vake", 1000L, new BigDecimal("3.0"), new BigDecimal("1000.0"));
+        Restaurant restaurant = new Restaurant("Wadi Naxe", "Vake", 1000L, new BigDecimal("3.0"), new BigDecimal("1000.0"), "2.jpg");
         Restaurant rest1 = memo.createRestaurant(restaurant);
         Restaurant rest2 = sqlDao.createRestaurant(restaurant);
         List<Restaurant> list1 = memo.getAllRestaurant();
@@ -75,7 +75,7 @@ public class MySqlRestaurantDaoTest {
     @Test
     void getById(){
         RestaurantDao memo = new InMemoryRestaurantDao();
-        Restaurant restaurant = new Restaurant("Wadi Naxe", "Vake", 1000L, new BigDecimal("3.0"), new BigDecimal("1000.0"));
+        Restaurant restaurant = new Restaurant("Wadi Naxe", "Vake", 1000L, new BigDecimal("3.0"), new BigDecimal("1000.0"), "2.jpg");
         Restaurant rest1 = memo.createRestaurant(restaurant);
         Restaurant rest2 = sqlDao.createRestaurant(restaurant);
         Optional<Restaurant> foundRestaurant = sqlDao.getRestaurantById(1L);
@@ -88,7 +88,7 @@ public class MySqlRestaurantDaoTest {
     @Test
     void getMeals(){
         RestaurantDao memo = new InMemoryRestaurantDao();
-        Restaurant restaurant = new Restaurant("Wadi Naxe", "Vake", 1000L, new BigDecimal("3.0"), new BigDecimal("1000.0"));
+        Restaurant restaurant = new Restaurant("Wadi Naxe", "Vake", 1000L, new BigDecimal("3.0"), new BigDecimal("1000.0"), "2.jpg");
         Restaurant rest1 = memo.createRestaurant(restaurant);
         Restaurant rest2 = sqlDao.createRestaurant(restaurant);
         Meal meal1 = new Meal(1L,"Xinkali",new BigDecimal("0.5"), new Time(2), 1L, "");
@@ -108,8 +108,8 @@ public class MySqlRestaurantDaoTest {
     @Test
     void getRestauransByMeals(){
         RestaurantDao memo = new InMemoryRestaurantDao();
-        Restaurant restaurant = new Restaurant("Wadi Naxe", "Vake", 1000L, new BigDecimal("3.0"), new BigDecimal("1000.0"));
-        Restaurant restaurant2 = new Restaurant("Modi Naxe", "Vaja", 1000L, new BigDecimal("3.0"), new BigDecimal("1000.0"));
+        Restaurant restaurant = new Restaurant("Wadi Naxe", "Vake", 1000L, new BigDecimal("3.0"), new BigDecimal("1000.0"), "1.jpg");
+        Restaurant restaurant2 = new Restaurant("Modi Naxe", "Vaja", 1000L, new BigDecimal("3.0"), new BigDecimal("1000.0"), "1.jpg");
         Restaurant restMemo1 = memo.createRestaurant(restaurant);
         Restaurant restMemo2 = memo.createRestaurant(restaurant2);
         Restaurant rest1 = sqlDao.createRestaurant(restaurant);
@@ -128,13 +128,13 @@ public class MySqlRestaurantDaoTest {
     @Test
     void updateRestaurant(){
         RestaurantDao memo = new InMemoryRestaurantDao();
-        Restaurant restaurant = new Restaurant("Wadi Naxe", "Vake", 1000L, new BigDecimal("3.0"), new BigDecimal("1000.0"));
+        Restaurant restaurant = new Restaurant("Wadi Naxe", "Vake", 1000L, new BigDecimal("3.0"), new BigDecimal("1000.0"), "");
         Restaurant restMemo1 = memo.createRestaurant(restaurant);
         Restaurant rest1 = sqlDao.createRestaurant(restaurant);
         long id = rest1.getRestaurantID();
         long inMemoryID = restMemo1.getRestaurantID();
-        memo.updateRestaurant(inMemoryID,  new Restaurant("Modi naxe", "Vaja", 1000L, new BigDecimal("3.0"), new BigDecimal("1000.0")));
-        sqlDao.updateRestaurant(id, new Restaurant("Modi naxe", "Vaja", 1000L, new BigDecimal("3.0"), new BigDecimal("1000.0")));
+        memo.updateRestaurant(inMemoryID,  new Restaurant("Modi naxe", "Vaja", 1000L, new BigDecimal("3.0"), new BigDecimal("1000.0"), ""));
+        sqlDao.updateRestaurant(id, new Restaurant("Modi naxe", "Vaja", 1000L, new BigDecimal("3.0"), new BigDecimal("1000.0"), ""));
         assertEquals(sqlDao.getRestaurantById(id).get().getRestaurantName(), "Modi naxe");
         assertEquals(memo.getRestaurantById(id).get().getRestaurantName(), "Modi naxe");
     }

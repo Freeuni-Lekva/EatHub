@@ -3,7 +3,6 @@ package ge.eathub.dao.impl;
 import ge.eathub.dao.RoomDao;
 import ge.eathub.database.DBConnection;
 import ge.eathub.dto.RoomDto;
-import ge.eathub.exceptions.MealAlreadyExistsException;
 import ge.eathub.exceptions.UserAlreadyInRoomException;
 import ge.eathub.models.*;
 
@@ -125,17 +124,9 @@ public class MySqlRoomDao implements RoomDao {
         List<Room> ret = new ArrayList<>();
         try {
             conn = dataSource.getConnection();
-            PreparedStatement stm = conn.prepareStatement(
-                    "select %s, %s, %s  from %s INNER JOIN %s ON ? = ? where ? = ?;".formatted(
-                            Room.TABLE + "." + Room.ROOM_ID,
-                            Room.TABLE + "." + Room.RESTAURANT_ID,
-                            Room.TABLE + "." + Room.ACTIVE,
-                            UserRoom.TABLE,
-                            Room.TABLE));
-            stm.setString(1, Room.TABLE + "." + Room.ROOM_ID);
-            stm.setString(2, UserRoom.TABLE + "." + UserRoom.ROOM_ID);
-            stm.setString(3, UserRoom.USER_ID);
-            stm.setLong(4, userID);
+            PreparedStatement stm = conn.prepareStatement("select r.room_id, r.restaurant_id ,r.active from %s u join %s r on r.room_id = u.room_id join %s rest on r.restaurant_id = rest.restaurant_id where u.user_id = ? ;"
+                    .formatted(UserRoom.TABLE, Room.TABLE, Restaurant.TABLE));
+            stm.setLong(1, userID);
             ResultSet rs = stm.executeQuery();
             while (rs.next()) {
                 ret.add(new Room(
@@ -145,8 +136,8 @@ public class MySqlRoomDao implements RoomDao {
                         )
                 );
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
         } finally {
             DBConnection.closeConnection(conn);
         }
@@ -160,7 +151,7 @@ public class MySqlRoomDao implements RoomDao {
         try {
             conn = dataSource.getConnection();
             PreparedStatement stm = conn.prepareStatement(
-                    "select %s, %s, %s, %s, %s, %s, %s  from %s INNER JOIN %s ON ? = ? where ? = ?;".formatted(
+                    "select %s, %s, %s, %s, %s, %s, %s  from %s INNER JOIN %s ON %s = %s where %s = ?;".formatted(
                             User.TABLE + "." + User.COLUMN_ID,
                             User.TABLE + "." + User.COLUMN_USERNAME,
                             User.TABLE + "." + User.COLUMN_PASSWORD,
@@ -169,11 +160,11 @@ public class MySqlRoomDao implements RoomDao {
                             User.TABLE + "." + User.COLUMN_ROLE,
                             User.TABLE + "." + User.COLUMN_CONFIRMED,
                             UserRoom.TABLE,
-                            User.TABLE));
-            stm.setString(1, User.TABLE + "." + User.COLUMN_ID);
-            stm.setString(2, UserRoom.TABLE + "." + UserRoom.USER_ID);
-            stm.setString(3, UserRoom.ROOM_ID);
-            stm.setLong(4, roomID);
+                            User.TABLE,
+                            User.TABLE + "." + User.COLUMN_ID,
+                            UserRoom.TABLE + "." + UserRoom.USER_ID,
+                            UserRoom.TABLE + "." + UserRoom.ROOM_ID));
+            stm.setLong(1, roomID);
             ResultSet rs = stm.executeQuery();
             while (rs.next()) {
                 ret.add(new User(
@@ -208,13 +199,13 @@ public class MySqlRoomDao implements RoomDao {
             stm.setLong(1, roomID);
             stm.setLong(2, userID);
             stm.executeUpdate();
-        }catch (SQLIntegrityConstraintViolationException e) {
+        } catch (SQLIntegrityConstraintViolationException e) {
             if (e.getErrorCode() == MYSQL_DUPLICATE_ERROR_CODE) {
                 throw new UserAlreadyInRoomException(userID.toString());
-           }
+            }
         } catch (SQLException e) {
             e.printStackTrace();
-        }finally {
+        } finally {
             DBConnection.closeConnection(conn);
         }
     }
@@ -272,7 +263,7 @@ public class MySqlRoomDao implements RoomDao {
         try {
             conn = dataSource.getConnection();
             PreparedStatement stm = conn.prepareStatement("select r.room_id, r.active, rest.restaurant_name, rest.location from %s u join %s r on r.room_id = u.room_id join %s rest on r.restaurant_id = rest.restaurant_id where u.user_id = ? ;"
-                            .formatted(UserRoom.TABLE, Room.TABLE, Restaurant.TABLE));
+                    .formatted(UserRoom.TABLE, Room.TABLE, Restaurant.TABLE));
             stm.setLong(1, userID);
             ResultSet rs = stm.executeQuery();
             while (rs.next()) {
@@ -286,7 +277,7 @@ public class MySqlRoomDao implements RoomDao {
             }
         } catch (SQLException throwables) {
             throwables.printStackTrace();
-        }finally {
+        } finally {
             DBConnection.closeConnection(conn);
         }
         return ret;
@@ -312,7 +303,7 @@ public class MySqlRoomDao implements RoomDao {
             }
         } catch (SQLException throwables) {
             throwables.printStackTrace();
-        }finally {
+        } finally {
             DBConnection.closeConnection(conn);
         }
         return ret;
