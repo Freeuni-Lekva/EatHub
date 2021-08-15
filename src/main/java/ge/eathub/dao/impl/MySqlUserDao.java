@@ -91,7 +91,7 @@ public class MySqlUserDao implements UserDao {
                     "SELECT * FROM %s where %s = ?;".formatted(User.TABLE, User.COLUMN_USERNAME));
             stm.setString(1, username);
             ResultSet rs = stm.executeQuery();
-            if(rs.next()) {
+            if (rs.next()) {
                 return Optional.of(new User(
                         rs.getLong(1),
                         rs.getString(2),

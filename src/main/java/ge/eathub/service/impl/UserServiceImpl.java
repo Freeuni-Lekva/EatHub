@@ -41,7 +41,7 @@ public class UserServiceImpl implements UserService {
         if (userDao.checkInfo(userDto.getUsername(), userDto.getEmail())) {
             if (DEBUG || Mailer.sendMail(new RegistrationMail(userDto.getUsername(), userDto.getEmail(),
                     authenticator.getAccessToken(userDto.getUsername())))) {
-                logger.info("email was sent to user "+ userDto.getUsername());
+                logger.info("email was sent to user " + userDto.getUsername());
                 User newUser = new User(userDto.getUsername(),
                         BCrypt.hashpw(userDto.getPassword(), BCrypt.gensalt()),
                         userDto.getEmail());
@@ -75,5 +75,14 @@ public class UserServiceImpl implements UserService {
 
         }
         return false;
+    }
+
+    @Override
+    public Optional<UserDto> getUserDtoByUsername(String username) {
+        Optional<User> user = userDao.getUserByUsername(username);
+        if (user.isEmpty()) {
+            return Optional.empty();
+        }
+        return Optional.of(user.get().toDto());
     }
 }

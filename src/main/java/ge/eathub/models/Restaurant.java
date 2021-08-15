@@ -62,12 +62,12 @@ public class Restaurant {
         return this;
     }
 
-    public Restaurant setRestaurantUrl(String url){
+    public Restaurant setRestaurantUrl(String url) {
         this.url = url;
         return this;
     }
 
-    public String getRestaurantUrl(){
+    public String getRestaurantUrl() {
         return url;
     }
 

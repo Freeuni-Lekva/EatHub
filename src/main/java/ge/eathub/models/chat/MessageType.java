@@ -17,5 +17,23 @@ public enum MessageType {
     @JsonProperty("invitation")
     INVITATION,
     @JsonProperty("time-change")
-    TIME_CHANGE
+    TIME_CHANGE,
+    @JsonProperty("pay-for-all")
+    PAY_FOR_ALL,
+    @JsonProperty("split-bill")
+    SPLIT_BILL,
+
+//    @JsonProperty("pay-for-all-start")
+//    PAY_FOR_ALL_START,
+//    @JsonProperty("pay-for-all-success")
+//    PAY_FOR_ALL_SUCCESS,
+//    @JsonProperty("pay-for-all-fail")
+//    PAY_FOR_ALL_FAIL,
+//    @JsonProperty("pay-for-start")
+//    SPLIT_BILL_START,
+//    @JsonProperty("time-change")
+//    SPLIT_BILL_SUCCESS,
+//    @JsonProperty("time-change")
+//    SPLIT_BILL_FAIL,
+
 }

@@ -219,7 +219,7 @@ public class MySqlRestaurantDao implements RestaurantDao {
                     "INSERT INTO %s (%s, %s, %s, %s, %s, %s) VALUES (?,?,?,?,?,?) ;".formatted(
                             Restaurant.TABLE,
                             Restaurant.COLUMN_NAME, Restaurant.COLUMN_LOCATION,
-                            Restaurant.COLUMN_LIMIT, Restaurant.COLUMN_RATING,Restaurant.COLUMN_BALANCE, Restaurant.COLUMN_URL), Statement.RETURN_GENERATED_KEYS);
+                            Restaurant.COLUMN_LIMIT, Restaurant.COLUMN_RATING, Restaurant.COLUMN_BALANCE, Restaurant.COLUMN_URL), Statement.RETURN_GENERATED_KEYS);
             stm.setString(1, restaurant.getRestaurantName());
             stm.setString(2, restaurant.getLocation());
             stm.setLong(3, restaurant.getLimit());

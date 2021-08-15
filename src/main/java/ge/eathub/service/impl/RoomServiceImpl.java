@@ -56,6 +56,16 @@ public class RoomServiceImpl implements RoomService {
     }
 
     @Override
+    public boolean closeRoom(Long roomID) {
+        return roomDao.closeRoom(roomID);
+    }
+
+    @Override
+    public boolean isRoomActive(Long roomID) {
+        return roomDao.isRoomActive(roomID);
+    }
+
+    @Override
     public List<RoomDto> getAllRoomByUserID(long userID) {
         return roomDao.getAllRoomByUserID(userID);
     }

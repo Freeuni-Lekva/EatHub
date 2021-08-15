@@ -89,8 +89,4 @@ public class MySqlChatDao implements ChatDao {
         return ret;
     }
 
-    @Override
-    public List<Message> getMessagesByRoomID(Long roomID, Integer num) {
-        return null;
-    }
 }

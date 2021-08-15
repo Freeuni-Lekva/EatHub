@@ -3,8 +3,12 @@ package ge.eathub.listener;
 import ge.eathub.dao.*;
 import ge.eathub.dao.impl.*;
 import ge.eathub.database.DBConnection;
+import ge.eathub.service.OrderService;
+import ge.eathub.service.RoomService;
+import ge.eathub.service.TransactionService;
 import ge.eathub.service.impl.OrderServiceImpl;
 import ge.eathub.service.impl.RoomServiceImpl;
+import ge.eathub.service.impl.TransactionServiceIml;
 import ge.eathub.service.impl.UserServiceImpl;
 
 import javax.servlet.ServletContext;
@@ -34,11 +38,11 @@ public class Listener implements ServletContextListener, HttpSessionListener, Ht
                 new UserServiceImpl(userDao));
 
         RoomDao roomDao = new MySqlRoomDao(ds);
-        sc.setAttribute(NameConstants.ORDER_SERVICE,
-                new OrderServiceImpl(roomDao, new MySqlOrderDao(ds)));
-
-        sc.setAttribute(NameConstants.ROOM_SERVICE,
-                new RoomServiceImpl(roomDao, userDao));
+        OrderDao orderDao = new MySqlOrderDao(ds);
+        OrderService orderService = new OrderServiceImpl(roomDao, orderDao);
+        sc.setAttribute(NameConstants.ORDER_SERVICE, orderService);
+        RoomService roomService = new RoomServiceImpl(roomDao, userDao);
+        sc.setAttribute(NameConstants.ROOM_SERVICE, roomService);
 
         RestaurantDao restaurantDao = new MySqlRestaurantDao(ds);
 
@@ -50,6 +54,10 @@ public class Listener implements ServletContextListener, HttpSessionListener, Ht
 
         ChatDao chatDao = new MySqlChatDao(ds);
         sc.setAttribute(NameConstants.CHAT_DAO, chatDao);
+
+        TransactionDao transactionDao = new MySqlTransactionDao(ds, userDao, roomDao);
+        TransactionService transactionService = new TransactionServiceIml(transactionDao, roomDao, orderDao);
+        sc.setAttribute(NameConstants.TRANSACTION_SERVICE, transactionService);
     }
 
     @Override
