@@ -142,4 +142,15 @@ public class User {
         return Objects.hash(userID, username);
     }
 
+    @Override
+    public String toString() {
+        return "User{" +
+                "userID=" + userID +
+                ", username='" + username + '\'' +
+                ", email='" + email + '\'' +
+                ", balance=" + balance +
+                ", role=" + role +
+                ", confirmed=" + confirmed +
+                '}';
+    }
 }

@@ -6,9 +6,11 @@ import ge.eathub.exceptions.UserNotFoundException;
 import ge.eathub.models.Room;
 import ge.eathub.service.RoomService;
 
-import javax.servlet.*;
-import javax.servlet.http.*;
-import javax.servlet.annotation.*;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.logging.Logger;
 
@@ -40,15 +42,13 @@ public class InvitationServlet extends HttpServlet {
         logger.info("POST " + user.getUsername() + " invited " + username);
         RoomService roomService = (RoomService) getServletContext().getAttribute(ROOM_SERVICE);
         try {
-            roomService.inviteUser(user.getUsername(), username,room.getRoomID());
+            roomService.inviteUser(user.getUsername(), username, room.getRoomID());
             logger.info("sent invitation");
             response.setStatus(HttpServletResponse.SC_OK);
-            return;
-        }catch (UserAlreadyInRoomException ex){
-            response.setStatus(HttpServletResponse.SC_NOT_ACCEPTABLE); //TODO: do some changes in front according it
-        }catch (UserNotFoundException ex){
+        } catch (UserAlreadyInRoomException ex) {
+            response.setStatus(HttpServletResponse.SC_NOT_ACCEPTABLE);
+        } catch (UserNotFoundException ex) {
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
         }
-        response.setStatus(HttpServletResponse.SC_NOT_FOUND); // TODO: it may be extra
     }
 }

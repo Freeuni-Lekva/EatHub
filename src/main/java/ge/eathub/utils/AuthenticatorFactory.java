@@ -6,7 +6,7 @@ public class AuthenticatorFactory {
 
     private static final Authenticator auth = new Authenticator();
 
-    public static Authenticator get(){
+    public static Authenticator get() {
         return auth;
     }
 }

@@ -295,5 +295,39 @@ public class MySqlOrderDao implements OrderDao {
         return orders;
     }
 
+    @Override
+    public List<OrderDto> getChosenMealsByIDs(Long userID, Long roomID) {
+        Connection conn = null;
+        List<OrderDto> orders = new ArrayList<>();
+        try {
+            conn = dataSource.getConnection();
+            PreparedStatement stm = conn.prepareStatement(
+                    ("SELECT o.order_id, u.username, m.meal_name, o.quantity, m.cooking_time, m.meal_price FROM orders o " +
+                            "JOIN meals m ON o.meal_id = m.meal_id " +
+                            "JOIN users u ON o.user_id = u.user_id " +
+                            "WHERE o.room_id = ? " +
+                            "AND u.user_id = ?;"));
+            stm.setLong(1, roomID);
+            stm.setLong(2, userID);
+            ResultSet rs = stm.executeQuery();
+            while (rs.next()) {
+                int quantity = rs.getInt(4);
+                orders.add(new OrderDto(
+                        rs.getLong(1),
+                        rs.getString(2),
+                        rs.getString(3),
+                        roomID,
+                        quantity,
+                        rs.getTime(5),
+                        rs.getBigDecimal(6).multiply(BigDecimal.valueOf(quantity))
+                ));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            DBConnection.closeConnection(conn);
+        }
+        return orders;
+    }
 
 }

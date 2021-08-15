@@ -117,7 +117,7 @@ public class MySqlRoomDaoTest {
         roomList = roomDao.getAllRooms();
         assertEquals(3, roomList.size());
 
-        roomDao.closeRoom(firstRoom);
+        roomDao.closeRoom(firstRoom.getRoomID());
         Room updatedRoom1 = roomDao.getRoomById(firstRoom.getRoomID()).get();
         assertFalse(updatedRoom1.getActive());
 

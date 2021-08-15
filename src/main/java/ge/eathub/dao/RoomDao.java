@@ -1,6 +1,7 @@
 package ge.eathub.dao;
 
 import ge.eathub.dto.RoomDto;
+import ge.eathub.models.Restaurant;
 import ge.eathub.models.Room;
 import ge.eathub.models.User;
 
@@ -14,7 +15,7 @@ public interface RoomDao {
 
     Optional<Room> getRoomById(Long roomID);
 
-    void closeRoom(Room room);
+    boolean closeRoom(Long roomID);
 
     // Optional<Room> getUserByUsername(String username);
 
@@ -27,6 +28,12 @@ public interface RoomDao {
     boolean userInRoom(Long roomID, Long userID);
 
     boolean mealInRoom(Long mealID, Long roomID);
+
+    Optional<Restaurant> getRestaurantByRoomID(Long roomID);
+
+    boolean isRoomActive(Long roomID);
+
+    boolean updateChosenTimeInRoom(Long roomID);
 
     List<RoomDto> getAllRoomByUserID(long userID);
 

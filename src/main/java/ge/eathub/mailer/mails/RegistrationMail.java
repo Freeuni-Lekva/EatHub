@@ -7,6 +7,7 @@ public class RegistrationMail extends Mail {
     private static final String SUBJECT = "EatHub - Confirm registration";
     private static final String MESSAGE = """
              <html>
+             <meta charset="utf-8">
              <body>
                  <h3>%s, welcome to EatHub!!!</h3>
                  <p>

@@ -103,19 +103,23 @@ public class MySqlRoomDao implements RoomDao {
     }
 
     @Override
-    public void closeRoom(Room room) {
+    public boolean closeRoom(Long roomID) {
         Connection conn = null;
         try {
             conn = dataSource.getConnection();
             PreparedStatement stm = conn.prepareStatement(
-                    "UPDATE rooms SET active = FALSE WHERE room_id = ?");
-            stm.setLong(1, room.getRoomID());
-            stm.executeUpdate();
+                    "UPDATE rooms SET active = FALSE WHERE %s = ?"
+                            .formatted(Room.ROOM_ID));
+            stm.setLong(1, roomID);
+            if (stm.executeUpdate() == 1) {
+                return true;
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
             DBConnection.closeConnection(conn);
         }
+        return false;
     }
 
     @Override
@@ -124,7 +128,10 @@ public class MySqlRoomDao implements RoomDao {
         List<Room> ret = new ArrayList<>();
         try {
             conn = dataSource.getConnection();
-            PreparedStatement stm = conn.prepareStatement("select r.room_id, r.restaurant_id ,r.active from %s u join %s r on r.room_id = u.room_id join %s rest on r.restaurant_id = rest.restaurant_id where u.user_id = ? ;"
+            PreparedStatement stm = conn.prepareStatement(("select r.room_id, r.restaurant_id ,r.active " +
+                    "from %s u join %s r on r.room_id = u.room_id " +
+                    "join %s rest on r.restaurant_id = rest.restaurant_id " +
+                    "where u.user_id = ? ;")
                     .formatted(UserRoom.TABLE, Room.TABLE, Restaurant.TABLE));
             stm.setLong(1, userID);
             ResultSet rs = stm.executeQuery();
@@ -136,8 +143,8 @@ public class MySqlRoomDao implements RoomDao {
                         )
                 );
             }
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
         } finally {
             DBConnection.closeConnection(conn);
         }
@@ -255,6 +262,77 @@ public class MySqlRoomDao implements RoomDao {
         return false;
     }
 
+    @Override
+    public Optional<Restaurant> getRestaurantByRoomID(Long roomID) {
+        Connection conn = null;
+        try {
+            conn = dataSource.getConnection();
+            PreparedStatement stm = conn.prepareStatement(
+                    "select res.* from rooms r " +
+                            "INNER JOIN restaurants res " +
+                            "on r.restaurant_id = res.restaurant_id " +
+                            "WHERE r.room_id = ?;");
+            stm.setLong(1, roomID);
+            ResultSet rs = stm.executeQuery();
+            if (rs.next()) {
+                return Optional.of(new Restaurant(
+                        rs.getLong(1),
+                        rs.getString(2),
+                        rs.getString(3),
+                        rs.getLong(4),
+                        rs.getBigDecimal(5),
+                        rs.getBigDecimal(6),
+                        rs.getString(7)
+                ));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            DBConnection.closeConnection(conn);
+        }
+        return Optional.empty();
+    }
+
+    @Override
+    public boolean isRoomActive(Long roomID) {
+        Connection conn = null;
+        try {
+            conn = dataSource.getConnection();
+            PreparedStatement stm = conn.prepareStatement(
+                    "select active from rooms " +
+                            " where room_id = ?");
+            stm.setLong(1, roomID);
+            ResultSet rs = stm.executeQuery();
+            if (rs.next()) {
+                return rs.getBoolean(1);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            DBConnection.closeConnection(conn);
+        }
+        return false;
+    }
+
+    @Override
+    public boolean updateChosenTimeInRoom(Long roomID) {
+        Connection conn = null;
+        try {
+            conn = dataSource.getConnection();
+            PreparedStatement stm = conn.prepareStatement(
+                    "UPDATE rooms SET active = FALSE WHERE %s = ?"
+                            .formatted(Room.ROOM_ID));
+            stm.setLong(1, roomID);
+            if (stm.executeUpdate() == 1) {
+                return true;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            DBConnection.closeConnection(conn);
+        }
+        return false;
+    }
 
     @Override
     public List<RoomDto> getAllRoomByUserID(long userID) {

@@ -16,6 +16,11 @@ public interface RoomService {
 
     Optional<Room> getRoomByID(Long roomID);
 
+    boolean closeRoom(Long roomID);
+
+    boolean isRoomActive(Long roomID);
+
+
     List<RoomDto> getAllRoomByUserID(long userID);
 
     List<RoomDto> getAllRoomDto();

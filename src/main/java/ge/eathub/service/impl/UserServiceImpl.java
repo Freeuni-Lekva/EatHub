@@ -14,7 +14,6 @@ import ge.eathub.models.User;
 import ge.eathub.security.Authenticator;
 import ge.eathub.service.UserService;
 import ge.eathub.utils.EmailValidator;
-import org.checkerframework.checker.nullness.Opt;
 import org.mindrot.jbcrypt.BCrypt;
 
 import java.util.Optional;
@@ -42,7 +41,7 @@ public class UserServiceImpl implements UserService {
         if (userDao.checkInfo(userDto.getUsername(), userDto.getEmail())) {
             if (DEBUG || Mailer.sendMail(new RegistrationMail(userDto.getUsername(), userDto.getEmail(),
                     authenticator.getAccessToken(userDto.getUsername())))) {
-                logger.info("email was sent to user "+ userDto.getUsername());
+                logger.info("email was sent to user " + userDto.getUsername());
                 User newUser = new User(userDto.getUsername(),
                         BCrypt.hashpw(userDto.getPassword(), BCrypt.gensalt()),
                         userDto.getEmail());
@@ -81,7 +80,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public Optional<UserDto> getUserDtoByUsername(String username) {
         Optional<User> user = userDao.getUserByUsername(username);
-        if (user.isEmpty()){
+        if (user.isEmpty()) {
             return Optional.empty();
         }
         return Optional.of(user.get().toDto());
