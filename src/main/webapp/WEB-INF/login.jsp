@@ -71,31 +71,33 @@
 
     </style>
 </head>
-    <body>
-        <div class = "log_in_form">
-            <div id = "login_text"> please log in</div>
-            <% String error = (String) request.getAttribute(LoginServlet.ERROR_ATTR);
-                if (error != null) {%>
-            <div id = "error_text"><%=error%></div>
-            <% }%>
-            <form action="<c:url value="/login"/>" method="post">
-                <div class = "text">
-                    Username:
-                </div>
-                <div>
-                    <input type='text' placeholder='Enter Username:' name='username' autocomplete='username' required/>
-                </div>
-                <div class = "text">
-                    Password:
-                </div>
-                <div>
-                    <input type='password' placeholder='Enter Password:' name='password' autocomplete='current-password' required/>
-                </div>
-                <input type='submit' value='Login'/>
-            </form>
-            <div id = "register_text">
-                Not a member? <a href="<c:url value="/register"/>"> Register </a>
-            </div>
+<body>
+<div class="log_in_form">
+    <div id="login_text"> please log in</div>
+    <% String error = (String) request.getAttribute(LoginServlet.ERROR_ATTR);
+        if (error != null) {%>
+    <div id="error_text"><%=error%>
+    </div>
+    <% }%>
+    <form action="<c:url value="/login"/>" method="post">
+        <div class="text">
+            Username:
         </div>
-    </body>
+        <div>
+            <input type='text' placeholder='Enter Username:' name='username' autocomplete='username' required/>
+        </div>
+        <div class="text">
+            Password:
+        </div>
+        <div>
+            <input type='password' placeholder='Enter Password:' name='password' autocomplete='current-password'
+                   required/>
+        </div>
+        <input type='submit' value='Login'/>
+    </form>
+    <div id="register_text">
+        Not a member? <a href="<c:url value="/register"/>"> Register </a>
+    </div>
+</div>
+</body>
 </html>

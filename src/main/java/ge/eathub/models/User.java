@@ -19,7 +19,7 @@ public class User {
     private String username;
     private String password;
     private String email;
-    private BigDecimal balance = BigDecimal.TEN;
+    private BigDecimal balance = new BigDecimal(500);
     private Role role = Role.CUSTOMER;
     private Boolean confirmed;
 

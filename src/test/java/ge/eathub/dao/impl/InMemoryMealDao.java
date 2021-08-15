@@ -8,14 +8,13 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Vector;
 import java.util.concurrent.atomic.AtomicLong;
-import java.util.function.Consumer;
 
 public class InMemoryMealDao implements MealDao {
 
     List<Meal> meals;
     AtomicLong count = new AtomicLong(1);
 
-    public InMemoryMealDao(){
+    public InMemoryMealDao() {
         meals = new Vector<>();
     }
 
@@ -27,8 +26,8 @@ public class InMemoryMealDao implements MealDao {
     @Override
     public Optional<Meal> getMealById(Long mealID) {
         return meals.stream().filter(meal ->
-                meal.getMealID()
-                        .equals(mealID))
+                        meal.getMealID()
+                                .equals(mealID))
                 .findAny();
     }
 
@@ -48,15 +47,12 @@ public class InMemoryMealDao implements MealDao {
         Optional<Meal> optMeal = meals.stream().filter(m -> m.getMealID().
                 equals(meal.getMealID()) &&
                 m.getRestaurantID().equals(meal.getRestaurantID())).findAny();
-        optMeal.ifPresent(new Consumer<Meal>() {
-            @Override
-            public void accept(Meal optMeal) {
-                optMeal.setMealName(meal.getMealName());
-                optMeal.setMealPrice(meal.getMealPrice());
-                optMeal.setCookingTime(meal.getCookingTime());
-            }
+        optMeal.ifPresent(optMeal1 -> {
+            optMeal1.setMealName(meal.getMealName());
+            optMeal1.setMealPrice(meal.getMealPrice());
+            optMeal1.setCookingTime(meal.getCookingTime());
         });
-        return !optMeal.isEmpty();
+        return optMeal.isPresent();
     }
 
     @Override

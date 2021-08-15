@@ -155,8 +155,6 @@
         </div>
 
         <div id="pay-buttons">
-<%--            <button id="finish" class="button" onclick="finishChoosing()">finish</button>--%>
-<%--            <button id="continue" class="button" onclick="continueChoosing()">continue</button>--%>
             <button id="split" class="button" onclick="splitBill()">split bill</button>
             <button id="pay" class="button" onclick="payForAll()">Pay</button>
             <span id="transaction-error" class="error"></span>

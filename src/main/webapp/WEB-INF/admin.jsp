@@ -23,7 +23,7 @@
             background-color: darksalmon;
         }
 
-        #update_or_add{
+        #update_or_add {
             position: absolute;
             left: 5%;
             top: 20%;
@@ -88,7 +88,7 @@
             text-align: center;
         }
 
-        #error{
+        #error {
             color: #f02323;
         }
 
@@ -167,7 +167,7 @@
 
     <% String error = (String) request.getAttribute(AdminServlet.ERROR_ATTR);
         if (error != null) {%>
-    <div class = "error_or_success" id = "error">
+    <div class="error_or_success" id="error">
         <%=error%>
     </div>
     <% }%>
@@ -175,16 +175,16 @@
 
     <% String success = (String) request.getAttribute(AdminServlet.SUCCESS_ATTR);
         if (success != null) {%>
-    <div class = "error_or_success" id = "success">
+    <div class="error_or_success" id="success">
         <%=success%>
     </div>
     <% }%>
-    <div id = "update_or_add">
-        <div class = "title_text">Update or add new restaurant</div>
+    <div id="update_or_add">
+        <div class="title_text">Update or add new restaurant</div>
         <form action="<c:url value="/admin?restaurant"/>" enctype="multipart/form-data" method="post">
 
-            <div class = "line_type"> Restaurants:
-                <select name="admin_option" id="admin_option" class = "chosen_options">
+            <div class="line_type"> Restaurants:
+                <select name="admin_option" id="admin_option" class="chosen_options">
                     <option value="0">Add new</option>
                     <%
                         ServletContext sc = request.getServletContext();
@@ -200,41 +200,42 @@
                 </select>
             </div>
 
-            <div class = "line_type"> Restaurant name:
-                <input class = "label_type" type='text' placeholder='Restaurant Name:' name='restaurant_name' required/>
+            <div class="line_type"> Restaurant name:
+                <input class="label_type" type='text' placeholder='Restaurant Name:' name='restaurant_name' required/>
             </div>
 
-            <div class = "line_type"> Location:
-                <input class = "label_type" type='text' placeholder='Location:' name='location' required/>
+            <div class="line_type"> Location:
+                <input class="label_type" type='text' placeholder='Location:' name='location' required/>
             </div>
-            <div class = "line_type">Limit:
-                <input class = "label_type" type='number' min="0" placeholder='0:' name='limit' required/>
-            </div>
-
-            <div class = "line_type">Rating:
-                <input class = "label_type" type='number' min="0" step="0.01" placeholder='0:' name='rating' required/>
+            <div class="line_type">Limit:
+                <input class="label_type" type='number' min="0" placeholder='0:' name='limit' required/>
             </div>
 
-            <div class = "line_type">Balance:
-                <input class = "label_type" type='number' min="0" step="0.1" placeholder='0:' name='balance' required/>
+            <div class="line_type">Rating:
+                <input class="label_type" type='number' min="0" step="0.01" placeholder='0:' name='rating' required/>
             </div>
 
-            <div class = "upload_image">
-                <input type="file" name="restaurant-image" accept="image/*" id="restaurant-image" placeholder="Choose Image" required/><br>
+            <div class="line_type">Balance:
+                <input class="label_type" type='number' min="0" step="0.1" placeholder='0:' name='balance' required/>
             </div>
 
-            <div class = "submit_button">
-                <input class = "button_type" type='submit' value='Submit'/>
+            <div class="upload_image">
+                <input type="file" name="restaurant-image" accept="image/*" id="restaurant-image"
+                       placeholder="Choose Image" required/><br>
+            </div>
+
+            <div class="submit_button">
+                <input class="button_type" type='submit' value='Submit'/>
             </div>
         </form>
     </div>
 
-    <div id = "update_meal">
-        <div class = "title_text">Update a Meal</div>
+    <div id="update_meal">
+        <div class="title_text">Update a Meal</div>
         <form action="<c:url value="/admin?update_meal"/>" enctype="multipart/form-data" method="post">
 
-            <div class = "line_type"> Meal:
-                <select name="meal_option" id="meal_option" class = "chosen_options">
+            <div class="line_type"> Meal:
+                <select name="meal_option" id="meal_option" class="chosen_options">
                     <%
                         MealDao mealDao = (MealDao) sc.getAttribute(NameConstants.MEAL_DAO);
                         List<Meal> meals = mealDao.getAllMeals();
@@ -249,46 +250,48 @@
             </div>
 
 
-            <div class = "line_type"> Meal name:
-                <input class = "label_type" type='text' placeholder='Meal Name:' name='meal_name' required/>
+            <div class="line_type"> Meal name:
+                <input class="label_type" type='text' placeholder='Meal Name:' name='meal_name' required/>
             </div>
 
-            <div class = "line_type">Meal price:
-                <input class = "label_type" type='number' min="0" step="0.5" placeholder='0:' name='meal_price' required/>
+            <div class="line_type">Meal price:
+                <input class="label_type" type='number' min="0" step="0.5" placeholder='0:' name='meal_price' required/>
             </div>
 
-            <div class = "line_type">Cooking time:
-                <input class = "label_type" type='number' min="0" placeholder='0:' name='cooking_time' required/>
+            <div class="line_type">Cooking time:
+                <input class="label_type" type='number' min="0" placeholder='0:' name='cooking_time' required/>
             </div>
 
-            <div class = "upload_image">
-                <input type="file" name="file-image-update" accept="image/*" id="file-image-update" placeholder="Choose Image" required/><br>
+            <div class="upload_image">
+                <input type="file" name="file-image-update" accept="image/*" id="file-image-update"
+                       placeholder="Choose Image" required/><br>
             </div>
 
-            <div class = "submit_button">
-                <input class = "button_type" type='submit' value='Submit'/>
+            <div class="submit_button">
+                <input class="button_type" type='submit' value='Submit'/>
             </div>
         </form>
     </div>
 
-    <div id = "add_meal">
-        <div class = "title_text">Add a new Meal</div>
+    <div id="add_meal">
+        <div class="title_text">Add a new Meal</div>
         <form action="<c:url value="/admin?add_meal"/>" enctype="multipart/form-data" method="post">
 
-            <div class = "line_type"> Meal name:
-                <input class = "label_type" type='text' placeholder='Add Meal Name:' name='add_meal_name' required/>
+            <div class="line_type"> Meal name:
+                <input class="label_type" type='text' placeholder='Add Meal Name:' name='add_meal_name' required/>
             </div>
 
-            <div class = "line_type">Meal price:
-                <input class = "label_type" type='number' min="0" step="0.5" placeholder='0:' name='add_meal_price' required/>
+            <div class="line_type">Meal price:
+                <input class="label_type" type='number' min="0" step="0.5" placeholder='0:' name='add_meal_price'
+                       required/>
             </div>
 
-            <div class = "line_type">Cooking time:
-                <input class = "label_type" type='number' min="0" placeholder='0:' name='add_cooking_time' required/>
+            <div class="line_type">Cooking time:
+                <input class="label_type" type='number' min="0" placeholder='0:' name='add_cooking_time' required/>
             </div>
 
-            <div class = "line_type"> Restaurants:
-                <select name="meal_admin_option" id="meal_admin_option" class = "chosen_options">
+            <div class="line_type"> Restaurants:
+                <select name="meal_admin_option" id="meal_admin_option" class="chosen_options">
                     <%
                         for (Restaurant restaurant : restaurants) {%>
                     <option value="<%=restaurant.getRestaurantID()%>"><%=restaurant.getRestaurantName()%>
@@ -300,24 +303,25 @@
                 </select>
             </div>
 
-            <div class = "upload_image">
-                <input type="file" name="file-image-add" accept="image/*" id="file-image-add"  placeholder="Choose Image" required/><br>
+            <div class="upload_image">
+                <input type="file" name="file-image-add" accept="image/*" id="file-image-add" placeholder="Choose Image"
+                       required/><br>
             </div>
 
-            <div class = "submit_button">
-                <input class = "button_type" type='submit' value='Submit'/>
+            <div class="submit_button">
+                <input class="button_type" type='submit' value='Submit'/>
             </div>
         </form>
     </div>
-    <div id = "logout_pos">
+    <div id="logout_pos">
         <form action="<c:url value="/logout"/>" method="get">
-            <button id = "logout_button" type = "submit">Log out </button>
+            <button id="logout_button" type="submit">Log out</button>
         </form>
     </div>
 
 </div>
 
-<div id = "active_room">
+<div id="active_room">
     <%
         RoomService roomService = (RoomService) sc.getAttribute(NameConstants.ROOM_SERVICE);
         List<RoomDto> list = roomService.getAllRoomDto();
@@ -333,7 +337,7 @@
         }
     %>
 </div>
-<div id = "room_history">
+<div id="room_history">
     <h3>Rooms history</h3>
     <%
         for (RoomDto dto : list) {

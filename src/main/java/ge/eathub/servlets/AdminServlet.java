@@ -11,14 +11,10 @@ import ge.eathub.models.Role;
 import ge.eathub.service.AdminService;
 import ge.eathub.service.impl.AdminServiceImpl;
 
-import javax.jms.Session;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.Part;
+import javax.servlet.http.*;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -44,7 +40,7 @@ public class AdminServlet extends HttpServlet {
 
     private boolean checkAdmin(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         ServletCommons.setEncoding(request, response);
-        Session session = (Session) request.getSession(false);
+        HttpSession session = request.getSession(false);
         if (session != null) {
             UserDto user = (UserDto) request.getSession().getAttribute(UserDto.ATTR);
             if (user != null) {
@@ -77,17 +73,17 @@ public class AdminServlet extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         request.setCharacterEncoding("UTF-8");
-        //  if (checkAdmin(request, response)) {
-        String query = request.getQueryString();
-        if (query.equals("update_meal")) {
-            updateMeal(request, response);
-        } else if (query.equals("add_meal")) {
-            addMeal(request, response);
-        } else if (request.getQueryString().equals("restaurant")) {
-            doRestaurant(request, response);
+        if (checkAdmin(request, response)) {
+            String query = request.getQueryString();
+            if (query.equals("update_meal")) {
+                updateMeal(request, response);
+            } else if (query.equals("add_meal")) {
+                addMeal(request, response);
+            } else if (request.getQueryString().equals("restaurant")) {
+                doRestaurant(request, response);
+            }
+            request.getRequestDispatcher(ADMIN_PAGE).forward(request, response);
         }
-        request.getRequestDispatcher(ADMIN_PAGE).forward(request, response);
-        // }
     }
 
     private void addMeal(HttpServletRequest request, HttpServletResponse response) {
@@ -112,9 +108,7 @@ public class AdminServlet extends HttpServlet {
             }
         } catch (MealCreationException | MealAlreadyExistsException ex) {
             request.setAttribute(ERROR_ATTR, ex.getMessage());
-        } catch (ServletException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
+        } catch (ServletException | IOException e) {
             e.printStackTrace();
         }
     }

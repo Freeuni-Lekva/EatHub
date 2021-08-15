@@ -8,7 +8,6 @@
     <meta charset="utf-8">
     <link type="text/css" rel="stylesheet" href="<c:url value="/styles/common.css"/>">
     <link type="text/css" rel="stylesheet" href="<c:url value="/styles/chat.css"/>">
-    <link type="text/css" rel="stylesheet" href="<c:url value="/styles/auth.css"/>">
     <script type="application/javascript" src="<c:url value="/scripts/chat.js"/>"></script>
     <title>Join Room</title>
 

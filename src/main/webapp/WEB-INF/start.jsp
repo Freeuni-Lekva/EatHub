@@ -19,11 +19,11 @@
 </head>
 <body>
 <div>
-    <%  ServletContext sc = request.getServletContext();
+    <% ServletContext sc = request.getServletContext();
         UserDto user = (UserDto) request.getSession().getAttribute(UserDto.ATTR);
         UserService userService = (UserService) sc.getAttribute(NameConstants.USER_SERVICE);
         Optional<UserDto> optUser = userService.getUserDtoByUsername(user.getUsername());
-        if (optUser.isPresent()){
+        if (optUser.isPresent()) {
             user = optUser.get();
             request.getSession().setAttribute(UserDto.ATTR, user);
         }
