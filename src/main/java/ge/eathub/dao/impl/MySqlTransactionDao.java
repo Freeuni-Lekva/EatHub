@@ -63,7 +63,7 @@ public class MySqlTransactionDao implements TransactionDao {
                         return price;
                     }
                 } else {
-                    throw new NotEnoughMoney(user.get().getUsername());
+                    return null;
                 }
             }
             conn.rollback();
@@ -170,7 +170,7 @@ public class MySqlTransactionDao implements TransactionDao {
                         }
                     } else {
                         conn.rollback();
-                        throw new NotEnoughMoney(user.getUsername());
+                        return false;
                     }
                 }
             }

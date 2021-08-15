@@ -7,7 +7,8 @@ import ge.eathub.dto.UserDto;
 import ge.eathub.listener.NameConstants;
 import ge.eathub.models.Order;
 import ge.eathub.models.Room;
-import ge.eathub.service.impl.OrderServiceImpl;
+import ge.eathub.service.OrderService;
+import ge.eathub.service.RoomService;
 import ge.eathub.utils.ObjectMapperFactory;
 
 import javax.servlet.ServletContext;
@@ -33,8 +34,17 @@ public class ChooseMealServlet extends HttpServlet {
             return;
         }
         ServletContext sc = getServletContext();
-        OrderServiceImpl orderService = (OrderServiceImpl) sc.getAttribute(NameConstants.ORDER_SERVICE);
+        OrderService orderService = (OrderService) sc.getAttribute(NameConstants.ORDER_SERVICE);
+        RoomService roomService = (RoomService) sc.getAttribute(NameConstants.ROOM_SERVICE);
         Room room = ((Room) request.getSession().getAttribute(Room.ATTR));
+        if (room == null) {
+            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+            return;
+        }
+        if (!roomService.isRoomActive(room.getRoomID())) {
+            response.setStatus(HttpServletResponse.SC_PRECONDITION_FAILED);
+            return;
+        }
         List<OrderDto> chosenMeals = orderService.getChosenMeals(user.getUserID(), room.getRoomID());
         response.setCharacterEncoding("UTF-8");
         response.setContentType("application/json");
@@ -54,8 +64,17 @@ public class ChooseMealServlet extends HttpServlet {
                 .readValueAs(new TypeReference<List<Order>>() {
                 });
         ServletContext sc = getServletContext();
-        OrderServiceImpl orderService = (OrderServiceImpl) sc.getAttribute(NameConstants.ORDER_SERVICE);
+        OrderService orderService = (OrderService) sc.getAttribute(NameConstants.ORDER_SERVICE);
+        RoomService roomService = (RoomService) sc.getAttribute(NameConstants.ROOM_SERVICE);
         Room room = ((Room) request.getSession().getAttribute(Room.ATTR));
+        if (room == null) {
+            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+            return;
+        }
+        if (!roomService.isRoomActive(room.getRoomID())) {
+            response.setStatus(HttpServletResponse.SC_PRECONDITION_FAILED);
+            return;
+        }
         logger.info(" Post " + user.getUsername()
                 + " room " + room.getRoomID());
         // TODO rewrite again
@@ -88,5 +107,10 @@ public class ChooseMealServlet extends HttpServlet {
             }
         }
         response.setStatus(HttpServletResponse.SC_OK);
+        List<OrderDto> chosenMeals = orderService.getChosenMeals(user.getUserID(), room.getRoomID());
+        response.setCharacterEncoding("UTF-8");
+        response.setContentType("application/json");
+        mapper.writer().writeValues(response.getWriter()).write(chosenMeals);
+        response.flushBuffer();
     }
 }
