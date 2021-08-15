@@ -132,24 +132,23 @@
         }
 
 
-
     </style>
 </head>
 <body>
-<div id = "upper_part">
-    <div id = "welcome_text">Welcome to the Restaurant Page</div>
+<div id="upper_part">
+    <div id="welcome_text">Welcome to the Restaurant Page</div>
 </div>
-<div id = "first_part">
+<div id="first_part">
 
-    <div class = "title_text">
+    <div class="title_text">
         Filter
     </div>
-    <hr class = "line">
+    <hr class="line">
 
 
     <form action="<c:url value="/restaurants?filter"/>" method="post">
         <div>
-            <label id = "restaurant_filter"> Restaurants:
+            <label id="restaurant_filter"> Restaurants:
                 <select name="filter_option" id="filter_option">
                     <option value="0">Search in all</option>
                     <%
@@ -167,21 +166,21 @@
             </label>
 
 
-            <label id = "meal_filter"> Meal name:
+            <label id="meal_filter"> Meal name:
                 <input type='text' placeholder='Meal name:' name='filter_meal_name' id="meal_name"/>
             </label>
         </div>
         <br>
         <br>
-        <div id = "submit_button">
-            <input id = "button_style" type='submit' value='submit'/>
+        <div id="submit_button">
+            <input id="button_style" type='submit' value='submit'/>
         </div>
     </form>
 
     <br>
     <% String error = (String) request.getAttribute(RestaurantsServlet.ERROR_ATTR);
         if (error != null) {%>
-    <div id = "error_text">
+    <div id="error_text">
         <%=error%>
     </div>
     <% }%>
@@ -189,22 +188,25 @@
 
     <% Map<Restaurant, List<Meal>> map = (Map<Restaurant, List<Meal>>) request.getAttribute(RestaurantsServlet.SUCCESS_RESTAURANT_ATTR);
         String title = (String) request.getAttribute(RestaurantsServlet.RESTAURANT_NAME_ATTR);
-        if (title != null){%>
-    <div class = "restaurant_title">
+        if (title != null) {%>
+    <div class="restaurant_title">
         <%=title%>
     </div>
     <br>
-    <div class = "meal_class">
-        <%}
+    <div class="meal_class">
+        <%
+            }
             if (map != null) {
-                for (Restaurant restaurant : map.keySet()) {%>
-        <div class = "restaurant_title"><%="Restaurant name: '" + restaurant.getRestaurantName() + "'"%>
-        </div><br>
+                for (Restaurant restaurant : map.keySet()) {
+        %>
+        <div class="restaurant_title"><%="Restaurant name: '" + restaurant.getRestaurantName() + "'"%>
+        </div>
+        <br>
         <%
 
             for (Meal meal : map.get(restaurant)) {%>
-        <input class = "meal_image" type="image" src=<%="images/Meals/" + meal.getMealUrl()%>><br>
-        <div class = "restaurant_title">
+        <input class="meal_image" type="image" src=<%="images/Meals/" + meal.getMealUrl()%>><br>
+        <div class="restaurant_title">
             <%="Meal name: '" + meal.getMealName() + "', Meal price: " + meal.getMealPrice() + ", Time: " + meal.getCookingTime()%>
         </div>
         <%}%>
@@ -213,33 +215,35 @@
         <% } %>
     </div>
 
-    <div class = "meal_class">
-    <% List<Meal> meals = (List<Meal>) request.getAttribute(RestaurantsServlet.SUCCESS_MEALS_ATTR);
-        if (meals != null) {
-            for (Meal meal : meals) {%>
-    <input class = "meal_image" type="image" src=<%="images/Meals/" + meal.getMealUrl()%>><br>
-    <div class = "restaurant_title">
-        <%="Meal name: '" + meal.getMealName() + "', Meal price: " + meal.getMealPrice()  + ", Time: " + meal.getCookingTime() %>
-    </div><br><br>
-    <%}%>
-    <% } %>
-    <br>
+    <div class="meal_class">
+        <% List<Meal> meals = (List<Meal>) request.getAttribute(RestaurantsServlet.SUCCESS_MEALS_ATTR);
+            if (meals != null) {
+                for (Meal meal : meals) {%>
+        <input class="meal_image" type="image" src=<%="images/Meals/" + meal.getMealUrl()%>><br>
+        <div class="restaurant_title">
+            <%="Meal name: '" + meal.getMealName() + "', Meal price: " + meal.getMealPrice() + ", Time: " + meal.getCookingTime() %>
+        </div>
+        <br><br>
+        <%}%>
+        <% } %>
+        <br>
     </div>
 </div>
 
-<div id = "second_part">
-    <div class = "title_text">
+<div id="second_part">
+    <div class="title_text">
         Available Restaurants
     </div>
-    <hr class = "line">
+    <hr class="line">
     <%
         for (Restaurant restaurant : restaurants) {%>
-    <div id = "restaurant">
+    <div id="restaurant">
         <a href="/newRoom?id=<%=restaurant.getRestaurantID()%> ">
-            <div id = "restaurant_name">
+            <div id="restaurant_name">
                 <%= restaurant.getRestaurantName() + ", " + restaurant.getLocation()%>
             </div>
-            <input id = "restaurant_image" type="image" src=<%="images/Restaurants/" + restaurant.getRestaurantUrl()%>><br>
+            <input id="restaurant_image" type="image"
+                   src=<%="images/Restaurants/" + restaurant.getRestaurantUrl()%>><br>
         </a>
     </div>
 

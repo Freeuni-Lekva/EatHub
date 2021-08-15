@@ -4,7 +4,6 @@ import ge.eathub.dao.RoomDao;
 import ge.eathub.dao.TransactionDao;
 import ge.eathub.dao.UserDao;
 import ge.eathub.database.DBConnection;
-import ge.eathub.exceptions.NotEnoughMoney;
 import ge.eathub.exceptions.UserNotFoundException;
 import ge.eathub.models.*;
 
@@ -63,7 +62,7 @@ public class MySqlTransactionDao implements TransactionDao {
                         return price;
                     }
                 } else {
-                    throw new NotEnoughMoney(user.get().getUsername());
+                    return null;
                 }
             }
             conn.rollback();
@@ -82,8 +81,7 @@ public class MySqlTransactionDao implements TransactionDao {
     }
 
 
-    @Override
-    public boolean minusUserBalance(Connection conn, Long userID, BigDecimal price, Long roomID, Long resID) {
+    private boolean minusUserBalance(Connection conn, Long userID, BigDecimal price, Long roomID, Long resID) {
         try {
             PreparedStatement stm = conn.prepareStatement(
                     "UPDATE %s SET %s = %s - ?  WHERE %s = ?;".formatted(
@@ -112,12 +110,10 @@ public class MySqlTransactionDao implements TransactionDao {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        System.out.println("minus user balance");
         return false;
     }
 
-    @Override
-    public boolean addRestaurantBalance(Connection conn, BigDecimal price, Long resID) {
+    private boolean addRestaurantBalance(Connection conn, BigDecimal price, Long resID) {
         try {
             PreparedStatement stm = conn.prepareStatement(
                     "UPDATE %s SET %s = %s + ? WHERE %s = ?;".formatted(
@@ -133,20 +129,16 @@ public class MySqlTransactionDao implements TransactionDao {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        System.out.println("add rest balance");
-
         return false;
     }
 
     @Override
     public boolean finishOrderByEachUser(Long roomID) {
-        System.out.println(roomID);
         Connection conn = null;
         try {
             conn = dataSource.getConnection();
             conn.setAutoCommit(false);
             List<User> users = roomDao.getUsersByRoomID(roomID);
-            System.out.println(users);
             for (User user : users) {
                 PreparedStatement stm = conn.prepareStatement(
                         "SELECT SUM(%s*%s), %s FROM %s INNER JOIN %s USING (%s) WHERE %s = ? AND %s =?;"
@@ -169,26 +161,18 @@ public class MySqlTransactionDao implements TransactionDao {
                     }
                     Long resID = rs.getLong(2);
                     if (user.getBalance().compareTo(price) > 0) {
-                        System.out.println("userid " + user.getUserID() + " price " + price + " room " + roomID + " resId " + resID);
                         if (!(minusUserBalance(conn, user.getUserID(), price, roomID, resID) &&
                                 addRestaurantBalance(conn, price, resID))) {
-                            System.out.println("inner if");
                             conn.rollback();
                             return false;
                         }
-                        System.out.println("user " + user.getUsername() + " price " + price);
                     } else {
-                        System.out.println("inner else if");
                         conn.rollback();
-                        throw new NotEnoughMoney(user.getUsername());
+                        return false;
                     }
-                } else {
-                    System.out.println("asdasdasdasd");
                 }
-
             }
             conn.commit();
-            System.out.println("true");
             return true;
         } catch (SQLException e) {
             e.printStackTrace();
@@ -201,7 +185,6 @@ public class MySqlTransactionDao implements TransactionDao {
             }
             DBConnection.closeConnection(conn);
         }
-        System.out.println("fakse");
         return false;
     }
 }

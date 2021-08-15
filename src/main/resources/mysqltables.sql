@@ -171,23 +171,15 @@ VALUES ('admin', '$2a$10$.gSvGvCf5I85vxP4dklNSuqkwnFGNZxE4S04Dy6aZX76btLZic6Wm',
        ('alex', '$2a$10$.gSvGvCf5I85vxP4dklNSuqkwnFGNZxE4S04Dy6aZX76btLZic6Wm',
         'ainau18@freeuni.edu.ge', 1000, 'CUSTOMER', TRUE),
        ('botko', '$2a$10$.gSvGvCf5I85vxP4dklNSuqkwnFGNZxE4S04Dy6aZX76btLZic6Wm',
-        'gbotk18@freeuni.edu.ge', 1000, 'CUSTOMER', TRUE),
-       ('nika', '$2a$10$.gSvGvCf5I85vxP4dklNSuqkwnFGNZxE4S04Dy6aZX76btLZic6Wm',
-        'nshug18@freeuni.edu.ge', 1000, 'CUSTOMER', TRUE),
-       ('test', '$2a$10$.gSvGvCf5I85vxP4dklNSuqkwnFGNZxE4S04Dy6aZX76btLZic6Wm',
-        'vanoganjelashvili@gmail.com', 1000, 'ADMIN', FALSE),
-       ('leo', '$2a$10$.gSvGvCf5I85vxP4dklNSuqkwnFGNZxE4S04Dy6aZX76btLZic6Wm',
-        'lirem18@freeuni.edu.ge', 1000, 'CUSTOMER', TRUE),
-       ('tornike', '$2a$10$.gSvGvCf5I85vxP4dklNSuqkwnFGNZxE4S04Dy6aZX76btLZic6Wm',
-        'ttotl18@freeuni.edu.ge', 1000, 'CUSTOMER', TRUE);
-;
+        'gbotk18@freeuni.edu.ge', 1000, 'CUSTOMER', TRUE);
 
 INSERT INTO restaurants(restaurant_name, location, max_limit, Balance, url)
 VALUES ('თბილისურა', 'Tbilisi', 1000, 1000, '1.jpg'),
        ('ალაზანი', 'Telavi', 2000, 2000, '2.jpg'),
        ('სტალინსკი', 'Gori', 2000, 2600, '3.jpg'),
        ('ქუთეისური', 'Kutaisi', 1000, 1000, '4.jpg'),
-       ('Tiflis Veranda Restaurant', 'Tbilisi', 1000, 1000, '5.jpg');
+       ('Tiflis Veranda Restaurant', 'Tbilisi', 1000, 1000, '5.jpg'),
+       ('ბიკენტიას საქაბაბე', 'Kutaisi', 1000, 1000, '6.jpg');
 
 
 INSERT INTO meals(meal_name, meal_price, cooking_time, restaurant_id, url)
@@ -199,7 +191,7 @@ VALUES ('მწვადი', 12.0, '00:30:00', 1, '1.jpg'),
        ('ხაჭაპური', 9.0, '00:22:00', 2, '6.jpg'),
        ('აჩმა', 12.0, '00:25:00', 3, '7.jpg'),
        ('ხინკალი', 7.0, '00:30:00', 3, '8.jpg'),
-       ('გორული კოტლეტი', 1, '00:16:00', 3, '9.jpg'),
+       ('გორული კოტლეტი', 2.0, '00:16:00', 3, '9.jpg'),
        ('კიტრის მწნილი', 5.0, '00:03:00', 3, '10.jpg'),
        ('იმერული ხაჭაპური', 8.0, '00:17:00', 4, '11.jpg'),
        ('აჭარული ხაჭაპური', 9.0, '00:22:00', 4, '12.jpg'),
@@ -207,7 +199,13 @@ VALUES ('მწვადი', 12.0, '00:30:00', 1, '1.jpg'),
        ('ტორტი', 16.0, '01:05:00', 4, '14.jpg'),
        ('Omlete', 15.0, '00:05:00', 5, '15.jpg'),
        ('Chicken Massaman', 17.0, '00:25:00', 5, '16.jpg'),
-       ('khinkali', 8.0, '00:20:00', 5, '17.jpg');
+       ('khinkali', 8.0, '00:20:00', 5, '17.jpg'),
+       ('Pizza', 14.0, '00:25:00', 5, '18.jpg'),
+       ('ქაბაბი', 7.0, '00:20:00', 6, '19.jpg'),
+       ('ლუდი', 4.0, '00:03:00', 6, '20.jpg'),
+       ('კუპატი', 8.0, '00:25:00', 6, '21.jpg'),
+       ('შქმერული', 17.0, '00:45:00', 6, '22.jpg');
+
 INSERT
 INTO rooms(restaurant_id, active)
 VALUES (3, true);

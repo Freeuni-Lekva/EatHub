@@ -62,7 +62,7 @@ public class JoinRoomServlet extends HttpServlet {
                 request.getRequestDispatcher(ROOM_PAGE).forward(request, response);
             } else {
                 response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-            } // TODO: extra // 's
+            }
         } catch (Exception e) {
             e.printStackTrace();
             response.setStatus(HttpServletResponse.SC_FORBIDDEN);

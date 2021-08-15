@@ -315,26 +315,6 @@ public class MySqlRoomDao implements RoomDao {
     }
 
     @Override
-    public boolean updateChosenTimeInRoom(Long roomID) {
-        Connection conn = null;
-        try {
-            conn = dataSource.getConnection();
-            PreparedStatement stm = conn.prepareStatement(
-                    "UPDATE rooms SET active = FALSE WHERE %s = ?"
-                            .formatted(Room.ROOM_ID));
-            stm.setLong(1, roomID);
-            if (stm.executeUpdate() == 1) {
-                return true;
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            DBConnection.closeConnection(conn);
-        }
-        return false;
-    }
-
-    @Override
     public List<RoomDto> getAllRoomByUserID(long userID) {
         Connection conn = null;
         List<RoomDto> ret = new ArrayList<>();

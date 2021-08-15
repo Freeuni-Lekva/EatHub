@@ -117,6 +117,7 @@
     </style>
 </head>
 <body>
+<div>
     <%  ServletContext sc = request.getServletContext();
         UserDto user = (UserDto) request.getSession().getAttribute(UserDto.ATTR);
         UserService userService = (UserService) sc.getAttribute(NameConstants.USER_SERVICE);

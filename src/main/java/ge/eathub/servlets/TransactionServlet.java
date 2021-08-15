@@ -2,6 +2,7 @@ package ge.eathub.servlets;
 
 import ge.eathub.dto.UserDto;
 import ge.eathub.models.Room;
+import ge.eathub.service.RoomService;
 import ge.eathub.service.TransactionService;
 
 import javax.servlet.ServletException;
@@ -11,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+import static ge.eathub.listener.NameConstants.ROOM_SERVICE;
 import static ge.eathub.listener.NameConstants.TRANSACTION_SERVICE;
 import static ge.eathub.servlets.ServletCommons.checkUser;
 
@@ -24,9 +26,14 @@ public class TransactionServlet extends HttpServlet {
         if (checkUser(request, response, user)) {
             return;
         }
-        Room room = (Room) request.getSession().getAttribute(Room.ATTR);
+        RoomService roomService = (RoomService) getServletContext().getAttribute(ROOM_SERVICE);
+        Room room = ((Room) request.getSession().getAttribute(Room.ATTR));
         if (room == null) {
             response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+            return;
+        }
+        if (!roomService.isRoomActive(room.getRoomID())) {
+            response.setStatus(HttpServletResponse.SC_PRECONDITION_FAILED);
             return;
         }
         String time = request.getParameter("time");
@@ -46,11 +53,15 @@ public class TransactionServlet extends HttpServlet {
         if (checkUser(request, response, user)) {
             return;
         }
-        Room room = (Room) request.getSession().getAttribute(Room.ATTR);
+        RoomService roomService = (RoomService) getServletContext().getAttribute(ROOM_SERVICE);
+        Room room = ((Room) request.getSession().getAttribute(Room.ATTR));
         if (room == null) {
             response.setStatus(HttpServletResponse.SC_FORBIDDEN);
             return;
-
+        }
+        if (!roomService.isRoomActive(room.getRoomID())) {
+            response.setStatus(HttpServletResponse.SC_PRECONDITION_FAILED);
+            return;
         }
         String time = request.getParameter("time");
         TransactionService transactionService = (TransactionService) getServletContext().getAttribute(TRANSACTION_SERVICE);

@@ -20,8 +20,6 @@ import java.util.Optional;
 import java.util.function.Supplier;
 import java.util.logging.Logger;
 
-import static ge.eathub.Main.DEBUG;
-
 public class UserServiceImpl implements UserService {
     private final static Logger logger = Logger.getLogger(UserServiceImpl.class.getName());
     private final static Authenticator authenticator = new Authenticator(15);
@@ -39,7 +37,7 @@ public class UserServiceImpl implements UserService {
             throw new InvalidEmailException(userDto.getEmail());
         }
         if (userDao.checkInfo(userDto.getUsername(), userDto.getEmail())) {
-            if (DEBUG || Mailer.sendMail(new RegistrationMail(userDto.getUsername(), userDto.getEmail(),
+            if (Mailer.sendMail(new RegistrationMail(userDto.getUsername(), userDto.getEmail(),
                     authenticator.getAccessToken(userDto.getUsername())))) {
                 logger.info("email was sent to user " + userDto.getUsername());
                 User newUser = new User(userDto.getUsername(),

@@ -24,10 +24,8 @@ public class ChatConfig extends ServerEndpointConfig.Configurator {
         String username = user.getName();
         Long userID = user.getUserID();
         Long roomID = Long.valueOf(req.getParameterMap().get("room-id").get(0));
-        //        TODO validate
 
         conf.getUserProperties().put(CHAT_DAO, chatDao);
-        System.out.println(req.getParameterMap());
     }
 
 }

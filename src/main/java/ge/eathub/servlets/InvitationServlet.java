@@ -33,14 +33,18 @@ public class InvitationServlet extends HttpServlet {
         if (checkUser(request, response, user)) {
             return;
         }
-        Room room = (Room) request.getSession().getAttribute(Room.ATTR);
+        RoomService roomService = (RoomService) getServletContext().getAttribute(ROOM_SERVICE);
+        Room room = ((Room) request.getSession().getAttribute(Room.ATTR));
         if (room == null) {
             response.setStatus(HttpServletResponse.SC_FORBIDDEN);
             return;
         }
+        if (!roomService.isRoomActive(room.getRoomID())) {
+            response.setStatus(HttpServletResponse.SC_PRECONDITION_FAILED);
+            return;
+        }
         String username = request.getParameter("username");
         logger.info("POST " + user.getUsername() + " invited " + username);
-        RoomService roomService = (RoomService) getServletContext().getAttribute(ROOM_SERVICE);
         try {
             roomService.inviteUser(user.getUsername(), username, room.getRoomID());
             logger.info("sent invitation");
