@@ -1,11 +1,12 @@
 /* Title Bar */
 
 #title {
-    background-color: #0084FF;
+    background-color: lightgreen;
     font-size: 20px;
     padding: 10px 20px 10px 20px;
     text-align: center;
-    color: #fff;
+    color: black;
+    font-weight: bold;
 }
 
 /* Contact list */
@@ -78,7 +79,6 @@
     font-size: 10px;
     padding: 7px;
 }
-
 #messages .message.change .content {
     background-color: #d2b900;
     color: #ffffff;
@@ -87,7 +87,6 @@
     font-size: 10px;
     padding: 7px;
 }
-
 #messages .message.payment .content {
     background-color: #ff001f;
     color: #ffffff;
@@ -124,21 +123,21 @@
 }
 
 #messages .message.sent .content {
-    background-color: #0084FF;
+    background-color: lightgreen;
     margin-left: auto;
     margin-right: 0;
-    color: #fff;
+    color: black;
     text-align: right;
     border-radius: 20px 0 20px 20px;
 }
 
 #messages .message.sent .sender {
-    color: #0084FF;
+    color: black;
     font-size: 10px;
 }
 
 #messages .message.sent .time {
-    color: #0084FF;
+    color: black;
     font-size: 10px;
 }
 

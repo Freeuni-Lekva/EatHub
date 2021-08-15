@@ -82,10 +82,6 @@
             margin-bottom: 1.5%;
         }
 
-        .line {
-
-        }
-
         #restaurant_filter {
             position: absolute;
             width: 50%;
