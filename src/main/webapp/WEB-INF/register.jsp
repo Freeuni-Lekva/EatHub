@@ -15,9 +15,9 @@
             #form_style {
                 position: absolute;
                 left: 40%;
-                top: 30%;
+                top: 27%;
                 width: 20%;
-                height: 40%;
+                height: 46%;
                 padding: 1vw;
                 border: 2px dashed lightgreen;
                 border-radius: 10px;
@@ -34,7 +34,7 @@
                 color: #f02323;
                 margin-top: 2.5%;
                 font-size: 1.2vw;
-                height: 5%;
+                height: 13%;
                 vertical-align: middle;
             }
 

@@ -48,7 +48,6 @@
         }
 
         .text {
-
             text-align: left;
             margin-top: 3%;
             margin-bottom: 1%;

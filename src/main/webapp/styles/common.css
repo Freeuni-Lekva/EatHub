@@ -32,22 +32,22 @@ input[type="number"],
 input[type="password"] {
     border-radius: 20px;
     padding: 10px;
-    border: 2px solid gainsboro;
+    border: 2px solid black;
 }
 
 button {
     border-radius: 20px;
     padding: 10px;
-    background-color: #0084FF;
-    color: #fff;
+    background-color: lightgreen;
+    color: black;
     width: 6em;
-    border: 2px solid #0084FF;
+    border: 2px solid black;
 }
 
 button:hover,
 button:focus {
-    background-color: #0966ff;
-    border-color: #0966ff;
+    background-color: chartreuse;
+    border-color: black;
     cursor: pointer;
 }
 
