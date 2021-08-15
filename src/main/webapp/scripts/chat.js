@@ -26,10 +26,10 @@ function joinRoom(currentUser, roomID) {
                     document.getElementsByTagName("html")[0].innerHTML =
                         dom.getElementsByTagName("html")[0].innerHTML;
                     joinChat(token, currentUser, roomID);
-                    checkUpdates();
-                    if (!ended) {
-                        getChosenMeals();
-                    }
+                    // checkUpdates();
+                    // if (!ended) {
+                    //     getChosenMeals();
+                    // }
                     display_time();
                     break;
                 case 401:
@@ -103,6 +103,9 @@ function openSocket(accessToken, roomID, currentUser) {
                 case "split-bill":
                     displaySplitBillMessage(webSocketMessage.username, webSocketMessage.content);
                     break
+                case "chosen-meals":
+                    displayChosenMeals(webSocketMessage.content);
+                    break;
                 case "active-users":
                     cleanAvailableUsers();
                     for (let i = 0; i < webSocketMessage.usernames.length; i++) {
@@ -125,6 +128,7 @@ function displaySplitBillMessage(username, content) {
     disableControls();
     displayPaymentMessage(content);
 }
+
 
 function displayPaymentMessage(text) {
     const message = document.createElement("div");
@@ -359,6 +363,7 @@ function chooseMeals() {
         if (request.readyState === XMLHttpRequest.DONE) {
             switch (request.status) {
                 case 200:
+                    sendUpdateChosenMealMessage(request.response)
                     document.getElementById("choose-error").innerHTML = "";
                     break;
                 case 401:
@@ -380,6 +385,20 @@ function chooseMeals() {
         }
     };
     request.send(JSON.stringify(chosenMeals));
+}
+
+function displayChosenMeals(content) {
+    cleanChosenMeals();
+    generateTable(JSON.parse(content));
+}
+
+function sendUpdateChosenMealMessage(content) {
+    let socketMessage = {
+        content: content,
+        type: "chosen-meals"
+    }
+
+    chatSocket.send(JSON.stringify(socketMessage));
 }
 
 function cleanChosenMeals() {
@@ -423,7 +442,7 @@ function checkUpdates() {
         switch (xhr.status) {
             case 200:
                 cleanChosenMeals();
-                generateTable(JSON.parse(xhr.response))
+                generateTable(JSON.parse(xhr.response));
                 break;
             case 401:
                 document.getElementById("choose-meals-error").innerHTML =
@@ -445,6 +464,7 @@ function checkUpdates() {
     xhr.send();
 }
 
+// no need for polling
 function getChosenMeals() {
     setInterval(function () {
         checkUpdates();

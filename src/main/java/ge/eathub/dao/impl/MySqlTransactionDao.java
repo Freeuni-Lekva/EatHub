@@ -4,7 +4,6 @@ import ge.eathub.dao.RoomDao;
 import ge.eathub.dao.TransactionDao;
 import ge.eathub.dao.UserDao;
 import ge.eathub.database.DBConnection;
-import ge.eathub.exceptions.NotEnoughMoney;
 import ge.eathub.exceptions.UserNotFoundException;
 import ge.eathub.models.*;
 
@@ -63,7 +62,7 @@ public class MySqlTransactionDao implements TransactionDao {
                         return price;
                     }
                 } else {
-                    throw new NotEnoughMoney(user.get().getUsername());
+                    return null;
                 }
             }
             conn.rollback();
@@ -169,7 +168,8 @@ public class MySqlTransactionDao implements TransactionDao {
                     }
                     Long resID = rs.getLong(2);
                     if (user.getBalance().compareTo(price) > 0) {
-                        System.out.println("userid " + user.getUserID() + " price " + price + " room " + roomID + " resId " + resID);
+                        System.out.println("userid " + user.getUserID() + " price " + price +
+                                " room " + roomID + " resId " + resID);
                         if (!(minusUserBalance(conn, user.getUserID(), price, roomID, resID) &&
                                 addRestaurantBalance(conn, price, resID))) {
                             System.out.println("inner if");
@@ -180,7 +180,7 @@ public class MySqlTransactionDao implements TransactionDao {
                     } else {
                         System.out.println("inner else if");
                         conn.rollback();
-                        throw new NotEnoughMoney(user.getUsername());
+                        return false;
                     }
                 } else {
                     System.out.println("asdasdasdasd");

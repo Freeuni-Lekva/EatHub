@@ -4,6 +4,7 @@ import ge.eathub.dao.OrderDao;
 import ge.eathub.dao.RoomDao;
 import ge.eathub.dao.TransactionDao;
 import ge.eathub.dto.OrderDto;
+import ge.eathub.exceptions.NotEnoughMoney;
 import ge.eathub.mailer.Mailer;
 import ge.eathub.mailer.mails.Mail;
 import ge.eathub.mailer.mails.OrderMail;
