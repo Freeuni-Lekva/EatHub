@@ -94,7 +94,6 @@ public class MySqlRoomDaoTest {
 
         roomDao.addUserIntoRoom(secondRoom.getRoomID(), sqlUser1.getUserID());
         List<RoomDto> rooms = roomDao.getAllRoomByUserID(sqlUser1.getUserID());
-        System.out.println(rooms);
         assertEquals(2, rooms.size());
         assertEquals(firstRoom.getRoomID(), rooms.get(0).getRoomID());
         assertEquals(secondRoom.getRoomID(), rooms.get(1).getRoomID());
@@ -119,7 +118,12 @@ public class MySqlRoomDaoTest {
 
         roomDao.closeRoom(firstRoom.getRoomID());
         Room updatedRoom1 = roomDao.getRoomById(firstRoom.getRoomID()).get();
+        assertFalse(roomDao.isRoomActive(updatedRoom1.getRoomID()));
         assertFalse(updatedRoom1.getActive());
+
+        Optional<Restaurant> optRoom = roomDao.getRestaurantByRoomID(secondRoom.getRoomID());
+        assertTrue(optRoom.isPresent());
+        assertEquals(2, optRoom.get().getRestaurantID());
 
     }
 }
