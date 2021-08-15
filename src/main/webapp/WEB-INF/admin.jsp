@@ -25,8 +25,8 @@
 
         #update_or_add{
             position: absolute;
-            left: 6%;
-            top: 30%;
+            left: 5%;
+            top: 20%;
             width: 25%;
             height: 40%;
             padding: 1vw;
@@ -37,8 +37,8 @@
 
         #update_meal {
             position: absolute;
-            left: 37%;
-            top: 30%;
+            left: 36.5%;
+            top: 20%;
             width: 25%;
             height: 40%;
             padding: 1vw;
@@ -50,7 +50,7 @@
         #add_meal {
             position: absolute;
             left: 68%;
-            top: 30%;
+            top: 20%;
             width: 25%;
             height: 40%;
             padding: 1vw;
@@ -61,8 +61,8 @@
 
         #logout_pos {
             position: absolute;
-            left: 45%;
-            top: 85%;
+            left: 85%;
+            top: 5%;
             height: 5%;
             width: 10%;
         }
@@ -145,6 +145,20 @@
             background-color: lightgreen;
         }
 
+        #active_room {
+            position: absolute;
+            left: 25%;
+            top: 70%;
+            width: 30%;
+        }
+
+        #room_history {
+            position: absolute;
+            left: 60%;
+            top: 70%;
+            width: 20%;
+        }
+
     </style>
 </head>
 <body>
@@ -191,7 +205,7 @@
             </div>
 
             <div class = "line_type"> Location:
-                <input class = "label_type" type='text' placeholder='location:' name='location' required/>
+                <input class = "label_type" type='text' placeholder='Location:' name='location' required/>
             </div>
             <div class = "line_type">Limit:
                 <input class = "label_type" type='number' min="0" placeholder='0:' name='limit' required/>
@@ -210,7 +224,7 @@
             </div>
 
             <div class = "submit_button">
-                <input class = "button_type" type='submit' value='submit'/>
+                <input class = "button_type" type='submit' value='Submit'/>
             </div>
         </form>
     </div>
@@ -252,7 +266,7 @@
             </div>
 
             <div class = "submit_button">
-                <input class = "button_type" type='submit' value='submit'/>
+                <input class = "button_type" type='submit' value='Submit'/>
             </div>
         </form>
     </div>
@@ -291,19 +305,19 @@
             </div>
 
             <div class = "submit_button">
-                <input class = "button_type" type='submit' value='submit'/>
+                <input class = "button_type" type='submit' value='Submit'/>
             </div>
         </form>
     </div>
     <div id = "logout_pos">
         <form action="<c:url value="/logout"/>" method="get">
-            <button id = "logout_button" type = "submit">LogOut </button>
+            <button id = "logout_button" type = "submit">Log out </button>
         </form>
     </div>
 
 </div>
 
-<div>
+<div id = "active_room">
     <%
         RoomService roomService = (RoomService) sc.getAttribute(NameConstants.ROOM_SERVICE);
         List<RoomDto> list = roomService.getAllRoomDto();
@@ -318,6 +332,8 @@
             }
         }
     %>
+</div>
+<div id = "room_history">
     <h3>Rooms history</h3>
     <%
         for (RoomDto dto : list) {

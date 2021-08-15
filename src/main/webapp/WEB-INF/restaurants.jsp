@@ -121,7 +121,7 @@
         .restaurant_title {
             text-align: center;
             font-weight: bold;
-            text-size: 1.5vw;
+            font-size: 1.2vw;
         }
 
         .meal_class {
