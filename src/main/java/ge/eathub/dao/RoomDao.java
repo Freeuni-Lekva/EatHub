@@ -1,5 +1,6 @@
 package ge.eathub.dao;
 
+import ge.eathub.dto.RoomDto;
 import ge.eathub.models.Restaurant;
 import ge.eathub.models.Room;
 import ge.eathub.models.User;
@@ -33,5 +34,8 @@ public interface RoomDao {
     boolean isRoomActive(Long roomID);
 
     boolean updateChosenTimeInRoom(Long roomID);
+    List<RoomDto> getAllRoomByUserID(long userID);
+
+    List<RoomDto> getAllRoomDto();
     //boolean removeUserFromRoom(Long roomID, Long userID);
 }

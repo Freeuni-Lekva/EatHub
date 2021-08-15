@@ -9,6 +9,8 @@
 <%@ page import="org.apache.ibatis.ognl.MapElementsAccessor" %>
 <%@ page import="ge.eathub.dao.MealDao" %>
 <%@ page import="ge.eathub.models.Meal" %>
+<%@ page import="ge.eathub.service.RoomService" %>
+<%@ page import="ge.eathub.dto.RoomDto" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -73,7 +75,8 @@
             <input type='number' min="0" step="0.1" placeholder='0:' name='balance' required/>
         </div>
 
-        <input type="file" name="restaurant-image" accept="image/*" id="restaurant-image" placeholder=" choose image" required/><br>
+        <input type="file" name="restaurant-image" accept="image/*" id="restaurant-image" placeholder=" choose image"
+               required/><br>
 
 
         <input type='submit' value='submit'/>
@@ -111,7 +114,8 @@
             <input type='number' min="0" placeholder='0:' name='cooking_time' required/>
         </div>
 
-        <input type="file" name="file-image-update" accept="image/*" id="file-image-update" placeholder=" choose image" required/><br>
+        <input type="file" name="file-image-update" accept="image/*" id="file-image-update" placeholder=" choose image"
+               required/><br>
 
 
         <input type='submit' value='submit'/>
@@ -146,17 +150,44 @@
             </select>
         </div>
 
-        <input type="file" name="file-image-add" accept="image/*" id="file-image-add"  placeholder=" choose image" required/><br>
+        <input type="file" name="file-image-add" accept="image/*" id="file-image-add" placeholder=" choose image"
+               required/><br>
 
 
         <input type='submit' value='submit'/>
     </form>
     <form action="<c:url value="/logout"/>" method="get">
-        <button type = "submit">LogOut </button>
+        <button type="submit">LogOut</button>
     </form>
 
 </div>
-
+<div>
+    <%
+        RoomService roomService = (RoomService) sc.getAttribute(NameConstants.ROOM_SERVICE);
+        List<RoomDto> list = roomService.getAllRoomDto();
+    %><h3>Active rooms</h3>
+    <%
+        for (RoomDto dto : list) {
+            if (dto.isActive()) {
+    %>
+                <li><%="Room ID: " + dto.getRoomID() + ", Restaurant: " + dto.getRestaurantName() + " , " + dto.getRestaurantLocation()%>
+                </li>
+    <%
+            }
+        }
+    %>
+    <h3>Rooms history</h3>
+    <%
+        for (RoomDto dto : list) {
+            if (!dto.isActive()) {
+    %>
+                <li><%="Room id: " + dto.getRoomID() + " Restaurant: " + dto.getRestaurantName() + " , " + dto.getRestaurantLocation()%>
+                </li>
+    <%
+            }
+        }
+    %>
+</div>
 
 </body>
 </html>

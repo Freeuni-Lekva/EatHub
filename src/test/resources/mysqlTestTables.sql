@@ -138,7 +138,8 @@ ALTER TABLE transactions
 CREATE TABLE user_room
 (
     room_id BIGINT NOT NULL,
-    user_id BIGINT NOT NULL
+    user_id BIGINT NOT NULL,
+    CONSTRAINT DUPLICATE_ROOM_USER UNIQUE (room_id, user_id)
 );
 
 ALTER TABLE user_room
@@ -160,3 +161,4 @@ ALTER TABLE messages
     ADD CONSTRAINT FK_rooms_TO_messages
         FOREIGN KEY (room_id)
             REFERENCES rooms (room_id);
+
