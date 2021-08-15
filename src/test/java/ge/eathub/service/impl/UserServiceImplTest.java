@@ -17,7 +17,6 @@ import org.mockito.Mock;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.mockito.stubbing.OngoingStubbing;
 
 import java.util.Optional;
 
@@ -35,9 +34,9 @@ class UserServiceImplTest {
     public void registerUserTest1() {
         UserService userService = new UserServiceImpl(daoMockito);
         when(daoMockito.createUser(any())).thenReturn(new User());
-        when(daoMockito.checkInfo(any(),any())).thenReturn(true);
+        when(daoMockito.checkInfo(any(), any())).thenReturn(true);
         try (MockedStatic<Mailer> mailer = Mockito.mockStatic(Mailer.class)) {
-            mailer.when(() -> Mailer.sendMail(any(), any(), any())).thenReturn(true);
+            mailer.when(() -> Mailer.sendMail(any())).thenReturn(true);
             userService.registerUser(new UserRegisterDto("asd", "asd", "asd@asd.com"));
         }
     }
@@ -45,10 +44,10 @@ class UserServiceImplTest {
     @Test
     public void registerUserException() {
         UserService userService = new UserServiceImpl(daoMockito);
-        when(daoMockito.checkInfo(any(),any())).thenReturn(true);
+        when(daoMockito.checkInfo(any(), any())).thenReturn(true);
         when(daoMockito.createUser(any())).thenThrow(UserCreationException.class);
         try (MockedStatic<Mailer> mailer = Mockito.mockStatic(Mailer.class)) {
-            mailer.when(() -> Mailer.sendMail(any(), any(), any())).thenReturn(true);
+            mailer.when(() -> Mailer.sendMail(any())).thenReturn(true);
             assertThrows(UserCreationException.class, () -> userService.registerUser(new UserRegisterDto("asd", "asd", "asd@asd.com")));
         }
     }
@@ -57,7 +56,7 @@ class UserServiceImplTest {
     public void registerUserEmail() {
         UserService userService = new UserServiceImpl(daoMockito);
         try (MockedStatic<Mailer> mailer = Mockito.mockStatic(Mailer.class)) {
-            mailer.when(() -> Mailer.sendMail(any(), any(), any())).thenReturn(true);
+            mailer.when(() -> Mailer.sendMail(any())).thenReturn(true);
             assertThrows(InvalidEmailException.class, () -> userService.registerUser(new UserRegisterDto("asd", "asd", "asdasd")));
         }
     }

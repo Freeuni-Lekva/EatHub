@@ -45,7 +45,7 @@ public class NewRoomServlet extends HttpServlet {
             request.getSession().setAttribute(Room.ATTR, newRoom);
             response.sendRedirect("/Room");
         } else {
-            // TODO: ERROR NOTIFICATION
+            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
         }
     }
 

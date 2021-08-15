@@ -14,7 +14,6 @@ import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Time;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -59,10 +58,8 @@ public class MySqlRestaurantDaoTest {
     }
 
 
-
-
     @Test
-    void getAll(){
+    void getAll() {
         RestaurantDao memo = new InMemoryRestaurantDao();
         Restaurant restaurant = new Restaurant("Wadi Naxe", "Vake", 1000L, new BigDecimal("3.0"), new BigDecimal("1000.0"), "2.jpg");
         Restaurant rest1 = memo.createRestaurant(restaurant);
@@ -73,7 +70,7 @@ public class MySqlRestaurantDaoTest {
     }
 
     @Test
-    void getById(){
+    void getById() {
         RestaurantDao memo = new InMemoryRestaurantDao();
         Restaurant restaurant = new Restaurant("Wadi Naxe", "Vake", 1000L, new BigDecimal("3.0"), new BigDecimal("1000.0"), "2.jpg");
         Restaurant rest1 = memo.createRestaurant(restaurant);
@@ -86,14 +83,14 @@ public class MySqlRestaurantDaoTest {
     }
 
     @Test
-    void getMeals(){
+    void getMeals() {
         RestaurantDao memo = new InMemoryRestaurantDao();
         Restaurant restaurant = new Restaurant("Wadi Naxe", "Vake", 1000L, new BigDecimal("3.0"), new BigDecimal("1000.0"), "2.jpg");
         Restaurant rest1 = memo.createRestaurant(restaurant);
         Restaurant rest2 = sqlDao.createRestaurant(restaurant);
-        Meal meal1 = new Meal(1L,"Xinkali",new BigDecimal("0.5"), new Time(2), 1L, "");
-        Meal meal2 = new Meal(2L,"Mtsvadi",new BigDecimal("1.5"), new Time(2), 1L, "");
-        Meal meal3 = new Meal(3L,"Adjafsandali",new BigDecimal("0.5"), new Time(2), 1L, "");
+        Meal meal1 = new Meal(1L, "Xinkali", new BigDecimal("0.5"), new Time(2), 1L, "");
+        Meal meal2 = new Meal(2L, "Mtsvadi", new BigDecimal("1.5"), new Time(2), 1L, "");
+        Meal meal3 = new Meal(3L, "Adjafsandali", new BigDecimal("0.5"), new Time(2), 1L, "");
         mealDao.createMeal(meal1);
         mealDao.createMeal(meal2);
         List<Meal> meals = sqlDao.getAllMeals(1L);
@@ -106,7 +103,7 @@ public class MySqlRestaurantDaoTest {
     }
 
     @Test
-    void getRestauransByMeals(){
+    void getRestauransByMeals() {
         RestaurantDao memo = new InMemoryRestaurantDao();
         Restaurant restaurant = new Restaurant("Wadi Naxe", "Vake", 1000L, new BigDecimal("3.0"), new BigDecimal("1000.0"), "1.jpg");
         Restaurant restaurant2 = new Restaurant("Modi Naxe", "Vaja", 1000L, new BigDecimal("3.0"), new BigDecimal("1000.0"), "1.jpg");
@@ -114,26 +111,26 @@ public class MySqlRestaurantDaoTest {
         Restaurant restMemo2 = memo.createRestaurant(restaurant2);
         Restaurant rest1 = sqlDao.createRestaurant(restaurant);
         Restaurant rest2 = sqlDao.createRestaurant(restaurant2);
-        Meal meal1 = new Meal(1L,"Xinkali",new BigDecimal("0.5"), new Time(2), 1L, "");
-        Meal meal2 = new Meal(2L,"Mtsvadi",new BigDecimal("1.5"), new Time(2), 1L, "");
-        Meal meal3 = new Meal(3L,"Adjafsandali",new BigDecimal("0.5"), new Time(2), 1L,"");
+        Meal meal1 = new Meal(1L, "Xinkali", new BigDecimal("0.5"), new Time(2), 1L, "");
+        Meal meal2 = new Meal(2L, "Mtsvadi", new BigDecimal("1.5"), new Time(2), 1L, "");
+        Meal meal3 = new Meal(3L, "Adjafsandali", new BigDecimal("0.5"), new Time(2), 1L, "");
         mealDao.createMeal(meal1);
         mealDao.createMeal(meal2);
         List<Meal> meals = sqlDao.getAllMeals(1L);
         mealDao.createMeal(meal3);
         Map<Restaurant, List<Meal>> mp = sqlDao.getRestaurantsByMeal("ali");
-        assertEquals(1,mp.size());
+        assertEquals(1, mp.size());
     }
 
     @Test
-    void updateRestaurant(){
+    void updateRestaurant() {
         RestaurantDao memo = new InMemoryRestaurantDao();
         Restaurant restaurant = new Restaurant("Wadi Naxe", "Vake", 1000L, new BigDecimal("3.0"), new BigDecimal("1000.0"), "");
         Restaurant restMemo1 = memo.createRestaurant(restaurant);
         Restaurant rest1 = sqlDao.createRestaurant(restaurant);
         long id = rest1.getRestaurantID();
         long inMemoryID = restMemo1.getRestaurantID();
-        memo.updateRestaurant(inMemoryID,  new Restaurant("Modi naxe", "Vaja", 1000L, new BigDecimal("3.0"), new BigDecimal("1000.0"), ""));
+        memo.updateRestaurant(inMemoryID, new Restaurant("Modi naxe", "Vaja", 1000L, new BigDecimal("3.0"), new BigDecimal("1000.0"), ""));
         sqlDao.updateRestaurant(id, new Restaurant("Modi naxe", "Vaja", 1000L, new BigDecimal("3.0"), new BigDecimal("1000.0"), ""));
         assertEquals(sqlDao.getRestaurantById(id).get().getRestaurantName(), "Modi naxe");
         assertEquals(memo.getRestaurantById(id).get().getRestaurantName(), "Modi naxe");

@@ -64,11 +64,7 @@ function openSocket(accessToken, roomID, currentUser) {
         console.log(ev.type);
     }
     chatSocket.onopen = function (event) {
-        // window.open("http://" + host + "/chat.jsp")
         document.getElementById("title").innerHTML = "Room - " + roomID;
-        // document.getElementById("join-room").style.display = "none";
-        // document.getElementById("contacts").style.display = "block";
-        // document.getElementById("chat").style.display = "block";
         document.getElementById("message").focus();
     };
 
@@ -157,7 +153,8 @@ function sendMessage() {
         sendText(text)
     }
     const input = document.getElementById('file-img');
-    if (input.files == null || typeof input.files === "undefined") {
+
+    if (!input.files[0]) {
         return;
     }
     let file = input.files[0];
@@ -310,7 +307,8 @@ function sendInvitation(byUser) {
         if (request.readyState === XMLHttpRequest.DONE) {
             switch (request.status) {
                 case 200:
-                    console.log("user invited");
+                    document.getElementById("invitation-error").innerHTML =
+                        "";
                     invitationSent(byUser, invitedUser);
                     break;
                 case 401:
@@ -327,7 +325,7 @@ function sendInvitation(byUser) {
                     break;
                 case 406:
                     document.getElementById("invitation-error").innerHTML =
-                        "user - " + invitedUser + " already in chat";
+                        "user - " + invitedUser + " is already invited";
                     break;
                 default:
                     document.getElementById("invitation-error").innerHTML =
@@ -569,7 +567,7 @@ function sendSplitBill(username) {
 
 function splitBill() {
     const xhr = new XMLHttpRequest();
-    xhr.open('PUT', "http://" + host + '/transaction?time='+document.getElementById('date-time').value);
+    xhr.open('PUT', "http://" + host + '/transaction?time=' + document.getElementById('date-time').value);
     xhr.onload = function () {
         switch (xhr.status) {
             case 200:
@@ -612,7 +610,7 @@ function sendPayForAll(username) {
 
 function payForAll() {
     const xhr = new XMLHttpRequest();
-    xhr.open('POST', "http://" + host + '/transaction?time='+document.getElementById('date-time').value);
+    xhr.open('POST', "http://" + host + '/transaction?time=' + document.getElementById('date-time').value);
     xhr.onload = function () {
         switch (xhr.status) {
             case 200:

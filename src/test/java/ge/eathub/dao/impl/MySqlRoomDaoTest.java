@@ -87,7 +87,7 @@ public class MySqlRoomDaoTest {
         assertEquals(2, userList.size());
 
         Room roomFromDB = roomDao.getRoomById(1L).get();
-        assertEquals(1,roomFromDB.getRoomID());
+        assertEquals(1, roomFromDB.getRoomID());
 
         assertTrue(roomDao.userInRoom(1L, 1L));
         assertFalse(roomDao.userInRoom(1L, 5L));

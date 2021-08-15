@@ -171,16 +171,7 @@ VALUES ('admin', '$2a$10$.gSvGvCf5I85vxP4dklNSuqkwnFGNZxE4S04Dy6aZX76btLZic6Wm',
        ('alex', '$2a$10$.gSvGvCf5I85vxP4dklNSuqkwnFGNZxE4S04Dy6aZX76btLZic6Wm',
         'ainau18@freeuni.edu.ge', 1000, 'CUSTOMER', TRUE),
        ('botko', '$2a$10$.gSvGvCf5I85vxP4dklNSuqkwnFGNZxE4S04Dy6aZX76btLZic6Wm',
-        'gbotk18@freeuni.edu.ge', 1000, 'CUSTOMER', TRUE),
-       ('nika', '$2a$10$.gSvGvCf5I85vxP4dklNSuqkwnFGNZxE4S04Dy6aZX76btLZic6Wm',
-        'nshug18@freeuni.edu.ge', 1000, 'CUSTOMER', TRUE),
-       ('test', '$2a$10$.gSvGvCf5I85vxP4dklNSuqkwnFGNZxE4S04Dy6aZX76btLZic6Wm',
-        'vanoganjelashvili@gmail.com', 1000, 'ADMIN', FALSE),
-       ('leo', '$2a$10$.gSvGvCf5I85vxP4dklNSuqkwnFGNZxE4S04Dy6aZX76btLZic6Wm',
-        'lirem18@freeuni.edu.ge', 1000, 'CUSTOMER', TRUE),
-       ('tornike', '$2a$10$.gSvGvCf5I85vxP4dklNSuqkwnFGNZxE4S04Dy6aZX76btLZic6Wm',
-        'ttotl18@freeuni.edu.ge', 1000, 'CUSTOMER', TRUE);
-;
+        'gbotk18@freeuni.edu.ge', 1000, 'CUSTOMER', TRUE);
 
 INSERT INTO restaurants(restaurant_name, location, max_limit, Balance, url)
 VALUES ('თბილისურა', 'Tbilisi', 1000, 1000, '1.jpg'),

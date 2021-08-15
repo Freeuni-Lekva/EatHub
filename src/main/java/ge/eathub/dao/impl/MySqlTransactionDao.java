@@ -4,7 +4,6 @@ import ge.eathub.dao.RoomDao;
 import ge.eathub.dao.TransactionDao;
 import ge.eathub.dao.UserDao;
 import ge.eathub.database.DBConnection;
-import ge.eathub.exceptions.NotEnoughMoney;
 import ge.eathub.exceptions.UserNotFoundException;
 import ge.eathub.models.*;
 
@@ -80,7 +79,6 @@ public class MySqlTransactionDao implements TransactionDao {
         }
         return null;
     }
-
 
 
     private boolean minusUserBalance(Connection conn, Long userID, BigDecimal price, Long roomID, Long resID) {

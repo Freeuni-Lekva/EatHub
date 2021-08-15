@@ -3,7 +3,6 @@ package ge.eathub.servlets;
 import ge.eathub.dto.UserDto;
 import ge.eathub.exceptions.UserAlreadyInRoomException;
 import ge.eathub.exceptions.UserNotFoundException;
-import ge.eathub.listener.NameConstants;
 import ge.eathub.models.Room;
 import ge.eathub.service.RoomService;
 

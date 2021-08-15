@@ -22,12 +22,12 @@ public class ServletCommons {
     public static final String INDEX_PAGE = "index.jsp";
 
 
-    protected static boolean checkUserSession(HttpServletRequest request, HttpServletResponse response, String redirectPage) throws ServletException, IOException {
+    protected static boolean checkUserSession(HttpServletRequest request, HttpServletResponse response, String URL) throws ServletException, IOException {
         HttpSession ses = request.getSession(false);
         if (ses != null) {
             UserDto user = (UserDto) ses.getAttribute(UserDto.ATTR);
             if (user != null) {
-                request.getRequestDispatcher(redirectPage).forward(request, response);
+                response.sendRedirect(URL);
                 return false;
             }
         }

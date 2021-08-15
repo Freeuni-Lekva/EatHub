@@ -27,7 +27,7 @@ public class LoginServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         ServletCommons.setEncoding(request, response);
-        if (checkUserSession(request, response, USER_START_PAGE)) {
+        if (checkUserSession(request, response, "/start")) {
             request.getRequestDispatcher(LOGIN_PAGE).forward(request, response);
         }
     }
@@ -50,7 +50,7 @@ public class LoginServlet extends HttpServlet {
                 UserDto usr = userService.loginUser(user);
                 request.getSession().setAttribute(UserDto.ATTR, usr);
                 if (usr.getRole().equals(Role.CUSTOMER)) {
-                    request.getRequestDispatcher(USER_START_PAGE).forward(request, response);
+                    response.sendRedirect("/start");
                 } else {
                     request.getRequestDispatcher(ADMIN_PAGE).forward(request, response);
                 }

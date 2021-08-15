@@ -5,9 +5,11 @@ import ge.eathub.exceptions.RestaurantCreationException;
 import ge.eathub.models.Meal;
 import ge.eathub.models.Restaurant;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
-import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 public class InMemoryRestaurantDao implements RestaurantDao {
@@ -16,7 +18,7 @@ public class InMemoryRestaurantDao implements RestaurantDao {
     private List<Meal> meals;
     AtomicLong count = new AtomicLong(1);
 
-    public InMemoryRestaurantDao(){
+    public InMemoryRestaurantDao() {
         restaurants = new ArrayList<>();
         meals = new ArrayList<>();
     }
@@ -47,7 +49,7 @@ public class InMemoryRestaurantDao implements RestaurantDao {
     public Map<Restaurant, List<Meal>> getRestaurantsByMeal(String mealName) {
         return restaurants.stream()
                 .map(x -> Map.of(x, getMealsBySubName(mealName, x.getRestaurantID())))
-                .reduce(null, (x,y) -> {
+                .reduce(null, (x, y) -> {
                     if (x == null) return y;
                     x.putAll(y);
                     return x;
@@ -58,17 +60,14 @@ public class InMemoryRestaurantDao implements RestaurantDao {
     public boolean updateRestaurant(long restaurantID, Restaurant restaurant) {
         Optional<Restaurant> optRestaurant = restaurants.stream().filter(m -> m.getRestaurantID().
                 equals(restaurantID)).findAny();
-        optRestaurant.ifPresent(new Consumer<Restaurant>() {
-            @Override
-            public void accept(Restaurant optRestaurant) {
-                optRestaurant.setRestaurantName(restaurant.getRestaurantName());
-                optRestaurant.setBalance(restaurant.getBalance());
-                optRestaurant.setLimit(restaurant.getLimit());
-                optRestaurant.setRating(restaurant.getRating());
-                optRestaurant.setLocation(restaurant.getLocation());
-            }
+        optRestaurant.ifPresent(optRestaurant1 -> {
+            optRestaurant1.setRestaurantName(restaurant.getRestaurantName());
+            optRestaurant1.setBalance(restaurant.getBalance());
+            optRestaurant1.setLimit(restaurant.getLimit());
+            optRestaurant1.setRating(restaurant.getRating());
+            optRestaurant1.setLocation(restaurant.getLocation());
         });
-        return !optRestaurant.isEmpty();
+        return optRestaurant.isPresent();
     }
 
     @Override

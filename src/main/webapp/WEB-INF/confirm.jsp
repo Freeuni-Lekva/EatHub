@@ -34,7 +34,7 @@
         #input_style {
             width: 75%;
             padding: 1% 2%;
-            margin: 1.5% ;
+            margin: 1.5%;
             box-sizing: border-box;
         }
 
@@ -47,7 +47,7 @@
         #button_style {
             width: 17%;
             padding: 1% 2%;
-            margin: 1.5% ;
+            margin: 1.5%;
         }
 
         input:hover {
@@ -56,23 +56,23 @@
     </style>
 </head>
 <body>
-<div id = "confirm_style">
-<form action="<c:url value="/confirm"/>" method="post">
-    <div id = "text_style">
-        please confirm registration, token is sent on your email
+<div id="confirm_style">
+    <form action="<c:url value="/confirm"/>" method="post">
+        <div id="text_style">
+            please confirm registration, token is sent on your email
+        </div>
+        <div>
+            <input id="input_style" name="confirm-token" placeholder="confirmation token "/>
+            <input id="button_style" type='submit' value='confirm'/>
+        </div>
+    </form>
+    <%--    <% request.getSession().get  %>--%>
+    <% String error = (String) request.getAttribute(ConfirmServlet.ERROR_ATTR);
+        if (error != null) {%>
+    <div id="error_text">
+        <%=error%>
     </div>
-    <div >
-        <input id = "input_style" name="confirm-token" placeholder="confirmation token "/>
-        <input id = "button_style" type='submit' value='confirm'/>
-    </div>
-</form>
-<%--    <% request.getSession().get  %>--%>
-<% String error = (String) request.getAttribute(ConfirmServlet.ERROR_ATTR);
-    if (error != null) {%>
-<div id = "error_text">
-    <%=error%>
-</div>
-<% }%>
+    <% }%>
 </div>
 </body>
 </html>

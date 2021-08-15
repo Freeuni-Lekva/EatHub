@@ -78,6 +78,7 @@
     font-size: 10px;
     padding: 7px;
 }
+
 #messages .message.change .content {
     background-color: #d2b900;
     color: #ffffff;
@@ -86,6 +87,7 @@
     font-size: 10px;
     padding: 7px;
 }
+
 #messages .message.payment .content {
     background-color: #ff001f;
     color: #ffffff;
