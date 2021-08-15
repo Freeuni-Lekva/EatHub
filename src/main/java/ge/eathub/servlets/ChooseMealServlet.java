@@ -38,7 +38,6 @@ public class ChooseMealServlet extends HttpServlet {
         response.setCharacterEncoding("UTF-8");
         response.setContentType("application/json");
         mapper.writer().writeValues(response.getWriter()).write(chosenMeals);
-        System.out.println(chosenMeals);
         response.flushBuffer();
     }
 

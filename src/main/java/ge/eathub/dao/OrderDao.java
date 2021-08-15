@@ -27,4 +27,6 @@ public interface OrderDao {
     List<Order> getAll(Long userID, Long roomID);
 
     List<OrderDto> getChosenMealsByRoomID(Long roomID);
-}
+
+    List<OrderDto> getChosenMealsByIDs(Long userID, Long roomID);
+    }

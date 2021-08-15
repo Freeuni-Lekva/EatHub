@@ -3,6 +3,7 @@ let chatSocket;
 let savedMeals = [];
 let flag = true;
 let maxTime = "00:00:00";
+let ended = false;
 
 function joinRoom(currentUser, roomID) {
     const request = new XMLHttpRequest();
@@ -14,22 +15,21 @@ function joinRoom(currentUser, roomID) {
                 case 200:
 
                     let html = request.response;
-                    console.log(request.getAllResponseHeaders());
                     let auth = request.getResponseHeader("Authorization")
-                    console.log(auth);
                     if (!auth) {
                         document.getElementById("join-error").innerHTML =
                             "no auth";
                         break;
                     }
                     let token = auth.split("Basic ")[1];
-                    console.log(token);
                     let dom = new DOMParser().parseFromString(html, 'text/html');
                     document.getElementsByTagName("html")[0].innerHTML =
                         dom.getElementsByTagName("html")[0].innerHTML;
                     joinChat(token, currentUser, roomID);
                     checkUpdates();
-                    getChosenMeals();
+                    if (!ended) {
+                        getChosenMeals();
+                    }
                     display_time();
                     break;
                 case 401:
@@ -73,9 +73,9 @@ function openSocket(accessToken, roomID, currentUser) {
     };
 
     chatSocket.onmessage = function (event) {
+
         if (typeof event.data === "string") {
             const webSocketMessage = JSON.parse(event.data);
-            console.log(webSocketMessage);
             switch (webSocketMessage.type) {
                 case "welcome":
                     displayConnectedUserMessage(webSocketMessage.username, currentUser);
@@ -97,6 +97,12 @@ function openSocket(accessToken, roomID, currentUser) {
                 case "time-change":
                     displayTimeChangeMessage(webSocketMessage.username, webSocketMessage.content);
                     break;
+                case "pay-for-all":
+                    displayPayForAll(webSocketMessage.username, webSocketMessage.content);
+                    break;
+                case "split-bill":
+                    displaySplitBillMessage(webSocketMessage.username, webSocketMessage.content);
+                    break
                 case "active-users":
                     cleanAvailableUsers();
                     for (let i = 0; i < webSocketMessage.usernames.length; i++) {
@@ -108,6 +114,38 @@ function openSocket(accessToken, roomID, currentUser) {
     };
 }
 
+function displayPayForAll(username, content) {
+    ended = true;
+    disableControls();
+    displayPaymentMessage(content);
+}
+
+function displaySplitBillMessage(username, content) {
+    ended = true;
+    disableControls();
+    displayPaymentMessage(content);
+}
+
+function displayPaymentMessage(text) {
+    const message = document.createElement("div");
+    message.setAttribute("class", "message payment");
+    const content = document.createElement("span");
+    content.setAttribute("class", "content");
+    content.appendChild(document.createTextNode(text));
+    message.appendChild(content);
+    const messages = document.getElementById("messages");
+    messages.appendChild(message);
+}
+
+function disableControls() {
+    document.getElementById("invitations").style.display = "none";
+    document.getElementById("pay-buttons").style.display = "none";
+    document.getElementById("meal-choose-button").style.display = "none";
+    document.getElementById("meal-choose-button").disabled = true;
+    document.getElementById("change-chosen-time").style.display = "none";
+
+}
+
 function sendMessage() {
     const text = document.getElementById("message").value.trim();
     if (text !== '') {
@@ -115,7 +153,7 @@ function sendMessage() {
         sendText(text)
     }
     const input = document.getElementById('file-img');
-    if (input.files == null) {
+    if (input.files == null || typeof input.files === "undefined") {
         return;
     }
     let file = input.files[0];
@@ -132,10 +170,8 @@ function sendText(text) {
 }
 
 function sendImage(file) {
-    console.log(file)
     const reader = new FileReader();
     reader.onload = function (event) {
-        console.log(event.target.result)
         let socketMessage = {
             content: event.target.result,
             type: "image"
@@ -285,6 +321,10 @@ function sendInvitation(byUser) {
                     document.getElementById("invitation-error").innerHTML =
                         "user - " + invitedUser + " not found";
                     break;
+                case 406:
+                    document.getElementById("invitation-error").innerHTML =
+                        "user - " + invitedUser + " already in chat";
+                    break;
                 default:
                     document.getElementById("invitation-error").innerHTML =
                         "some error";
@@ -311,7 +351,6 @@ function chooseMeals() {
             cost = cost + (price * amount);
         }
     }
-    console.log(chosenMeals)
     document.getElementById("chosen-cost").innerHTML = cost.toString();
     const request = new XMLHttpRequest();
     request.open("POST", "http://" + host + "/ChooseMeal");
@@ -320,7 +359,6 @@ function chooseMeals() {
         if (request.readyState === XMLHttpRequest.DONE) {
             switch (request.status) {
                 case 200:
-                    console.log("chose meals OK");
                     document.getElementById("choose-error").innerHTML = "";
                     break;
                 case 401:
@@ -355,14 +393,11 @@ function cleanChosenMeals() {
 function generateTable(orderList) {
 
     const table = document.getElementById("chosen-meals-table");
-    console.log(orderList);
     let numRows = orderList.length;
     let price = 0;
     let row;
-    let td;
     for (let i = 0; i < numRows; i++) {
         let order = orderList[i];
-        console.log(order);
         row = document.createElement("tr");
         addToTableRow(row, document.createTextNode(order.username))
 
@@ -387,7 +422,6 @@ function checkUpdates() {
     xhr.onload = function () {
         switch (xhr.status) {
             case 200:
-                console.log(xhr.response);
                 cleanChosenMeals();
                 generateTable(JSON.parse(xhr.response))
                 break;
@@ -454,6 +488,7 @@ function addToTableRow(tr, child) {
 }
 
 function display_time() {
+    if (ended) return;
     let refresh = 1000;
     setTimeout('update_time()', refresh);
 }
@@ -481,6 +516,7 @@ function update_time() {
         document.getElementById('date-time').value = currTime;
     }
     document.getElementById('date-time').min = currTime;
+
     display_time();
 }
 
@@ -499,4 +535,91 @@ function chooseTime() {
     }
 
     chatSocket.send(JSON.stringify(socketMessage));
+}
+
+function sendSplitBill(username) {
+    let socketMessage = {
+        content: username + " split bill ",
+        type: "split-bill"
+    }
+
+    chatSocket.send(JSON.stringify(socketMessage));
+}
+
+
+function splitBill() {
+    const xhr = new XMLHttpRequest();
+    xhr.open('PUT', "http://" + host + '/transaction?time='+document.getElementById('date-time').value);
+    xhr.onload = function () {
+        switch (xhr.status) {
+            case 200:
+                console.log(xhr.response);
+                sendSplitBill(xhr.response);
+                document.getElementById("transaction-error").innerHTML = "";
+                break;
+            case 401:
+                document.getElementById("transaction-error").innerHTML =
+                    "unauthorized";
+                break;
+            case 403:
+                document.getElementById("transaction-error").innerHTML =
+                    "forbidden";
+                break;
+            case 404:
+                document.getElementById("transaction-error").innerHTML =
+                    " not found";
+                break;
+            case 412:
+                document.getElementById("transaction-error").innerHTML =
+                    " not enough money on balance ";
+                break;
+            default:
+                document.getElementById("transaction-error").innerHTML =
+                    "some error";
+        }
+    };
+    xhr.send();
+}
+
+function sendPayForAll(username) {
+    let socketMessage = {
+        content: username + " payed",
+        type: "pay-for-all"
+    }
+
+    chatSocket.send(JSON.stringify(socketMessage));
+}
+
+function payForAll() {
+    const xhr = new XMLHttpRequest();
+    xhr.open('POST', "http://" + host + '/transaction?time='+document.getElementById('date-time').value);
+    xhr.onload = function () {
+        switch (xhr.status) {
+            case 200:
+                console.log(xhr.response);
+                sendPayForAll(xhr.response);
+                document.getElementById("transaction-error").innerHTML = "";
+                break;
+            case 401:
+                document.getElementById("transaction-error").innerHTML =
+                    "unauthorized";
+                break;
+            case 403:
+                document.getElementById("transaction-error").innerHTML =
+                    "forbidden";
+                break;
+            case 404:
+                document.getElementById("transaction-error").innerHTML =
+                    "not found";
+                break;
+            case 412:
+                document.getElementById("transaction-error").innerHTML =
+                    " not enough money on balance ";
+                break;
+            default:
+                document.getElementById("transaction-error").innerHTML =
+                    "some error";
+        }
+    };
+    xhr.send();
 }

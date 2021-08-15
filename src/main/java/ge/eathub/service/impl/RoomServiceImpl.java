@@ -52,4 +52,14 @@ public class RoomServiceImpl implements RoomService {
     public Optional<Room> getRoomByID(Long roomID) {
         return roomDao.getRoomById(roomID);
     }
+
+    @Override
+    public boolean closeRoom(Long roomID) {
+        return roomDao.closeRoom(roomID);
+    }
+
+    @Override
+    public boolean isRoomActive(Long roomID) {
+        return roomDao.isRoomActive(roomID);
+    }
 }

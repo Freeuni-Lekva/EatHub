@@ -7,4 +7,5 @@ public class NameConstants {
     public static final String MEAL_DAO = "MEAL_DAO";
     public static final String ORDER_SERVICE = "ORDER_SERVICE";
     public static final String ROOM_SERVICE = "ROOM_SERVICE";
+    public static final String TRANSACTION_SERVICE = "TRANSACTION_SERVICE";
 }

@@ -5,11 +5,11 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 public interface TransactionDao {
-    boolean finishOrderByUser (Long userID, Long roomID) throws SQLException;
+    BigDecimal finishOrderByUser(Long userID, Long roomID);
 
-    boolean minusUserBalance (Connection conn, Long userID, BigDecimal price, Long roomID) throws SQLException;
+    boolean minusUserBalance(Connection conn, Long userID, BigDecimal price, Long roomID, Long resID);
 
-    boolean addRestaurantBalance (Connection conn, Long roomID, BigDecimal price, Long userID) throws SQLException;
+    boolean addRestaurantBalance(Connection conn, BigDecimal price, Long resID);
 
-    boolean finishOrderByEachUser (Long roomID) throws SQLException;
+    boolean finishOrderByEachUser(Long roomID);
 }

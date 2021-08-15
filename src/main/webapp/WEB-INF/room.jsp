@@ -43,8 +43,8 @@
         <div style="display: block" id="chat">
             <div id="messages" autofocus></div>
             <form id="chat-controls" onsubmit="return false;">
-                <input type="text" id="message" placeholder="Enter a message"/>
                 <input type="file" name="img" accept="image/*" id="file-img" placeholder=" choose image"/>
+                <input type="text" id="message" placeholder="Enter a message"/>
                 <button class="button" onclick="sendMessage()">Send</button>
             </form>
         </div>
@@ -67,6 +67,8 @@
             <table id="menu-list">
                 <thead>
                 <tr>
+                    <th>
+                    </th>
                     <th>Meal
                     </th>
                     <th> Price In GEL
@@ -102,14 +104,20 @@
                 <%}%>
                 </tbody>
             </table>
-            <button class="button" onclick="chooseMeals()">choose</button>
+            <button id="meal-choose-button" class="button" onclick="chooseMeals()">choose</button>
             <div style="flex-direction: row">
                 <span> Your Total cost:</span>
                 <span id="chosen-cost"> <%=total%></span>
             </div>
             <span class="error" id="choose-error"> </span>
         </form>
-
+        <div id="invitations">
+            <form id="invitation" onsubmit="return false;">
+                <input type="text" id="invited-user" placeholder="Invite User"/>
+                <button class="button" onclick="sendInvitation('<%=user.getUsername()%>')">Invite</button>
+                <span class="error" id="invitation-error"> </span>
+            </form>
+        </div>
     </div>
     <div id="chosen-meals">
         <h3>Chosen Meals:</h3>
@@ -135,26 +143,27 @@
         </div>
 
         <span class="error" id="chosen-meals-error"> </span>
+        <div>
 
+            <label id="datetime"> chosen time:
+                <input type="datetime-local" id="date-time"
+                       value="2021-08-13T19:30"
+                       min="2021-08-13T19:30" max="2022-08-13T19:30">
+            </label>
+            <button id="change-chosen-time" class="button" onclick="chooseTime()">Change Time</button>
+
+        </div>
+
+        <div id="pay-buttons">
+<%--            <button id="finish" class="button" onclick="finishChoosing()">finish</button>--%>
+<%--            <button id="continue" class="button" onclick="continueChoosing()">continue</button>--%>
+            <button id="split" class="button" onclick="splitBill()">split bill</button>
+            <button id="pay" class="button" onclick="payForAll()">Pay</button>
+            <span id="transaction-error" class="error"></span>
+        </div>
     </div>
 </div>
-<div id="invitations">
-    <form id="invitation" onsubmit="return false;">
-        <input type="text" id="invited-user" placeholder="Invite User"/>
-        <button class="button" onclick="sendInvitation('<%=user.getUsername()%>')">Invite</button>
-        <span class="error" id="invitation-error"> </span>
-    </form>
-</div>
-<div>
 
-    <label id="datetime"> chosen time:
-        <input type="datetime-local" id="date-time"
-               value="2021-08-13T19:30"
-               min="2021-08-13T19:30" max="2022-08-13T19:30">
-    </label>
-    <button class="button" onclick="chooseTime()">Change Time</button>
-
-</div>
 
 </body>
 </html>

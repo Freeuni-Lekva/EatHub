@@ -19,7 +19,7 @@ public class Mailer {
             message.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
         }
         message.setSubject(sub);
-        message.setContent(msg, "text/html");
+        message.setContent(msg, "text/html;charset=UTF-8");
         //send message
         Transport.send(message);
         System.out.println("message sent successfully");

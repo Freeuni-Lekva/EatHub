@@ -13,4 +13,9 @@ public interface RoomService {
     boolean checkUser(Long roomID, Long userID);
 
     Optional<Room> getRoomByID(Long roomID);
+
+    boolean closeRoom(Long roomID);
+
+    boolean isRoomActive(Long roomID);
+
 }
