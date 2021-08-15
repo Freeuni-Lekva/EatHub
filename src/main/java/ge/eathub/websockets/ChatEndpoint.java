@@ -36,7 +36,6 @@ public class ChatEndpoint {
     public void onOpen(Session session, EndpointConfig config) throws SessionException {
         try {
             chatDao = (ChatDao) session.getUserProperties().get(CHAT_DAO);
-//            session.
             roomID = Long.valueOf(session.getRequestParameterMap().get("room-id").get(0));
             Set<Session> ses = activeUsers.getOrDefault(roomID, null);
             if (ses == null) {
@@ -56,7 +55,6 @@ public class ChatEndpoint {
             welcomeUser(username);
             broadcastAvailableUsers();
         } catch (Exception e) {
-            System.out.println("caught error");
             e.printStackTrace();
             throw new SessionException(e.getMessage(), e, session);
         }
@@ -70,7 +68,6 @@ public class ChatEndpoint {
 
     @OnMessage
     public void onMessage(Session session, Message message) {
-        System.out.println("on message :" + message);
         message = message
                 .setCurrentDateTime()
                 .setRoomID(roomID)
@@ -103,11 +100,9 @@ public class ChatEndpoint {
                 .setRoomID(roomID)
                 .setContent("Welcome " + username);
         broadcast(message);
-        chatDao.saveMessage(message);
     }
 
     private void broadcastUserDisconnected(String username) {
-        // Save THIS?
         broadcast(new Message().setUsername(username)
                 .setType(MessageType.GOODBYE)
                 .setRoomID(roomID)
