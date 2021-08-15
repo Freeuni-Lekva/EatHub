@@ -21,7 +21,6 @@ public class Meal {
     private String url;
 
 
-
     public Meal() {
     }
 
@@ -104,12 +103,12 @@ public class Meal {
         return this;
     }
 
-    public Meal setMealUrl(String url){
+    public Meal setMealUrl(String url) {
         this.url = url;
         return this;
     }
 
-    public String getMealUrl(){
+    public String getMealUrl() {
         return url;
     }
 

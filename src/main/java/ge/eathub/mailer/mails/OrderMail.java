@@ -38,7 +38,7 @@ public class OrderMail extends Mail {
         super(email, SUBJECT);
         StringBuilder sb = new StringBuilder();
         generateOrderList(sb, orders);
-        setMessage(MESSAGE.formatted(roomID, restaurantName, location,time, sb.toString(), amount));
+        setMessage(MESSAGE.formatted(roomID, restaurantName, location, time, sb.toString(), amount));
     }
 
 

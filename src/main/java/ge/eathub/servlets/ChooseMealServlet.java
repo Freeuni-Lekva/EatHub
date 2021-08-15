@@ -25,16 +25,17 @@ import java.util.logging.Logger;
 public class ChooseMealServlet extends HttpServlet {
     private final static Logger logger = Logger.getLogger(ChooseMealServlet.class.getName());
     private final static ObjectMapper mapper = ObjectMapperFactory.get();
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         UserDto user = (UserDto) request.getSession().getAttribute(UserDto.ATTR);
-        if (ServletCommons.checkUser(request, response, user)){
+        if (ServletCommons.checkUser(request, response, user)) {
             return;
         }
         ServletContext sc = getServletContext();
         OrderServiceImpl orderService = (OrderServiceImpl) sc.getAttribute(NameConstants.ORDER_SERVICE);
         Room room = ((Room) request.getSession().getAttribute(Room.ATTR));
-        List<OrderDto> chosenMeals = orderService.getChosenMeals(user.getUserID(),room.getRoomID());
+        List<OrderDto> chosenMeals = orderService.getChosenMeals(user.getUserID(), room.getRoomID());
         response.setCharacterEncoding("UTF-8");
         response.setContentType("application/json");
         mapper.writer().writeValues(response.getWriter()).write(chosenMeals);
@@ -42,16 +43,16 @@ public class ChooseMealServlet extends HttpServlet {
     }
 
 
-
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         UserDto user = (UserDto) request.getSession().getAttribute(UserDto.ATTR);
-        if (ServletCommons.checkUser(request, response, user)){
+        if (ServletCommons.checkUser(request, response, user)) {
             return;
         }
         List<Order> orders = mapper
                 .createParser(request.getReader())
-                .readValueAs(new TypeReference<List<Order>>() {});
+                .readValueAs(new TypeReference<List<Order>>() {
+                });
         ServletContext sc = getServletContext();
         OrderServiceImpl orderService = (OrderServiceImpl) sc.getAttribute(NameConstants.ORDER_SERVICE);
         Room room = ((Room) request.getSession().getAttribute(Room.ATTR));

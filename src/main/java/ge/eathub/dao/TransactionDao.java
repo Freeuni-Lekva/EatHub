@@ -2,7 +2,6 @@ package ge.eathub.dao;
 
 import java.math.BigDecimal;
 import java.sql.Connection;
-import java.sql.SQLException;
 
 public interface TransactionDao {
     BigDecimal finishOrderByUser(Long userID, Long roomID);

@@ -46,10 +46,10 @@ public class TransactionServiceIml implements TransactionService {
                 Mail mail;
                 if (userID.equals(user.getUserID())) {
                     mail = new OrderMail(user.getEmail(), roomID, orders, rest.getRestaurantName(),
-                            rest.getLocation(),time, amount);
+                            rest.getLocation(), time, amount);
                 } else {
                     mail = new OrderMail(user.getEmail(), roomID, orders, rest.getRestaurantName(),
-                            rest.getLocation(),time , BigDecimal.ZERO);
+                            rest.getLocation(), time, BigDecimal.ZERO);
                 }
                 Mail finalMail = mail;
                 new Thread(() -> Mailer.sendMail(
@@ -78,7 +78,7 @@ public class TransactionServiceIml implements TransactionService {
                 usersByRoomID.forEach(user -> {
                     List<OrderDto> orders = orderDao.getChosenMealsByIDs(user.getUserID(), roomID);
                     Mail mail = new OrderMail(user.getEmail(), roomID, orders, rest.getRestaurantName(),
-                            rest.getLocation(),time);
+                            rest.getLocation(), time);
                     new Thread(() -> Mailer.sendMail(
                             mail))
                             .start();

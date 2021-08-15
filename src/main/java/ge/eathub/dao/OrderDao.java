@@ -29,4 +29,4 @@ public interface OrderDao {
     List<OrderDto> getChosenMealsByRoomID(Long roomID);
 
     List<OrderDto> getChosenMealsByIDs(Long userID, Long roomID);
-    }
+}

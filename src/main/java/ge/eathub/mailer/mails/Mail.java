@@ -3,14 +3,14 @@ package ge.eathub.mailer.mails;
 public class Mail {
     private final String to;
     private final String subject;
-    private  String message;
+    private String message;
 
     public Mail(String to, String subject) {
         this.to = to;
         this.subject = subject;
     }
 
-    public void setMessage(String message){
+    public void setMessage(String message) {
         this.message = message;
     }
 

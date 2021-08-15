@@ -23,7 +23,7 @@ public class Room {
         this.active = active;
     }
 
-    public Room(Long restaurantID, Boolean active){
+    public Room(Long restaurantID, Boolean active) {
         this.restaurantID = restaurantID;
         this.active = active;
     }
