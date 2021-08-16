@@ -71,18 +71,19 @@
 
         #invited-user {
             margin-bottom: 5%;
-            width: 100%;
+            width: 80%;
             text-align: center;
         }
 
         #invite_button {
-            width: 116%;
+            width: 100%;
 
         }
 
         #menu_place {
             position: absolute;
             overflow-y: auto;
+            overflow-x: hidden;
             left: 5%;
             top: 42%;
             height: 43%;
@@ -91,9 +92,9 @@
 
         #button_place {
             position: absolute;
-            top: 82.2%;
-            left: 25%;
-            width: 50%;
+            top: 81%;
+            left: 10%;
+            width: 80%;
         }
 
         #meal-choose-button {
@@ -141,7 +142,7 @@
             position: absolute;
             top: 35%;
             left: 20%;
-            width: 60%;
+            width: 80%;
         }
 
         th, td {
@@ -205,12 +206,12 @@
         }
 
         #change-chosen-time {
-            width: 28%;
+            width: 30%;
         }
 
         #datetime {
             font-weight: bold;
-            font-size: 1vw;
+            font-size: 0.8vw;
         }
 
         #start_page_button {
@@ -225,6 +226,10 @@
             padding: 1% 2%;
             margin: 1% 0;
             box-sizing: border-box;
+        }
+
+        #date-time {
+            width: 40%;
         }
 
     </style>
