@@ -2,8 +2,12 @@
 
 #title {
     background-color: lightgreen;
-    font-size: 20px;
-    padding: 10px 20px 10px 20px;
+    position: absolute;
+    top: 0%;
+    height: 5.8%;
+    width: 100%;
+    left:0%;
+    font-size: 1.7vw;
     text-align: center;
     color: black;
     font-weight: bold;
