@@ -9,9 +9,9 @@ import java.util.Properties;
 
 public class Mailer {
 
-    private static final String sender = "eathub.freeuni@gmail.com";
-    private static final String password = "gAutexeli8421.";
-    public static final String ADDRESS = "e4c16e1346a9.ngrok.io";
+    private static final String sender = "yourmail@gmail.com";
+    private static final String password = "yourPassword";
+    public static final String ADDRESS = "localhost";
 
     public static void send(Session session, String[] receivers, String sub, String msg) throws MessagingException {
         MimeMessage message = new MimeMessage(session);
